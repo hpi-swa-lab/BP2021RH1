@@ -1,5 +1,5 @@
 import { type Page } from '@playwright/test';
-import { scrollToBottom, waitForAllImagesLoaded } from './helper';
+import { expectText, scrollToBottom, waitForAllImagesLoaded } from './helper';
 import { expect, test } from './test';
 
 test.describe('Search', () => {
@@ -22,6 +22,13 @@ test.describe('Search', () => {
     await scrollToBottom(page);
     await expect(page.locator('.picture-count')).toHaveText('107 Bilder');
     await expect(previews).toHaveCount(107);
+  });
+
+  test('says when nothing matches', async ({ page }) => {
+    await search(page, 'Fantasiewort');
+    await expectText(page, 'Im Archiv gibt es leider keine Bilder');
+    await expect(page.locator('.picture-count')).toHaveText('Keine Bilder');
+    await expect(page.locator('.picture-grid .picture-preview')).toHaveCount(0);
   });
 
   test('is possible to like a picture in the search view', async ({ page }) => {

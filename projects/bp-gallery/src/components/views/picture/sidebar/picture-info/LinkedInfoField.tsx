@@ -77,18 +77,27 @@ const LinkedInfoField = ({
     },
   });
 
+  const isClipboardEmpty = clipboardData.pictureIds.length === 0;
+
   useEffect(() => {
-    if (canGetClipboardPictureInfo) {
+    // Strapi drops an empty id filter and would return all pictures
+    if (canGetClipboardPictureInfo && !isClipboardEmpty) {
       getClipboardPictureInfo({
         variables: {
           pictureIds: clipboardData.pictureIds,
         },
       });
     }
-  }, [canGetClipboardPictureInfo, getClipboardPictureInfo, clipboardData.pictureIds]);
+  }, [
+    canGetClipboardPictureInfo,
+    isClipboardEmpty,
+    getClipboardPictureInfo,
+    clipboardData.pictureIds,
+  ]);
 
-  const clipboardPictures: FlatPicture[] | undefined =
+  const queriedClipboardPictures: FlatPicture[] | undefined =
     useSimplifiedQueryResponseData(clipboardPicturesData)?.pictures;
+  const clipboardPictures = isClipboardEmpty ? [] : queriedClipboardPictures;
 
   const shouldCopy =
     !clipboardPicturesLoading &&

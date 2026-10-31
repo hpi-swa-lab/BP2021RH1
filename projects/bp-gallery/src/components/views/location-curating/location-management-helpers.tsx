@@ -531,6 +531,8 @@ export const useDeleteTag = (
   const descendantsPicturesQueryResponse = tagPictures({
     variables: { tagIDs: descendants },
     fetchPolicy: 'no-cache',
+    // Strapi drops an empty id filter and would return all locations
+    skip: descendants.length === 0,
   });
 
   const flattenedDescendantsPictures = useSimplifiedQueryResponseData(
@@ -574,7 +576,7 @@ export const useDeleteTag = (
       return;
     }
     if (deleteOption === deleteOptions.DELETE_TAG_AND_CHILDREN) {
-      const tags: any[] = flattenedDescendantsPictures?.locationTags;
+      const tags: any[] = flattenedDescendantsPictures?.locationTags ?? [];
       if (tags.some((tag: any) => tag.pictures.length)) {
         await prompt({
           preset: DialogPreset.CONFIRM,

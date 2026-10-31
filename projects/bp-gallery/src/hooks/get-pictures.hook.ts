@@ -35,6 +35,9 @@ const useGetPictures = (
   fetchPolicy?: WatchQueryFetchPolicy,
   type: PictureOverviewType = PictureOverviewType.CUSTOM
 ) => {
+  // Strapi drops an empty id filter and would return all pictures
+  const isEmptyIdArray = queryParams instanceof Array && queryParams.length === 0;
+
   const filters = useMemo(() => {
     const innerFilters =
       queryParams instanceof Array
@@ -62,7 +65,7 @@ const useGetPictures = (
     },
     fetchPolicy,
     notifyOnNetworkStatusChange: true,
-    skip: isAllSearchActive || type !== PictureOverviewType.CUSTOM,
+    skip: isEmptyIdArray || isAllSearchActive || type !== PictureOverviewType.CUSTOM,
   });
   const customQueryResult = useGetPicturesByAllSearchQuery({
     variables: {
@@ -87,7 +90,7 @@ const useGetPictures = (
     },
     fetchPolicy,
     notifyOnNetworkStatusChange: true,
-    skip: type !== PictureOverviewType.MOST_LIKED,
+    skip: isEmptyIdArray || type !== PictureOverviewType.MOST_LIKED,
   });
 
   const allSearchResult = useMemo(
@@ -98,6 +101,14 @@ const useGetPictures = (
     [customQueryResult]
   );
 
+  const emptyResult = useMemo(
+    () => ({ ...queryResult, data: { pictures: { data: [] } } }),
+    [queryResult]
+  );
+
+  if (isEmptyIdArray) {
+    return emptyResult;
+  }
   switch (type) {
     case PictureOverviewType.MOST_LIKED:
       return mostLikedQueryResult;

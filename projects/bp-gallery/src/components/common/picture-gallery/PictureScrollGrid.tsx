@@ -125,6 +125,10 @@ const PictureScrollGrid = ({
     if (maxNumPictures && pictures) {
       fetchCount = Math.min(maxNumPictures - pictures.length, NUMBER_OF_PICTURES_LOADED_PER_FETCH);
     }
+    if (queryParams instanceof Array) {
+      // An empty id filter would return all pictures
+      fetchCount = Math.min(fetchCount, queryParams.length - nextFetchMoreIdArrayStart);
+    }
     if (fetchCount > 0) {
       setIsFetching(true);
       if (queryParams instanceof Array) {
