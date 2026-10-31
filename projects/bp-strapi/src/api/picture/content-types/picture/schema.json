@@ -154,6 +154,10 @@
       "relation": "oneToMany",
       "target": "api::orientation-tag.orientation-tag",
       "mappedBy": "picture"
+    },
+    "deleted": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

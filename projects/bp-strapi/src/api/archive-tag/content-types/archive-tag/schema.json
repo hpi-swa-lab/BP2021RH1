@@ -71,6 +71,10 @@
     "hidden": {
       "type": "boolean",
       "default": false
+    },
+    "deleted": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

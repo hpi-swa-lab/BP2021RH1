@@ -19,7 +19,7 @@ const CommentVerification = ({
   const { t } = useTranslation();
 
   const [acceptComment] = useAcceptCommentMutation({
-    variables: { commentId: comment.id, currentTime: new Date().toISOString() },
+    variables: { commentId: comment.id },
     refetchQueries: [
       'getPictureInfo',
       'getDailyPictureInfo',
@@ -48,17 +48,17 @@ const CommentVerification = ({
   const { canAcceptOrDeclineComment, canAcceptComment, canDeclineComment } =
     useCanAcceptOrDeclineComment(comment.id);
 
-  if (!comment.publishedAt && !canAcceptOrDeclineComment) {
+  if (!comment.accepted && !canAcceptOrDeclineComment) {
     return null;
   } else {
     return (
       <div
-        className={`comment-verification-container${!comment.publishedAt ? ' unverified' : ''}${
+        className={`comment-verification-container${!comment.accepted ? ' unverified' : ''}${
           !canAcceptOrDeclineComment ? ' unstyled' : ''
         }`}
       >
         {children}
-        {!comment.publishedAt && (
+        {!comment.accepted && (
           <>
             {canDeclineComment && (
               <Button startIcon={<Close />} onClick={onDecline}>

@@ -50,7 +50,7 @@ const CommentsContainer = memo(function CommentsContainer({
 
   const badgeNumber = useMemo(() => {
     return !canAcceptOrDeclineComment
-      ? comments?.filter(elem => elem.publishedAt).length
+      ? comments?.filter(elem => elem.accepted).length
       : comments?.length;
   }, [canAcceptOrDeclineComment, comments]);
 

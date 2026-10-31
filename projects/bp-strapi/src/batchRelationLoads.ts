@@ -1,6 +1,7 @@
 import { convertQueryParams, sanitize, validate } from '@strapi/utils';
 import type { Common } from '@strapi/strapi';
 import DataLoader from 'dataloader';
+import { withoutDeleted } from './deletedEntries';
 import { StrapiExtended } from './types';
 
 const { transformParamsToQuery } = convertQueryParams;
@@ -103,7 +104,8 @@ export const batchRelationLoads = (strapi: StrapiExtended) => {
       const isToMany = isMediaAttribute ? attribute.multiple : attribute.relation.endsWith('Many');
       const targetContentType = strapi.getModel(targetUID);
 
-      return async (parent, args = {}, context, info) => {
+      return async (parent, requestedArgs = {}, context, info) => {
+        const args = withoutDeleted(targetUID, requestedArgs);
         const transformedArgs: TransformedArgs = transformArgs(args, {
           contentType: targetContentType,
           usePagination: true,

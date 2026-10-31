@@ -320,6 +320,7 @@ module.exports = ({ strapi }) => ({
               author: comment.author,
               date: comment.date,
               picture: strapiPicture.id,
+              accepted: true,
             },
           });
         }
@@ -348,7 +349,7 @@ module.exports = ({ strapi }) => ({
           author: comment.author,
           date: comment.date,
           picture: strapiPicture.id,
-          publishedAt: null, // keep those as draft comments
+          accepted: false,
         },
       });
     }

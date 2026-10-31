@@ -33,7 +33,13 @@ export const getLocationTagsWithThumbnail = async (
   const locationTags = await strapi.entityService.findMany('api::location-tag.location-tag', {
     ...locationArgs,
     fields: ['name'],
-    populate: ['coordinates', 'child_tags', 'parent_tags', 'pictures', 'verified_pictures'],
+    populate: {
+      coordinates: true,
+      child_tags: true,
+      parent_tags: true,
+      pictures: { filters: { deleted: false } },
+      verified_pictures: { filters: { deleted: false } },
+    },
   });
 
   const { filters: transformedThumbnailFilters } = transformArgs(
