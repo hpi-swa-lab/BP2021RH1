@@ -12,6 +12,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./projects/bp-strapi/e2e/data.sql:/seed/data.sql:ro
       - ./compose/seed-db.sh:/docker-entrypoint-initdb.d/seed-db.sh:ro
+      - ./compose/dev-admin.sql:/seed/dev-admin.sql:ro
     healthcheck:
       test: pg_isready -h 127.0.0.1 -U postgres -d bpgallery
       interval: 2s
