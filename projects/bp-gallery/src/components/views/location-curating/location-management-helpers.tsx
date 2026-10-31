@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import {
   ComponentCommonSynonyms,
   ComponentCommonSynonymsInput,
+  useGetPicturesForLocationLazyQuery,
 } from '../../../graphql/APIConnector';
-import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { getDescendants } from '../../../helpers/tree-helpers';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
@@ -507,7 +507,6 @@ export const useDeleteTag = (
   const prompt = useDialog();
   const { t } = useTranslation();
 
-  const { tagPictures } = useGenericTagEndpoints(TagType.LOCATION);
   const { deleteTags } = useDeleteTagAndChildren(refetch, TagType.LOCATION);
   const { deleteSingleTag } = useDeleteSingleTag(refetch, TagType.LOCATION);
   const { deleteLocalTagCloneAndMoveUpChildren } = useDeleteLocalTagCloneAndMoveUpChildren(
@@ -520,28 +519,27 @@ export const useDeleteTag = (
     refetch,
     parentTag
   );
-  const descendants = getDescendants(locationTag, 'child_tags');
-
-  const tagPicturesQueryResponse = tagPictures({
-    variables: { tagIDs: [locationTag.id] },
-    fetchPolicy: 'no-cache',
-  });
-  const flattenedTagPictures = useSimplifiedQueryResponseData(tagPicturesQueryResponse.data);
-
-  const descendantsPicturesQueryResponse = tagPictures({
-    variables: { tagIDs: descendants },
-    fetchPolicy: 'no-cache',
-  });
-
-  const flattenedDescendantsPictures = useSimplifiedQueryResponseData(
-    descendantsPicturesQueryResponse.data
-  );
+  // Asked when deleting, so a quick click can't delete before the answer arrives
+  const [getPictures] = useGetPicturesForLocationLazyQuery({ fetchPolicy: 'no-cache' });
 
   const { canDeleteTag: canRunDeleteTag, canUpdateTagParent: canRunUpdateTagParent } =
     useLocationPanelPermissions();
   const canDeleteTag = canRunDeleteTag && canRunUpdateTagParent;
 
   const deleteTag = useCallback(async () => {
+    const pictureCounts = async (ids: string[]) => {
+      // Strapi drops an empty id filter and would answer for all locations
+      if (!ids.length) return [];
+      const { data, error } = await getPictures({ variables: { tagIDs: ids } });
+      if (error) throw error;
+      return (
+        data?.locationTags?.data.map(
+          ({ attributes }) =>
+            (attributes?.pictures?.data.length ?? 0) +
+            (attributes?.verified_pictures?.data.length ?? 0)
+        ) ?? []
+      );
+    };
     const deleteOption = await prompt({
       title: t(`tag-panel.should-delete-${TagType.LOCATION}`),
       content: locationTag.name,
@@ -564,18 +562,16 @@ export const useDeleteTag = (
       ],
     });
     if (deleteOption === deleteOptions.ABORT) return;
-    if (flattenedTagPictures?.locationTags[0].pictures.length) {
+    const [count = 0] = await pictureCounts([locationTag.id]);
+    if (count) {
       await prompt({
         preset: DialogPreset.CONFIRM,
-        title: t('tag-panel.not-allowed-to-delete', {
-          count: flattenedTagPictures.locationTags[0].pictures.length,
-        }),
+        title: t('tag-panel.not-allowed-to-delete', { count }),
       });
       return;
     }
     if (deleteOption === deleteOptions.DELETE_TAG_AND_CHILDREN) {
-      const tags: any[] = flattenedDescendantsPictures?.locationTags;
-      if (tags.some((tag: any) => tag.pictures.length)) {
+      if ((await pictureCounts(getDescendants(locationTag, 'child_tags'))).some(Boolean)) {
         await prompt({
           preset: DialogPreset.CONFIRM,
           title: t('tag-panel.not-allowed-to-delete-sublocation'),
@@ -632,8 +628,7 @@ export const useDeleteTag = (
     deleteLocalTagCloneAndMoveUpChildren,
     deleteSingleTag,
     deleteTags,
-    flattenedDescendantsPictures,
-    flattenedTagPictures,
+    getPictures,
     locationTag,
     prompt,
     t,

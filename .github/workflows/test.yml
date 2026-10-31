@@ -39,4 +39,4 @@ jobs:
       - name: Lint bp-gallery
         run: pnpm lint
       - name: Type check bp-gallery
-        run: pnpm tsc
+        run: pnpm tsc && pnpm tsc -p e2e

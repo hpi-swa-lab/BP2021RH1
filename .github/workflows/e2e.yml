@@ -9,7 +9,7 @@ on:
     branches:
       - main
       - staging
-  # Also saves the node_modules and Cypress caches where every new PR can read them
+  # Also saves the node_modules cache where every new PR can read it
   push:
     branches:
       - staging
@@ -26,43 +26,80 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runner: [0, 1, 2]
+        shard: [1, 2, 3]
     env:
-      E2E_RUNNER: ${{ matrix.runner }}
-      E2E_RUNNERS: 3
-      E2E_CYPRESS_CACHE: /tmp/e2e-cache/cypress
+      E2E_STACKS: 3
+      E2E_SHARD: ${{ matrix.shard }}/3
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Restore node_modules and Cypress caches
+      - name: Find the Node image the stack installs with
+        id: node
+        run: echo "image=$(grep -m1 -o 'node:[^ ]*' docker-compose.yml)" >> "$GITHUB_OUTPUT"
+      - name: Restore node_modules cache
         uses: actions/cache@v4
         with:
-          path: |
-            projects/*/node_modules
-            ${{ env.E2E_CYPRESS_CACHE }}
-          key: e2e-node22-${{ hashFiles('projects/*/pnpm-lock.yaml') }}
-          restore-keys: e2e-node22-
+          path: projects/*/node_modules
+          key: e2e-${{ steps.node.outputs.image }}-${{ hashFiles('projects/*/pnpm-lock.yaml') }}
       - name: Run E2E tests
         run: compose/e2e.sh
       - name: Let the cache step read the files the containers wrote as root
         if: always()
-        run: sudo chown -R "$(id -u):$(id -g)" projects/*/node_modules "$E2E_CYPRESS_CACHE"
-      - name: Store screenshots and logs
+        run: sudo chown -R "$(id -u):$(id -g)" projects/*/node_modules
+      - name: Store the container logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-logs-${{ matrix.shard }}
+          path: /tmp/bp-e2e/*.log
+          if-no-files-found: ignore
+      - name: Store the report for merging
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-${{ matrix.runner }}
-          path: |
-            projects/bp-gallery/cypress/screenshots
-            /tmp/bp-e2e/*.log
+          name: blob-report-${{ matrix.shard }}
+          path: projects/bp-gallery/blob-report
+          retention-days: 1
           if-no-files-found: ignore
 
-  # The check that branch protection requires
+  # Merges the runners' reports and is the check that branch protection requires
   e2e_result:
     name: Run E2E Tests
     needs: run_e2e_tests
     if: always()
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
     steps:
-      - run: test "${{ needs.run_e2e_tests.result }}" = success
+      - name: Check out the summary reporter
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: projects/bp-gallery/e2e/summary-reporter.ts
+          sparse-checkout-cone-mode: false
+      - name: Download the reports of all runners
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+      - name: Merge them into one HTML report and a summary for the run's page
+        run: >-
+          npx --yes playwright@1.64.1 merge-reports
+          --reporter html,./projects/bp-gallery/e2e/summary-reporter.ts ./all-blob-reports
+      - name: Store the HTML report
+        id: report
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report
+          path: playwright-report
+      - name: Link the report on the run's page
+        run: >-
+          echo "[Download the HTML report](${{ steps.report.outputs.artifact-url }}) with screenshots and traces,
+          unzip it and run \`npx playwright show-report <folder>\`." >> "$GITHUB_STEP_SUMMARY"
+      - name: Delete the reports of the runners
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: blob-report-*
+      - name: Fail if a runner failed
+        run: test "${{ needs.run_e2e_tests.result }}" = success
