@@ -22,7 +22,7 @@ const Title = () => {
   const titlePictureLink = asUploadPath(titlePicture?.media);
   return (
     <div className='flex-1'>
-      {titlePicture ? (
+      {titlePicture?.media ? (
         <div
           style={{ backgroundImage: `url(${titlePictureLink})` }}
           className='relative h-[40rem] bg-cover bg-center'
@@ -47,7 +47,9 @@ const Section = ({ sectionId }: { sectionId: string }) => {
   const { getSection } = useContext(ExhibitionGetContext);
   const mySection = getSection(sectionId);
   const [focusedPicture, setFocusedPicture] = useState<string>();
-  const images = mySection?.dragElements.map(elem => ({
+  // A deleted picture comes back as a placeholder without media
+  const dragElements = mySection?.dragElements.filter(elem => elem.picture.media);
+  const images = dragElements?.map(elem => ({
     src: asUploadPath(elem.picture.media),
     width: elem.picture.media?.width ?? 0,
     height: elem.picture.media?.height ?? 0,
@@ -59,8 +61,8 @@ const Section = ({ sectionId }: { sectionId: string }) => {
         <Portal container={root}>
           <PictureView
             initialPictureId={focusedPicture}
-            siblingIds={mySection?.dragElements
-              .map(drag => drag.picture.id)
+            siblingIds={dragElements
+              ?.map(drag => drag.picture.id)
               .filter((value, index, self) => self.indexOf(value) === index)}
             onBack={() => setFocusedPicture(undefined)}
           />

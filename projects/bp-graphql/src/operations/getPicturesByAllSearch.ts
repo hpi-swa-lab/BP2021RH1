@@ -18,7 +18,7 @@ export default {
         id
         attributes {
           is_text
-          comments {
+          comments(filters: { accepted: { eq: true } }) {
             data {
               id
             }

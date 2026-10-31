@@ -36,7 +36,7 @@ export default {
                 }
               }
             }
-            comments {
+            comments(filters: { accepted: { eq: true } }) {
               data {
                 id
               }

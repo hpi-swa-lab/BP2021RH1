@@ -6,8 +6,8 @@ export default {
   needsParameters: ['archive_tag'],
   isAllowed: checkComment('commentId'),
   document: graphql`
-    mutation acceptComment($commentId: ID!, $currentTime: DateTime!) {
-      updateComment(id: $commentId, data: { publishedAt: $currentTime }) {
+    mutation acceptComment($commentId: ID!) {
+      updateComment(id: $commentId, data: { accepted: true }) {
         data {
           id
         }

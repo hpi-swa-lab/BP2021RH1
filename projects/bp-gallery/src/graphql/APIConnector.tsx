@@ -20,8 +20,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -40,6 +43,7 @@ export type ArchivePictureCountEntityResponseCollection = {
 
 export type ArchiveTag = {
   createdAt?: Maybe<Scalars['DateTime']>;
+  deleted?: Maybe<Scalars['Boolean']>;
   email?: Maybe<Scalars['String']>;
   exhibitions?: Maybe<ExhibitionRelationResponseCollection>;
   hidden?: Maybe<Scalars['Boolean']>;
@@ -95,6 +99,7 @@ export type ArchiveTagEntityResponseCollection = {
 export type ArchiveTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  deleted?: InputMaybe<BooleanFilterInput>;
   email?: InputMaybe<StringFilterInput>;
   exhibitions?: InputMaybe<ExhibitionFiltersInput>;
   hidden?: InputMaybe<BooleanFilterInput>;
@@ -116,6 +121,7 @@ export type ArchiveTagFiltersInput = {
 };
 
 export type ArchiveTagInput = {
+  deleted?: InputMaybe<Scalars['Boolean']>;
   email?: InputMaybe<Scalars['String']>;
   exhibitions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   hidden?: InputMaybe<Scalars['Boolean']>;
@@ -147,6 +153,7 @@ export type BooleanFilterInput = {
   lt?: InputMaybe<Scalars['Boolean']>;
   lte?: InputMaybe<Scalars['Boolean']>;
   ne?: InputMaybe<Scalars['Boolean']>;
+  nei?: InputMaybe<Scalars['Boolean']>;
   not?: InputMaybe<BooleanFilterInput>;
   notContains?: InputMaybe<Scalars['Boolean']>;
   notContainsi?: InputMaybe<Scalars['Boolean']>;
@@ -188,6 +195,7 @@ export type Collection = {
   publishedAt?: Maybe<Scalars['DateTime']>;
   thumbnail?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+  visible: Scalars['Boolean'];
 };
 
 export type CollectionChild_CollectionsArgs = {
@@ -239,6 +247,7 @@ export type CollectionFiltersInput = {
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   thumbnail?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
+  visible?: InputMaybe<BooleanFilterInput>;
 };
 
 export type CollectionInput = {
@@ -249,6 +258,7 @@ export type CollectionInput = {
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
   thumbnail?: InputMaybe<Scalars['String']>;
+  visible?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CollectionRelationResponseCollection = {
@@ -256,6 +266,7 @@ export type CollectionRelationResponseCollection = {
 };
 
 export type Comment = {
+  accepted: Scalars['Boolean'];
   author?: Maybe<Scalars['String']>;
   childComments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
@@ -290,6 +301,7 @@ export type CommentEntityResponseCollection = {
 };
 
 export type CommentFiltersInput = {
+  accepted?: InputMaybe<BooleanFilterInput>;
   and?: InputMaybe<Array<InputMaybe<CommentFiltersInput>>>;
   author?: InputMaybe<StringFilterInput>;
   childComments?: InputMaybe<CommentFiltersInput>;
@@ -307,6 +319,7 @@ export type CommentFiltersInput = {
 };
 
 export type CommentInput = {
+  accepted?: InputMaybe<Scalars['Boolean']>;
   author?: InputMaybe<Scalars['String']>;
   childComments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   date?: InputMaybe<Scalars['DateTime']>;
@@ -372,6 +385,7 @@ export type DateTimeFilterInput = {
   lt?: InputMaybe<Scalars['DateTime']>;
   lte?: InputMaybe<Scalars['DateTime']>;
   ne?: InputMaybe<Scalars['DateTime']>;
+  nei?: InputMaybe<Scalars['DateTime']>;
   not?: InputMaybe<DateTimeFilterInput>;
   notContains?: InputMaybe<Scalars['DateTime']>;
   notContainsi?: InputMaybe<Scalars['DateTime']>;
@@ -689,6 +703,7 @@ export type FloatFilterInput = {
   lt?: InputMaybe<Scalars['Float']>;
   lte?: InputMaybe<Scalars['Float']>;
   ne?: InputMaybe<Scalars['Float']>;
+  nei?: InputMaybe<Scalars['Float']>;
   not?: InputMaybe<FloatFilterInput>;
   notContains?: InputMaybe<Scalars['Float']>;
   notContainsi?: InputMaybe<Scalars['Float']>;
@@ -741,6 +756,7 @@ export type IdFilterInput = {
   lt?: InputMaybe<Scalars['ID']>;
   lte?: InputMaybe<Scalars['ID']>;
   ne?: InputMaybe<Scalars['ID']>;
+  nei?: InputMaybe<Scalars['ID']>;
   not?: InputMaybe<IdFilterInput>;
   notContains?: InputMaybe<Scalars['ID']>;
   notContainsi?: InputMaybe<Scalars['ID']>;
@@ -765,6 +781,7 @@ export type IntFilterInput = {
   lt?: InputMaybe<Scalars['Int']>;
   lte?: InputMaybe<Scalars['Int']>;
   ne?: InputMaybe<Scalars['Int']>;
+  nei?: InputMaybe<Scalars['Int']>;
   not?: InputMaybe<IntFilterInput>;
   notContains?: InputMaybe<Scalars['Int']>;
   notContainsi?: InputMaybe<Scalars['Int']>;
@@ -789,6 +806,7 @@ export type JsonFilterInput = {
   lt?: InputMaybe<Scalars['JSON']>;
   lte?: InputMaybe<Scalars['JSON']>;
   ne?: InputMaybe<Scalars['JSON']>;
+  nei?: InputMaybe<Scalars['JSON']>;
   not?: InputMaybe<JsonFilterInput>;
   notContains?: InputMaybe<Scalars['JSON']>;
   notContainsi?: InputMaybe<Scalars['JSON']>;
@@ -1717,6 +1735,7 @@ export type Picture = {
   collections?: Maybe<CollectionRelationResponseCollection>;
   comments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
+  deleted?: Maybe<Scalars['Boolean']>;
   descriptions?: Maybe<DescriptionRelationResponseCollection>;
   exhibition_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
   face_tags?: Maybe<FaceTagRelationResponseCollection>;
@@ -1860,6 +1879,7 @@ export type PictureFiltersInput = {
   collections?: InputMaybe<CollectionFiltersInput>;
   comments?: InputMaybe<CommentFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  deleted?: InputMaybe<BooleanFilterInput>;
   descriptions?: InputMaybe<DescriptionFiltersInput>;
   exhibition_pictures?: InputMaybe<ExhibitionPictureFiltersInput>;
   face_tags?: InputMaybe<FaceTagFiltersInput>;
@@ -1940,6 +1960,7 @@ export type PictureInput = {
   archive_tag?: InputMaybe<Scalars['ID']>;
   collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  deleted?: InputMaybe<Scalars['Boolean']>;
   descriptions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   exhibition_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   face_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -2343,6 +2364,7 @@ export type StringFilterInput = {
   lt?: InputMaybe<Scalars['String']>;
   lte?: InputMaybe<Scalars['String']>;
   ne?: InputMaybe<Scalars['String']>;
+  nei?: InputMaybe<Scalars['String']>;
   not?: InputMaybe<StringFilterInput>;
   notContains?: InputMaybe<Scalars['String']>;
   notContainsi?: InputMaybe<Scalars['String']>;
@@ -2945,7 +2967,7 @@ export type GetCollectionInfoByIdQuery = {
             id?: string | null;
             attributes?: {
               name: string;
-              publishedAt?: any | null;
+              visible: boolean;
               pictures?: { data: Array<{ id?: string | null }> } | null;
               child_collections?: { data: Array<{ id?: string | null }> } | null;
               parent_collections?: {
@@ -2973,11 +2995,7 @@ export type GetCollectionInfoByNameQuery = {
         child_collections?: {
           data: Array<{
             id?: string | null;
-            attributes?: {
-              name: string;
-              thumbnail?: string | null;
-              publishedAt?: any | null;
-            } | null;
+            attributes?: { name: string; thumbnail?: string | null; visible: boolean } | null;
           }>;
         } | null;
       } | null;
@@ -3469,7 +3487,7 @@ export type GetMultiplePictureInfoQuery = {
               text: string;
               author?: string | null;
               date: any;
-              publishedAt?: any | null;
+              accepted: boolean;
               pinned?: boolean | null;
             } | null;
           }>;
@@ -3658,7 +3676,7 @@ export type GetPictureInfoQuery = {
               text: string;
               author?: string | null;
               date: any;
-              publishedAt?: any | null;
+              accepted: boolean;
               pinned?: boolean | null;
               picture?: { data?: { id?: string | null } | null } | null;
               parentComment?: { data?: { id?: string | null } | null } | null;
@@ -3830,11 +3848,7 @@ export type GetPublishedCollectionInfoByNameQuery = {
         child_collections?: {
           data: Array<{
             id?: string | null;
-            attributes?: {
-              name: string;
-              thumbnail?: string | null;
-              publishedAt?: any | null;
-            } | null;
+            attributes?: { name: string; thumbnail?: string | null; visible: boolean } | null;
           }>;
         } | null;
       } | null;
@@ -3913,7 +3927,6 @@ export type MeQuery = { me?: { id: string; username: string; email?: string | nu
 
 export type AcceptCommentMutationVariables = Exact<{
   commentId: Scalars['ID'];
-  currentTime: Scalars['DateTime'];
 }>;
 
 export type AcceptCommentMutation = {
@@ -4076,6 +4089,7 @@ export type CreatePictureGeoInfoMutation = {
 
 export type CreatePictureSequenceMutationVariables = Exact<{
   pictures: Array<Scalars['ID']> | Scalars['ID'];
+  publishedAt: Scalars['DateTime'];
 }>;
 
 export type CreatePictureSequenceMutation = {
@@ -4700,12 +4714,12 @@ export type GetAllArchiveTagsQueryResult = Apollo.QueryResult<
 
 export const GetAllCollectionsDocument = gql`
   query getAllCollections {
-    collections(publicationState: PREVIEW) {
+    collections {
       data {
         id
         attributes {
           name
-          parent_collections(publicationState: PREVIEW) {
+          parent_collections {
             data {
               id
               attributes {
@@ -5231,23 +5245,23 @@ export const GetCollectionInfoByIdDocument = gql`
         attributes {
           name
           description
-          child_collections(sort: "name:asc", publicationState: PREVIEW) {
+          child_collections(sort: "name:asc") {
             data {
               id
               attributes {
                 name
-                publishedAt
+                visible
                 pictures(pagination: { limit: 1 }) {
                   data {
                     id
                   }
                 }
-                child_collections(pagination: { limit: 1 }, publicationState: PREVIEW) {
+                child_collections(pagination: { limit: 1 }) {
                   data {
                     id
                   }
                 }
-                parent_collections(publicationState: PREVIEW) {
+                parent_collections {
                   data {
                     id
                     attributes {
@@ -5319,19 +5333,19 @@ export type GetCollectionInfoByIdQueryResult = Apollo.QueryResult<
 
 export const GetCollectionInfoByNameDocument = gql`
   query getCollectionInfoByName($collectionName: String) {
-    collections(filters: { name: { eq: $collectionName } }, publicationState: PREVIEW) {
+    collections(filters: { name: { eq: $collectionName } }) {
       data {
         id
         attributes {
           name
           description
-          child_collections(sort: "name:asc", publicationState: PREVIEW) {
+          child_collections(sort: "name:asc") {
             data {
               id
               attributes {
                 name
                 thumbnail
-                publishedAt
+                visible
               }
             }
           }
@@ -5430,7 +5444,7 @@ export const GetDailyPictureInfoDocument = gql`
               }
             }
           }
-          comments {
+          comments(filters: { accepted: { eq: true } }) {
             data {
               id
             }
@@ -6344,7 +6358,7 @@ export const GetMostLikedPicturesDocument = gql`
         id
         attributes {
           is_text
-          comments {
+          comments(filters: { accepted: { eq: true } }) {
             data {
               id
             }
@@ -6523,7 +6537,7 @@ export const GetMultiplePictureInfoDocument = gql`
               }
             }
           }
-          collections(publicationState: PREVIEW) {
+          collections {
             data {
               id
               attributes {
@@ -6541,14 +6555,14 @@ export const GetMultiplePictureInfoDocument = gql`
               }
             }
           }
-          comments(publicationState: PREVIEW, sort: "date:asc") {
+          comments(sort: "date:asc") {
             data {
               id
               attributes {
                 text
                 author
                 date
-                publishedAt
+                accepted
                 pinned
               }
             }
@@ -7094,7 +7108,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          collections(publicationState: PREVIEW) {
+          collections {
             data {
               id
               attributes {
@@ -7102,11 +7116,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          comments(
-            publicationState: PREVIEW
-            sort: "date:desc"
-            filters: { picture: { id: { eq: $pictureId } } }
-          ) {
+          comments(sort: "date:desc", filters: { picture: { id: { eq: $pictureId } } }) {
             data {
               id
               attributes {
@@ -7123,12 +7133,12 @@ export const GetPictureInfoDocument = gql`
                     id
                   }
                 }
-                childComments(publicationState: PREVIEW, sort: "date:asc") {
+                childComments(sort: "date:asc") {
                   data {
                     id
                   }
                 }
-                publishedAt
+                accepted
                 pinned
               }
             }
@@ -7241,7 +7251,7 @@ export const GetPicturesDocument = gql`
         id
         attributes {
           is_text
-          comments {
+          comments(filters: { accepted: { eq: true } }) {
             data {
               id
             }
@@ -7358,7 +7368,7 @@ export const GetPicturesByAllSearchDocument = gql`
       id
       attributes {
         is_text
-        comments {
+        comments(filters: { accepted: { eq: true } }) {
           data {
             id
           }
@@ -7603,19 +7613,19 @@ export type GetPicturesForLocationQueryResult = Apollo.QueryResult<
 
 export const GetPublishedCollectionInfoByNameDocument = gql`
   query getPublishedCollectionInfoByName($collectionName: String) {
-    collections(filters: { name: { eq: $collectionName } }) {
+    collections(filters: { name: { eq: $collectionName }, visible: { eq: true } }) {
       data {
         id
         attributes {
           name
           description
-          child_collections(sort: "name:asc") {
+          child_collections(sort: "name:asc", filters: { visible: { eq: true } }) {
             data {
               id
               attributes {
                 name
                 thumbnail
-                publishedAt
+                visible
               }
             }
           }
@@ -7745,7 +7755,7 @@ export type GetRootCollectionQueryResult = Apollo.QueryResult<
 
 export const GetUnverifiedCommentsDocument = gql`
   query getUnverifiedComments {
-    comments(filters: { publishedAt: { null: true } }, publicationState: PREVIEW) {
+    comments(filters: { accepted: { eq: false } }) {
       data {
         id
         attributes {
@@ -7970,8 +7980,8 @@ export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 
 export const AcceptCommentDocument = gql`
-  mutation acceptComment($commentId: ID!, $currentTime: DateTime!) {
-    updateComment(id: $commentId, data: { publishedAt: $currentTime }) {
+  mutation acceptComment($commentId: ID!) {
+    updateComment(id: $commentId, data: { accepted: true }) {
       data {
         id
       }
@@ -7998,7 +8008,6 @@ export type AcceptCommentMutationFn = Apollo.MutationFunction<
  * const [acceptCommentMutation, { data, loading, error }] = useAcceptCommentMutation({
  *   variables: {
  *      commentId: // value for 'commentId'
- *      currentTime: // value for 'currentTime'
  *   },
  * });
  */
@@ -8318,6 +8327,8 @@ export type ContactMutationFn = Apollo.MutationFunction<ContactMutation, Contact
  *      reply_email: // value for 'reply_email'
  *      subject: // value for 'subject'
  *      message: // value for 'message'
+ *      honeypot: // value for 'honeypot'
+ *      fill_time: // value for 'fill_time'
  *   },
  * });
  */
@@ -9008,8 +9019,8 @@ export type CreatePictureGeoInfoMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreatePictureSequenceDocument = gql`
-  mutation createPictureSequence($pictures: [ID!]!) {
-    createPictureSequence(data: { pictures: $pictures }) {
+  mutation createPictureSequence($pictures: [ID!]!, $publishedAt: DateTime!) {
+    createPictureSequence(data: { pictures: $pictures, publishedAt: $publishedAt }) {
       data {
         id
       }
@@ -9036,6 +9047,7 @@ export type CreatePictureSequenceMutationFn = Apollo.MutationFunction<
  * const [createPictureSequenceMutation, { data, loading, error }] = useCreatePictureSequenceMutation({
  *   variables: {
  *      pictures: // value for 'pictures'
+ *      publishedAt: // value for 'publishedAt'
  *   },
  * });
  */
@@ -10332,7 +10344,8 @@ export const PostCommentDocument = gql`
         text: $text
         date: $date
         picture: $id
-        publishedAt: null
+        publishedAt: $date
+        accepted: false
         parentComment: $parentCommentId
       }
     ) {
@@ -10702,7 +10715,7 @@ export type UnpinCommentMutationOptions = Apollo.BaseMutationOptions<
 
 export const UnpublishPictureDocument = gql`
   mutation unpublishPicture($id: ID!) {
-    updatePicture(id: $id, data: { publishedAt: null }) {
+    updatePicture(id: $id, data: { deleted: true }) {
       data {
         id
       }

@@ -12,23 +12,23 @@ export default {
           attributes {
             name
             description
-            child_collections(sort: "name:asc", publicationState: PREVIEW) {
+            child_collections(sort: "name:asc") {
               data {
                 id
                 attributes {
                   name
-                  publishedAt
+                  visible
                   pictures(pagination: { limit: 1 }) {
                     data {
                       id
                     }
                   }
-                  child_collections(pagination: { limit: 1 }, publicationState: PREVIEW) {
+                  child_collections(pagination: { limit: 1 }) {
                     data {
                       id
                     }
                   }
-                  parent_collections(publicationState: PREVIEW) {
+                  parent_collections {
                     data {
                       id
                       attributes {

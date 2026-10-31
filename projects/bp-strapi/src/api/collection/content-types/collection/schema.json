@@ -40,6 +40,11 @@
     },
     "thumbnail": {
       "type": "string"
+    },
+    "visible": {
+      "type": "boolean",
+      "default": true,
+      "required": true
     }
   }
 }

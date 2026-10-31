@@ -48,7 +48,7 @@ export const removeArchiveTag = async (id: string) => {
       id,
     },
     data: {
-      publishedAt: null,
+      deleted: true,
     },
   });
 
@@ -69,7 +69,7 @@ export const removeArchiveTag = async (id: string) => {
           id: picture.id,
         },
         data: {
-          publishedAt: null,
+          deleted: true,
         },
       })
     )
