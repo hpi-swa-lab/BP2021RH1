@@ -36,6 +36,8 @@ jobs:
         run: pnpm install --frozen-lockfile && pnpm tsc
       - name: Generate APIConnector
         run: pnpm generate-api
+      - name: Check that the generated GraphQL client is committed
+        run: git diff --exit-code -- src/graphql
       - name: Lint bp-gallery
         run: pnpm lint
       - name: Type check bp-gallery
