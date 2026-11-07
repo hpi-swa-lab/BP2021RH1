@@ -2,11 +2,7 @@ import { ApolloLink, from } from '@apollo/client';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { onError as createErrorLink } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
-import {
-  addPermission,
-  canRunOperation,
-  deleteParameterizedPermission,
-} from 'bp-graphql/build/operations';
+import { operations } from 'bp-graphql';
 import { extractFiles } from 'extract-files';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { TFunction } from 'i18next';
@@ -128,9 +124,11 @@ export const buildHttpLink = (
       authorization: token ? `Bearer ${token}` : '',
     },
   };
-  const batchedOperationNames = [canRunOperation, addPermission, deleteParameterizedPermission].map(
-    operation => operation.document.name
-  );
+  const batchedOperationNames = [
+    operations.canRunOperation,
+    operations.addPermission,
+    operations.deleteParameterizedPermission,
+  ].map(operation => operation.document.name);
   let httpLink = ApolloLink.split(
     operation =>
       !batchedOperationNames.includes(operation.operationName) ||
