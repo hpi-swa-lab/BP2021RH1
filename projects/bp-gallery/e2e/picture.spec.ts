@@ -85,6 +85,31 @@ test.describe('Tag lists in the picture sidebar', () => {
     await expect(page.getByRole('option', { name: 'wine', exact: true })).toBeVisible();
     expect(requestedLists()).toEqual(['getAllKeywordTags']);
   });
+
+  test('load when their field opened before the permission check answered', async ({ page }) => {
+    let answer = () => {};
+    const answered = new Promise<void>(resolve => (answer = resolve));
+    await page.route('**/graphql', async route => {
+      const operations = [route.request().postDataJSON()].flat() as {
+        variables?: { operation?: string; withSomeVariables?: boolean };
+      }[];
+      // The check with its own variables, asked after the one whether the user may list
+      // collections at all
+      const holdsCheck = operations.some(
+        ({ variables }) =>
+          variables?.operation?.includes('query getAllCollections') && !variables.withSomeVariables
+      );
+      if (holdsCheck) await answered;
+      await route.continue();
+    });
+    await page.goto('/picture/1');
+    const input = infoField(page, 'Collections').locator('input');
+    await input.click();
+    // Picture 1 isn't in this collection, so only the loaded list can offer it
+    await input.fill('Collection 2');
+    answer();
+    await expect(page.getByRole('option', { name: 'Collection 2', exact: true })).toBeVisible();
+  });
 });
 
 test('the like button counts a like and takes it back', async ({ page }) => {

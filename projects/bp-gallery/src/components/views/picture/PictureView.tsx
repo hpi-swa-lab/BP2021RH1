@@ -234,7 +234,12 @@ const PictureView = ({
                 </div>
               </ZoomWrapper>
               {!isPresentationMode && (
-                <PictureSidebar loading={loading} error={error} picture={picture} />
+                <PictureSidebar
+                  pictureId={pictureInSequenceId}
+                  loading={loading}
+                  error={error}
+                  picture={picture}
+                />
               )}
             </div>
           </OrientationTaggingProvider>

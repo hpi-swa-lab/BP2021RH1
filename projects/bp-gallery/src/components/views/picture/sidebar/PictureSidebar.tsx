@@ -3,11 +3,8 @@ import { Crop } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  useCanRunUpdatePictureMutation,
-  useUpdatePictureMutation,
-} from '../../../../graphql/APIConnector';
-import { useCanEditPicture } from '../../../../hooks/can-do-hooks';
+import { useUpdatePictureMutation } from '../../../../graphql/APIConnector';
+import { useCanEditPicture, usePictureSidebarPermissions } from '../../../../hooks/can-do-hooks';
 import { FlatPicture } from '../../../../types/additionalFlatTypes';
 import Loading from '../../../common/Loading';
 import QueryErrorDisplay from '../../../common/QueryErrorDisplay';
@@ -20,10 +17,12 @@ import PictureEditDialog from './picture-info/PictureEditDialog';
 import PictureInfo, { Field } from './picture-info/PictureInfo';
 
 const PictureSidebar = ({
+  pictureId,
   picture,
   loading,
   error,
 }: {
+  pictureId: string;
   picture?: FlatPicture;
   loading?: boolean;
   error?: ApolloError;
@@ -35,11 +34,7 @@ const PictureSidebar = ({
     refetchQueries: ['getPictureInfo'],
     awaitRefetchQueries: true,
   });
-  const { canRun: canUpdatePicture } = useCanRunUpdatePictureMutation({
-    variables: {
-      pictureId: picture?.id,
-    },
-  });
+  const { canUpdatePicture, loading: permissionsLoading } = usePictureSidebarPermissions(pictureId);
 
   useEffect(() => {
     if (canUpdatePicture) {
@@ -97,7 +92,7 @@ const PictureSidebar = ({
   const pictureIds = useMemo(() => (picture ? [picture.id] : []), [picture]);
   const onDialogClose = useCallback(() => setEditDialogOpen(false), []);
 
-  const { canEditPicture } = useCanEditPicture(picture?.id ?? '-1', picture?.media?.id ?? '-1');
+  const { canEditPicture } = useCanEditPicture(pictureId, picture?.media?.id ?? '-1');
 
   return (
     <div
@@ -105,9 +100,9 @@ const PictureSidebar = ({
       ref={containerRef}
       onKeyUp={event => event.stopPropagation()}
     >
-      {loading && <Loading />}
+      {(loading || permissionsLoading) && <Loading />}
       {error && <QueryErrorDisplay error={error} />}
-      {!loading && !error && picture && (
+      {!loading && !permissionsLoading && !error && picture && (
         <>
           <PictureInfo
             picture={picture}

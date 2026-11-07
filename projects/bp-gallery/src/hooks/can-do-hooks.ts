@@ -7,6 +7,8 @@ import {
   useCanRunAddUserMutation,
   useCanRunBulkEditMutation,
   useCanRunChangePasswordMutation,
+  useCanRunCreateFaceTagMutation,
+  useCanRunCreateOrientationTagMutation,
   useCanRunCreatePictureSequenceMutation,
   useCanRunCreateSubCollectionMutation,
   useCanRunDeclineCommentMutation,
@@ -148,6 +150,22 @@ export const useCanEditPicture = (pictureId: string, mediaId: string) => {
   return {
     canEditPicture: canUpload && canUpdatePicture && canRemoveUpload,
     loading: canUploadLoading || canUpdatePictureLoading || canRemoveUploadLoading,
+  };
+};
+
+// The face and orientation tagging providers run the same tag checks for the picture. Asking for
+// them here too lets the sidebar wait until all of them are known, and lets the prefetch load them
+// for the neighbouring pictures; all of them read the same cached answers.
+export const usePictureSidebarPermissions = (pictureId: string | undefined) => {
+  const options = { variables: { pictureId }, skip: !pictureId };
+  const { canRun: canUpdatePicture, loading: canUpdatePictureLoading } =
+    useCanRunUpdatePictureMutation(options);
+  const { loading: canCreateFaceTagLoading } = useCanRunCreateFaceTagMutation(options);
+  const { loading: canCreateOrientationTagLoading } =
+    useCanRunCreateOrientationTagMutation(options);
+  return {
+    canUpdatePicture,
+    loading: canUpdatePictureLoading || canCreateFaceTagLoading || canCreateOrientationTagLoading,
   };
 };
 

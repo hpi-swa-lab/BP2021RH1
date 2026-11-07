@@ -1,3 +1,4 @@
+import { useCanRunOperation } from '../hooks/can-run-operation.hook';
 import { ErrorPolicy, gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 
@@ -12239,15 +12240,16 @@ export function useCanRunCanRunOperationQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CanRunOperationDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CanRunOperationDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCanRunOperationQueries(
@@ -12258,18 +12260,14 @@ export function useCanRunMultipleCanRunOperationQueries(
     variableSets: Partial<CanRunOperationQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CanRunOperationDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CanRunOperationDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetAllArchiveTagsQuery(
@@ -12281,15 +12279,16 @@ export function useCanRunGetAllArchiveTagsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetAllArchiveTagsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetAllArchiveTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetAllArchiveTagsQueries(
@@ -12300,18 +12299,14 @@ export function useCanRunMultipleGetAllArchiveTagsQueries(
     variableSets: Partial<GetAllArchiveTagsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetAllArchiveTagsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetAllArchiveTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetAllCollectionsQuery(
@@ -12323,15 +12318,16 @@ export function useCanRunGetAllCollectionsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetAllCollectionsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetAllCollectionsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetAllCollectionsQueries(
@@ -12342,18 +12338,14 @@ export function useCanRunMultipleGetAllCollectionsQueries(
     variableSets: Partial<GetAllCollectionsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetAllCollectionsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetAllCollectionsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetAllKeywordTagsQuery(
@@ -12365,15 +12357,16 @@ export function useCanRunGetAllKeywordTagsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetAllKeywordTagsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetAllKeywordTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetAllKeywordTagsQueries(
@@ -12384,18 +12377,14 @@ export function useCanRunMultipleGetAllKeywordTagsQueries(
     variableSets: Partial<GetAllKeywordTagsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetAllKeywordTagsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetAllKeywordTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetAllLocationTagsQuery(
@@ -12407,15 +12396,16 @@ export function useCanRunGetAllLocationTagsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetAllLocationTagsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetAllLocationTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetAllLocationTagsQueries(
@@ -12426,18 +12416,14 @@ export function useCanRunMultipleGetAllLocationTagsQueries(
     variableSets: Partial<GetAllLocationTagsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetAllLocationTagsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetAllLocationTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetAllPersonTagsQuery(
@@ -12449,15 +12435,16 @@ export function useCanRunGetAllPersonTagsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetAllPersonTagsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetAllPersonTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetAllPersonTagsQueries(
@@ -12468,18 +12455,14 @@ export function useCanRunMultipleGetAllPersonTagsQueries(
     variableSets: Partial<GetAllPersonTagsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetAllPersonTagsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetAllPersonTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetAllPictureIdsQuery(
@@ -12491,15 +12474,16 @@ export function useCanRunGetAllPictureIdsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetAllPictureIdsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetAllPictureIdsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetAllPictureIdsQueries(
@@ -12510,18 +12494,14 @@ export function useCanRunMultipleGetAllPictureIdsQueries(
     variableSets: Partial<GetAllPictureIdsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetAllPictureIdsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetAllPictureIdsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetArchiveQuery(
@@ -12533,15 +12513,16 @@ export function useCanRunGetArchiveQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetArchiveDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetArchiveDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetArchiveQueries(
@@ -12552,18 +12533,14 @@ export function useCanRunMultipleGetArchiveQueries(
     variableSets: Partial<GetArchiveQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetArchiveDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetArchiveDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetArchiveNamesQuery(
@@ -12575,15 +12552,16 @@ export function useCanRunGetArchiveNamesQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetArchiveNamesDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetArchiveNamesDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetArchiveNamesQueries(
@@ -12594,18 +12572,14 @@ export function useCanRunMultipleGetArchiveNamesQueries(
     variableSets: Partial<GetArchiveNamesQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetArchiveNamesDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetArchiveNamesDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetArchivePictureCountsQuery(
@@ -12617,15 +12591,16 @@ export function useCanRunGetArchivePictureCountsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetArchivePictureCountsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetArchivePictureCountsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetArchivePictureCountsQueries(
@@ -12636,18 +12611,14 @@ export function useCanRunMultipleGetArchivePictureCountsQueries(
     variableSets: Partial<GetArchivePictureCountsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetArchivePictureCountsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetArchivePictureCountsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetCollectionInfoByIdQuery(
@@ -12659,15 +12630,16 @@ export function useCanRunGetCollectionInfoByIdQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetCollectionInfoByIdDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetCollectionInfoByIdDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetCollectionInfoByIdQueries(
@@ -12678,18 +12650,14 @@ export function useCanRunMultipleGetCollectionInfoByIdQueries(
     variableSets: Partial<GetCollectionInfoByIdQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetCollectionInfoByIdDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetCollectionInfoByIdDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetCollectionInfoByNameQuery(
@@ -12701,15 +12669,16 @@ export function useCanRunGetCollectionInfoByNameQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetCollectionInfoByNameDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetCollectionInfoByNameDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetCollectionInfoByNameQueries(
@@ -12720,18 +12689,14 @@ export function useCanRunMultipleGetCollectionInfoByNameQueries(
     variableSets: Partial<GetCollectionInfoByNameQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetCollectionInfoByNameDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetCollectionInfoByNameDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetDailyPictureInfoQuery(
@@ -12743,15 +12708,16 @@ export function useCanRunGetDailyPictureInfoQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetDailyPictureInfoDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetDailyPictureInfoDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetDailyPictureInfoQueries(
@@ -12762,18 +12728,14 @@ export function useCanRunMultipleGetDailyPictureInfoQueries(
     variableSets: Partial<GetDailyPictureInfoQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetDailyPictureInfoDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetDailyPictureInfoDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetDecadePreviewThumbnailsQuery(
@@ -12785,15 +12747,16 @@ export function useCanRunGetDecadePreviewThumbnailsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetDecadePreviewThumbnailsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetDecadePreviewThumbnailsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetDecadePreviewThumbnailsQueries(
@@ -12804,18 +12767,14 @@ export function useCanRunMultipleGetDecadePreviewThumbnailsQueries(
     variableSets: Partial<GetDecadePreviewThumbnailsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetDecadePreviewThumbnailsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetDecadePreviewThumbnailsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetExhibitionQuery(
@@ -12827,15 +12786,16 @@ export function useCanRunGetExhibitionQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetExhibitionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetExhibitionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetExhibitionQueries(
@@ -12846,18 +12806,14 @@ export function useCanRunMultipleGetExhibitionQueries(
     variableSets: Partial<GetExhibitionQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetExhibitionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetExhibitionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetExhibitionsQuery(
@@ -12869,15 +12825,16 @@ export function useCanRunGetExhibitionsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetExhibitionsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetExhibitionsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetExhibitionsQueries(
@@ -12888,18 +12845,14 @@ export function useCanRunMultipleGetExhibitionsQueries(
     variableSets: Partial<GetExhibitionsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetExhibitionsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetExhibitionsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetFaceTagsQuery(
@@ -12911,15 +12864,16 @@ export function useCanRunGetFaceTagsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetFaceTagsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetFaceTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetFaceTagsQueries(
@@ -12930,18 +12884,14 @@ export function useCanRunMultipleGetFaceTagsQueries(
     variableSets: Partial<GetFaceTagsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetFaceTagsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetFaceTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetIdeaLotContentQuery(
@@ -12953,15 +12903,16 @@ export function useCanRunGetIdeaLotContentQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetIdeaLotContentDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetIdeaLotContentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetIdeaLotContentQueries(
@@ -12972,18 +12923,14 @@ export function useCanRunMultipleGetIdeaLotContentQueries(
     variableSets: Partial<GetIdeaLotContentQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetIdeaLotContentDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetIdeaLotContentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetKeywordTagsWithThumbnailQuery(
@@ -12995,15 +12942,16 @@ export function useCanRunGetKeywordTagsWithThumbnailQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetKeywordTagsWithThumbnailDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetKeywordTagsWithThumbnailDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetKeywordTagsWithThumbnailQueries(
@@ -13014,18 +12962,14 @@ export function useCanRunMultipleGetKeywordTagsWithThumbnailQueries(
     variableSets: Partial<GetKeywordTagsWithThumbnailQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetKeywordTagsWithThumbnailDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetKeywordTagsWithThumbnailDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetLocationTagQuery(
@@ -13037,15 +12981,16 @@ export function useCanRunGetLocationTagQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetLocationTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetLocationTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetLocationTagQueries(
@@ -13056,18 +13001,14 @@ export function useCanRunMultipleGetLocationTagQueries(
     variableSets: Partial<GetLocationTagQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetLocationTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetLocationTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetLocationTagsWithThumbnailQuery(
@@ -13079,15 +13020,16 @@ export function useCanRunGetLocationTagsWithThumbnailQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetLocationTagsWithThumbnailDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetLocationTagsWithThumbnailDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetLocationTagsWithThumbnailQueries(
@@ -13098,18 +13040,14 @@ export function useCanRunMultipleGetLocationTagsWithThumbnailQueries(
     variableSets: Partial<GetLocationTagsWithThumbnailQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetLocationTagsWithThumbnailDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetLocationTagsWithThumbnailDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetMostLikedPicturesQuery(
@@ -13121,15 +13059,16 @@ export function useCanRunGetMostLikedPicturesQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetMostLikedPicturesDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetMostLikedPicturesDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetMostLikedPicturesQueries(
@@ -13140,18 +13079,14 @@ export function useCanRunMultipleGetMostLikedPicturesQueries(
     variableSets: Partial<GetMostLikedPicturesQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetMostLikedPicturesDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetMostLikedPicturesDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetMultiplePictureInfoQuery(
@@ -13163,15 +13098,16 @@ export function useCanRunGetMultiplePictureInfoQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetMultiplePictureInfoDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetMultiplePictureInfoDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetMultiplePictureInfoQueries(
@@ -13182,18 +13118,14 @@ export function useCanRunMultipleGetMultiplePictureInfoQueries(
     variableSets: Partial<GetMultiplePictureInfoQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetMultiplePictureInfoDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetMultiplePictureInfoDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetOrientationTagsQuery(
@@ -13205,15 +13137,16 @@ export function useCanRunGetOrientationTagsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetOrientationTagsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetOrientationTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetOrientationTagsQueries(
@@ -13224,18 +13157,14 @@ export function useCanRunMultipleGetOrientationTagsQueries(
     variableSets: Partial<GetOrientationTagsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetOrientationTagsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetOrientationTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetParameterizedPermissionsQuery(
@@ -13247,15 +13176,16 @@ export function useCanRunGetParameterizedPermissionsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetParameterizedPermissionsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetParameterizedPermissionsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetParameterizedPermissionsQueries(
@@ -13266,18 +13196,14 @@ export function useCanRunMultipleGetParameterizedPermissionsQueries(
     variableSets: Partial<GetParameterizedPermissionsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetParameterizedPermissionsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetParameterizedPermissionsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetPersonTagQuery(
@@ -13289,15 +13215,16 @@ export function useCanRunGetPersonTagQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPersonTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetPersonTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetPersonTagQueries(
@@ -13308,18 +13235,14 @@ export function useCanRunMultipleGetPersonTagQueries(
     variableSets: Partial<GetPersonTagQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPersonTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetPersonTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetPersonTagsWithThumbnailQuery(
@@ -13331,15 +13254,16 @@ export function useCanRunGetPersonTagsWithThumbnailQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPersonTagsWithThumbnailDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetPersonTagsWithThumbnailDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetPersonTagsWithThumbnailQueries(
@@ -13350,18 +13274,14 @@ export function useCanRunMultipleGetPersonTagsWithThumbnailQueries(
     variableSets: Partial<GetPersonTagsWithThumbnailQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPersonTagsWithThumbnailDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetPersonTagsWithThumbnailDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetPictureGeoInfoQuery(
@@ -13373,15 +13293,16 @@ export function useCanRunGetPictureGeoInfoQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPictureGeoInfoDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetPictureGeoInfoDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetPictureGeoInfoQueries(
@@ -13392,18 +13313,14 @@ export function useCanRunMultipleGetPictureGeoInfoQueries(
     variableSets: Partial<GetPictureGeoInfoQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPictureGeoInfoDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetPictureGeoInfoDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetPictureInfoQuery(
@@ -13415,15 +13332,16 @@ export function useCanRunGetPictureInfoQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPictureInfoDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetPictureInfoDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetPictureInfoQueries(
@@ -13434,18 +13352,14 @@ export function useCanRunMultipleGetPictureInfoQueries(
     variableSets: Partial<GetPictureInfoQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPictureInfoDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetPictureInfoDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetPicturesQuery(
@@ -13457,15 +13371,16 @@ export function useCanRunGetPicturesQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPicturesDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetPicturesDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetPicturesQueries(
@@ -13476,18 +13391,14 @@ export function useCanRunMultipleGetPicturesQueries(
     variableSets: Partial<GetPicturesQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPicturesDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetPicturesDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetPicturesByAllSearchQuery(
@@ -13499,15 +13410,16 @@ export function useCanRunGetPicturesByAllSearchQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPicturesByAllSearchDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetPicturesByAllSearchDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetPicturesByAllSearchQueries(
@@ -13518,18 +13430,14 @@ export function useCanRunMultipleGetPicturesByAllSearchQueries(
     variableSets: Partial<GetPicturesByAllSearchQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPicturesByAllSearchDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetPicturesByAllSearchDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetPicturesForCollectionQuery(
@@ -13541,15 +13449,16 @@ export function useCanRunGetPicturesForCollectionQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPicturesForCollectionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetPicturesForCollectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetPicturesForCollectionQueries(
@@ -13560,18 +13469,14 @@ export function useCanRunMultipleGetPicturesForCollectionQueries(
     variableSets: Partial<GetPicturesForCollectionQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPicturesForCollectionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetPicturesForCollectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetPicturesForLocationQuery(
@@ -13583,15 +13488,16 @@ export function useCanRunGetPicturesForLocationQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPicturesForLocationDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetPicturesForLocationDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetPicturesForLocationQueries(
@@ -13602,18 +13508,14 @@ export function useCanRunMultipleGetPicturesForLocationQueries(
     variableSets: Partial<GetPicturesForLocationQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPicturesForLocationDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetPicturesForLocationDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetPublishedCollectionInfoByNameQuery(
@@ -13625,15 +13527,16 @@ export function useCanRunGetPublishedCollectionInfoByNameQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPublishedCollectionInfoByNameDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetPublishedCollectionInfoByNameDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetPublishedCollectionInfoByNameQueries(
@@ -13644,18 +13547,14 @@ export function useCanRunMultipleGetPublishedCollectionInfoByNameQueries(
     variableSets: Partial<GetPublishedCollectionInfoByNameQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetPublishedCollectionInfoByNameDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetPublishedCollectionInfoByNameDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetRootCollectionQuery(
@@ -13667,15 +13566,16 @@ export function useCanRunGetRootCollectionQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetRootCollectionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetRootCollectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetRootCollectionQueries(
@@ -13686,18 +13586,14 @@ export function useCanRunMultipleGetRootCollectionQueries(
     variableSets: Partial<GetRootCollectionQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetRootCollectionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetRootCollectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetUnverifiedCommentsQuery(
@@ -13709,15 +13605,16 @@ export function useCanRunGetUnverifiedCommentsQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetUnverifiedCommentsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetUnverifiedCommentsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetUnverifiedCommentsQueries(
@@ -13728,18 +13625,14 @@ export function useCanRunMultipleGetUnverifiedCommentsQueries(
     variableSets: Partial<GetUnverifiedCommentsQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetUnverifiedCommentsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetUnverifiedCommentsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetUserQuery(
@@ -13751,15 +13644,16 @@ export function useCanRunGetUserQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetUserDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetUserDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetUserQueries(
@@ -13770,18 +13664,14 @@ export function useCanRunMultipleGetUserQueries(
     variableSets: Partial<GetUserQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetUserDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetUserDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunGetUsersQuery(
@@ -13793,15 +13683,16 @@ export function useCanRunGetUsersQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetUsersDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: GetUsersDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleGetUsersQueries(
@@ -13812,18 +13703,14 @@ export function useCanRunMultipleGetUsersQueries(
     variableSets: Partial<GetUsersQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: GetUsersDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: GetUsersDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunMeQuery(
@@ -13835,15 +13722,16 @@ export function useCanRunMeQuery(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: MeDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: MeDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleMeQueries(
@@ -13854,18 +13742,14 @@ export function useCanRunMultipleMeQueries(
     variableSets: Partial<MeQueryVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: MeDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: MeDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunAcceptCommentMutation(
@@ -13877,15 +13761,16 @@ export function useCanRunAcceptCommentMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: AcceptCommentDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: AcceptCommentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleAcceptCommentMutations(
@@ -13896,18 +13781,14 @@ export function useCanRunMultipleAcceptCommentMutations(
     variableSets: Partial<AcceptCommentMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: AcceptCommentDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: AcceptCommentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunAddArchiveTagMutation(
@@ -13919,15 +13800,16 @@ export function useCanRunAddArchiveTagMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: AddArchiveTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: AddArchiveTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleAddArchiveTagMutations(
@@ -13938,18 +13820,14 @@ export function useCanRunMultipleAddArchiveTagMutations(
     variableSets: Partial<AddArchiveTagMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: AddArchiveTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: AddArchiveTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunAddPermissionMutation(
@@ -13961,15 +13839,16 @@ export function useCanRunAddPermissionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: AddPermissionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: AddPermissionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleAddPermissionMutations(
@@ -13980,18 +13859,14 @@ export function useCanRunMultipleAddPermissionMutations(
     variableSets: Partial<AddPermissionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: AddPermissionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: AddPermissionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunAddUserMutation(
@@ -14003,15 +13878,16 @@ export function useCanRunAddUserMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: AddUserDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: AddUserDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleAddUserMutations(
@@ -14022,18 +13898,14 @@ export function useCanRunMultipleAddUserMutations(
     variableSets: Partial<AddUserMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: AddUserDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: AddUserDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunBulkEditMutation(
@@ -14045,15 +13917,16 @@ export function useCanRunBulkEditMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: BulkEditDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: BulkEditDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleBulkEditMutations(
@@ -14064,18 +13937,14 @@ export function useCanRunMultipleBulkEditMutations(
     variableSets: Partial<BulkEditMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: BulkEditDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: BulkEditDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunChangePasswordMutation(
@@ -14087,15 +13956,16 @@ export function useCanRunChangePasswordMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: ChangePasswordDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: ChangePasswordDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleChangePasswordMutations(
@@ -14106,18 +13976,14 @@ export function useCanRunMultipleChangePasswordMutations(
     variableSets: Partial<ChangePasswordMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: ChangePasswordDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: ChangePasswordDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunContactMutation(
@@ -14129,15 +13995,16 @@ export function useCanRunContactMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: ContactDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: ContactDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleContactMutations(
@@ -14148,18 +14015,14 @@ export function useCanRunMultipleContactMutations(
     variableSets: Partial<ContactMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: ContactDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: ContactDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreateExhibitionMutation(
@@ -14171,15 +14034,16 @@ export function useCanRunCreateExhibitionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateExhibitionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreateExhibitionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreateExhibitionMutations(
@@ -14190,18 +14054,14 @@ export function useCanRunMultipleCreateExhibitionMutations(
     variableSets: Partial<CreateExhibitionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateExhibitionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreateExhibitionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreateExhibitionPictureMutation(
@@ -14213,15 +14073,16 @@ export function useCanRunCreateExhibitionPictureMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateExhibitionPictureDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreateExhibitionPictureDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreateExhibitionPictureMutations(
@@ -14232,18 +14093,14 @@ export function useCanRunMultipleCreateExhibitionPictureMutations(
     variableSets: Partial<CreateExhibitionPictureMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateExhibitionPictureDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreateExhibitionPictureDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreateExhibitionSectionMutation(
@@ -14255,15 +14112,16 @@ export function useCanRunCreateExhibitionSectionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateExhibitionSectionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreateExhibitionSectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreateExhibitionSectionMutations(
@@ -14274,18 +14132,14 @@ export function useCanRunMultipleCreateExhibitionSectionMutations(
     variableSets: Partial<CreateExhibitionSectionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateExhibitionSectionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreateExhibitionSectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreateFaceTagMutation(
@@ -14297,15 +14151,16 @@ export function useCanRunCreateFaceTagMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateFaceTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreateFaceTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreateFaceTagMutations(
@@ -14316,18 +14171,14 @@ export function useCanRunMultipleCreateFaceTagMutations(
     variableSets: Partial<CreateFaceTagMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateFaceTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreateFaceTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreateKeywordTagMutation(
@@ -14339,15 +14190,16 @@ export function useCanRunCreateKeywordTagMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateKeywordTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreateKeywordTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreateKeywordTagMutations(
@@ -14358,18 +14210,14 @@ export function useCanRunMultipleCreateKeywordTagMutations(
     variableSets: Partial<CreateKeywordTagMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateKeywordTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreateKeywordTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreateLinkMutation(
@@ -14381,15 +14229,16 @@ export function useCanRunCreateLinkMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateLinkDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreateLinkDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreateLinkMutations(
@@ -14400,18 +14249,14 @@ export function useCanRunMultipleCreateLinkMutations(
     variableSets: Partial<CreateLinkMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateLinkDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreateLinkDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreateLocationTagMutation(
@@ -14423,15 +14268,16 @@ export function useCanRunCreateLocationTagMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateLocationTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreateLocationTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreateLocationTagMutations(
@@ -14442,18 +14288,14 @@ export function useCanRunMultipleCreateLocationTagMutations(
     variableSets: Partial<CreateLocationTagMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateLocationTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreateLocationTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreateOrientationTagMutation(
@@ -14465,15 +14307,16 @@ export function useCanRunCreateOrientationTagMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateOrientationTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreateOrientationTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreateOrientationTagMutations(
@@ -14484,18 +14327,14 @@ export function useCanRunMultipleCreateOrientationTagMutations(
     variableSets: Partial<CreateOrientationTagMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateOrientationTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreateOrientationTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreatePersonTagMutation(
@@ -14507,15 +14346,16 @@ export function useCanRunCreatePersonTagMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreatePersonTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreatePersonTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreatePersonTagMutations(
@@ -14526,18 +14366,14 @@ export function useCanRunMultipleCreatePersonTagMutations(
     variableSets: Partial<CreatePersonTagMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreatePersonTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreatePersonTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreatePictureMutation(
@@ -14549,15 +14385,16 @@ export function useCanRunCreatePictureMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreatePictureDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreatePictureDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreatePictureMutations(
@@ -14568,18 +14405,14 @@ export function useCanRunMultipleCreatePictureMutations(
     variableSets: Partial<CreatePictureMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreatePictureDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreatePictureDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreatePictureGeoInfoMutation(
@@ -14591,15 +14424,16 @@ export function useCanRunCreatePictureGeoInfoMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreatePictureGeoInfoDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreatePictureGeoInfoDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreatePictureGeoInfoMutations(
@@ -14610,18 +14444,14 @@ export function useCanRunMultipleCreatePictureGeoInfoMutations(
     variableSets: Partial<CreatePictureGeoInfoMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreatePictureGeoInfoDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreatePictureGeoInfoDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreatePictureSequenceMutation(
@@ -14633,15 +14463,16 @@ export function useCanRunCreatePictureSequenceMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreatePictureSequenceDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreatePictureSequenceDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreatePictureSequenceMutations(
@@ -14652,18 +14483,14 @@ export function useCanRunMultipleCreatePictureSequenceMutations(
     variableSets: Partial<CreatePictureSequenceMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreatePictureSequenceDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreatePictureSequenceDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunCreateSubCollectionMutation(
@@ -14675,15 +14502,16 @@ export function useCanRunCreateSubCollectionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateSubCollectionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: CreateSubCollectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleCreateSubCollectionMutations(
@@ -14694,18 +14522,14 @@ export function useCanRunMultipleCreateSubCollectionMutations(
     variableSets: Partial<CreateSubCollectionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: CreateSubCollectionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: CreateSubCollectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunDeclineCommentMutation(
@@ -14717,15 +14541,16 @@ export function useCanRunDeclineCommentMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeclineCommentDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: DeclineCommentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleDeclineCommentMutations(
@@ -14736,18 +14561,14 @@ export function useCanRunMultipleDeclineCommentMutations(
     variableSets: Partial<DeclineCommentMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeclineCommentDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: DeclineCommentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunDeleteCollectionMutation(
@@ -14759,15 +14580,16 @@ export function useCanRunDeleteCollectionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteCollectionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: DeleteCollectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleDeleteCollectionMutations(
@@ -14778,18 +14600,14 @@ export function useCanRunMultipleDeleteCollectionMutations(
     variableSets: Partial<DeleteCollectionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteCollectionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: DeleteCollectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunDeleteExhibitionMutation(
@@ -14801,15 +14619,16 @@ export function useCanRunDeleteExhibitionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteExhibitionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: DeleteExhibitionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleDeleteExhibitionMutations(
@@ -14820,18 +14639,14 @@ export function useCanRunMultipleDeleteExhibitionMutations(
     variableSets: Partial<DeleteExhibitionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteExhibitionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: DeleteExhibitionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunDeleteExhibitionPictureMutation(
@@ -14843,15 +14658,16 @@ export function useCanRunDeleteExhibitionPictureMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteExhibitionPictureDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: DeleteExhibitionPictureDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleDeleteExhibitionPictureMutations(
@@ -14862,18 +14678,14 @@ export function useCanRunMultipleDeleteExhibitionPictureMutations(
     variableSets: Partial<DeleteExhibitionPictureMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteExhibitionPictureDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: DeleteExhibitionPictureDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunDeleteExhibitionSectionMutation(
@@ -14885,15 +14697,16 @@ export function useCanRunDeleteExhibitionSectionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteExhibitionSectionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: DeleteExhibitionSectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleDeleteExhibitionSectionMutations(
@@ -14904,18 +14717,14 @@ export function useCanRunMultipleDeleteExhibitionSectionMutations(
     variableSets: Partial<DeleteExhibitionSectionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteExhibitionSectionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: DeleteExhibitionSectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunDeleteFaceTagMutation(
@@ -14927,15 +14736,16 @@ export function useCanRunDeleteFaceTagMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteFaceTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: DeleteFaceTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleDeleteFaceTagMutations(
@@ -14946,18 +14756,14 @@ export function useCanRunMultipleDeleteFaceTagMutations(
     variableSets: Partial<DeleteFaceTagMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteFaceTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: DeleteFaceTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunDeleteKeywordTagMutation(
@@ -14969,15 +14775,16 @@ export function useCanRunDeleteKeywordTagMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteKeywordTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: DeleteKeywordTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleDeleteKeywordTagMutations(
@@ -14988,18 +14795,14 @@ export function useCanRunMultipleDeleteKeywordTagMutations(
     variableSets: Partial<DeleteKeywordTagMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteKeywordTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: DeleteKeywordTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunDeleteLinkMutation(
@@ -15011,15 +14814,16 @@ export function useCanRunDeleteLinkMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteLinkDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: DeleteLinkDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleDeleteLinkMutations(
@@ -15030,18 +14834,14 @@ export function useCanRunMultipleDeleteLinkMutations(
     variableSets: Partial<DeleteLinkMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteLinkDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: DeleteLinkDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunDeleteLocationTagMutation(
@@ -15053,15 +14853,16 @@ export function useCanRunDeleteLocationTagMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteLocationTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: DeleteLocationTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleDeleteLocationTagMutations(
@@ -15072,18 +14873,14 @@ export function useCanRunMultipleDeleteLocationTagMutations(
     variableSets: Partial<DeleteLocationTagMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteLocationTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: DeleteLocationTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunDeleteOrientationTagMutation(
@@ -15095,15 +14892,16 @@ export function useCanRunDeleteOrientationTagMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteOrientationTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: DeleteOrientationTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleDeleteOrientationTagMutations(
@@ -15114,18 +14912,14 @@ export function useCanRunMultipleDeleteOrientationTagMutations(
     variableSets: Partial<DeleteOrientationTagMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteOrientationTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: DeleteOrientationTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunDeleteParameterizedPermissionMutation(
@@ -15137,15 +14931,16 @@ export function useCanRunDeleteParameterizedPermissionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteParameterizedPermissionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: DeleteParameterizedPermissionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleDeleteParameterizedPermissionMutations(
@@ -15156,18 +14951,14 @@ export function useCanRunMultipleDeleteParameterizedPermissionMutations(
     variableSets: Partial<DeleteParameterizedPermissionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeleteParameterizedPermissionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: DeleteParameterizedPermissionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunDeletePersonTagMutation(
@@ -15179,15 +14970,16 @@ export function useCanRunDeletePersonTagMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeletePersonTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: DeletePersonTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleDeletePersonTagMutations(
@@ -15198,18 +14990,14 @@ export function useCanRunMultipleDeletePersonTagMutations(
     variableSets: Partial<DeletePersonTagMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: DeletePersonTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: DeletePersonTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunFixCommentTextMutation(
@@ -15221,15 +15009,16 @@ export function useCanRunFixCommentTextMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: FixCommentTextDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: FixCommentTextDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleFixCommentTextMutations(
@@ -15240,18 +15029,14 @@ export function useCanRunMultipleFixCommentTextMutations(
     variableSets: Partial<FixCommentTextMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: FixCommentTextDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: FixCommentTextDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunForgotPasswordMutation(
@@ -15263,15 +15048,16 @@ export function useCanRunForgotPasswordMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: ForgotPasswordDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: ForgotPasswordDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleForgotPasswordMutations(
@@ -15282,18 +15068,14 @@ export function useCanRunMultipleForgotPasswordMutations(
     variableSets: Partial<ForgotPasswordMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: ForgotPasswordDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: ForgotPasswordDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunIncreaseNotAPlaceCountMutation(
@@ -15305,15 +15087,16 @@ export function useCanRunIncreaseNotAPlaceCountMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: IncreaseNotAPlaceCountDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: IncreaseNotAPlaceCountDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleIncreaseNotAPlaceCountMutations(
@@ -15324,18 +15107,14 @@ export function useCanRunMultipleIncreaseNotAPlaceCountMutations(
     variableSets: Partial<IncreaseNotAPlaceCountMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: IncreaseNotAPlaceCountDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: IncreaseNotAPlaceCountDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunLikeMutation(
@@ -15347,15 +15126,16 @@ export function useCanRunLikeMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: LikeDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: LikeDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleLikeMutations(
@@ -15366,18 +15146,14 @@ export function useCanRunMultipleLikeMutations(
     variableSets: Partial<LikeMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: LikeDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: LikeDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunLoginMutation(
@@ -15389,15 +15165,16 @@ export function useCanRunLoginMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: LoginDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: LoginDocument.loc?.source.body ?? '',
+    checkAtAllFirst: false,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleLoginMutations(
@@ -15408,18 +15185,14 @@ export function useCanRunMultipleLoginMutations(
     variableSets: Partial<LoginMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: LoginDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: LoginDocument.loc?.source.body ?? '',
+    checkAtAllFirst: false,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunMergeCollectionsMutation(
@@ -15431,15 +15204,16 @@ export function useCanRunMergeCollectionsMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: MergeCollectionsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: MergeCollectionsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleMergeCollectionsMutations(
@@ -15450,18 +15224,14 @@ export function useCanRunMultipleMergeCollectionsMutations(
     variableSets: Partial<MergeCollectionsMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: MergeCollectionsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: MergeCollectionsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunMergeKeywordTagsMutation(
@@ -15473,15 +15243,16 @@ export function useCanRunMergeKeywordTagsMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: MergeKeywordTagsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: MergeKeywordTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleMergeKeywordTagsMutations(
@@ -15492,18 +15263,14 @@ export function useCanRunMultipleMergeKeywordTagsMutations(
     variableSets: Partial<MergeKeywordTagsMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: MergeKeywordTagsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: MergeKeywordTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunMergeLocationTagsMutation(
@@ -15515,15 +15282,16 @@ export function useCanRunMergeLocationTagsMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: MergeLocationTagsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: MergeLocationTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleMergeLocationTagsMutations(
@@ -15534,18 +15302,14 @@ export function useCanRunMultipleMergeLocationTagsMutations(
     variableSets: Partial<MergeLocationTagsMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: MergeLocationTagsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: MergeLocationTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunMergePersonTagsMutation(
@@ -15557,15 +15321,16 @@ export function useCanRunMergePersonTagsMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: MergePersonTagsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: MergePersonTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleMergePersonTagsMutations(
@@ -15576,18 +15341,14 @@ export function useCanRunMultipleMergePersonTagsMutations(
     variableSets: Partial<MergePersonTagsMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: MergePersonTagsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: MergePersonTagsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunMultipleUploadMutation(
@@ -15599,15 +15360,16 @@ export function useCanRunMultipleUploadMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: MultipleUploadDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: MultipleUploadDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleMultipleUploadMutations(
@@ -15618,18 +15380,14 @@ export function useCanRunMultipleMultipleUploadMutations(
     variableSets: Partial<MultipleUploadMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: MultipleUploadDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: MultipleUploadDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunPinCommentMutation(
@@ -15641,15 +15399,16 @@ export function useCanRunPinCommentMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: PinCommentDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: PinCommentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultiplePinCommentMutations(
@@ -15660,18 +15419,14 @@ export function useCanRunMultiplePinCommentMutations(
     variableSets: Partial<PinCommentMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: PinCommentDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: PinCommentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunPostCommentMutation(
@@ -15683,15 +15438,16 @@ export function useCanRunPostCommentMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: PostCommentDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: PostCommentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultiplePostCommentMutations(
@@ -15702,18 +15458,14 @@ export function useCanRunMultiplePostCommentMutations(
     variableSets: Partial<PostCommentMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: PostCommentDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: PostCommentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunRemoveArchiveTagMutation(
@@ -15725,15 +15477,16 @@ export function useCanRunRemoveArchiveTagMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: RemoveArchiveTagDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: RemoveArchiveTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleRemoveArchiveTagMutations(
@@ -15744,18 +15497,14 @@ export function useCanRunMultipleRemoveArchiveTagMutations(
     variableSets: Partial<RemoveArchiveTagMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: RemoveArchiveTagDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: RemoveArchiveTagDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunRemoveUploadMutation(
@@ -15767,15 +15516,16 @@ export function useCanRunRemoveUploadMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: RemoveUploadDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: RemoveUploadDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleRemoveUploadMutations(
@@ -15786,18 +15536,14 @@ export function useCanRunMultipleRemoveUploadMutations(
     variableSets: Partial<RemoveUploadMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: RemoveUploadDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: RemoveUploadDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunRemoveUserMutation(
@@ -15809,15 +15555,16 @@ export function useCanRunRemoveUserMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: RemoveUserDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: RemoveUserDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleRemoveUserMutations(
@@ -15828,18 +15575,14 @@ export function useCanRunMultipleRemoveUserMutations(
     variableSets: Partial<RemoveUserMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: RemoveUserDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: RemoveUserDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunResetPasswordMutation(
@@ -15851,15 +15594,16 @@ export function useCanRunResetPasswordMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: ResetPasswordDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: ResetPasswordDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleResetPasswordMutations(
@@ -15870,18 +15614,14 @@ export function useCanRunMultipleResetPasswordMutations(
     variableSets: Partial<ResetPasswordMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: ResetPasswordDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: ResetPasswordDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunSetPicturesForCollectionMutation(
@@ -15893,15 +15633,16 @@ export function useCanRunSetPicturesForCollectionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: SetPicturesForCollectionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: SetPicturesForCollectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleSetPicturesForCollectionMutations(
@@ -15912,18 +15653,14 @@ export function useCanRunMultipleSetPicturesForCollectionMutations(
     variableSets: Partial<SetPicturesForCollectionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: SetPicturesForCollectionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: SetPicturesForCollectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUnpinCommentMutation(
@@ -15935,15 +15672,16 @@ export function useCanRunUnpinCommentMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UnpinCommentDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UnpinCommentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUnpinCommentMutations(
@@ -15954,18 +15692,14 @@ export function useCanRunMultipleUnpinCommentMutations(
     variableSets: Partial<UnpinCommentMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UnpinCommentDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UnpinCommentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUnpublishPictureMutation(
@@ -15977,15 +15711,16 @@ export function useCanRunUnpublishPictureMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UnpublishPictureDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UnpublishPictureDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUnpublishPictureMutations(
@@ -15996,18 +15731,14 @@ export function useCanRunMultipleUnpublishPictureMutations(
     variableSets: Partial<UnpublishPictureMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UnpublishPictureDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UnpublishPictureDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateArchiveMutation(
@@ -16019,15 +15750,16 @@ export function useCanRunUpdateArchiveMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateArchiveDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateArchiveDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateArchiveMutations(
@@ -16038,18 +15770,14 @@ export function useCanRunMultipleUpdateArchiveMutations(
     variableSets: Partial<UpdateArchiveMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateArchiveDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateArchiveDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateCollectionMutation(
@@ -16061,15 +15789,16 @@ export function useCanRunUpdateCollectionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateCollectionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateCollectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateCollectionMutations(
@@ -16080,18 +15809,14 @@ export function useCanRunMultipleUpdateCollectionMutations(
     variableSets: Partial<UpdateCollectionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateCollectionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateCollectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateCollectionParentsMutation(
@@ -16103,15 +15828,16 @@ export function useCanRunUpdateCollectionParentsMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateCollectionParentsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateCollectionParentsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateCollectionParentsMutations(
@@ -16122,18 +15848,14 @@ export function useCanRunMultipleUpdateCollectionParentsMutations(
     variableSets: Partial<UpdateCollectionParentsMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateCollectionParentsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateCollectionParentsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateExhibitionMutation(
@@ -16145,15 +15867,16 @@ export function useCanRunUpdateExhibitionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateExhibitionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateExhibitionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateExhibitionMutations(
@@ -16164,18 +15887,14 @@ export function useCanRunMultipleUpdateExhibitionMutations(
     variableSets: Partial<UpdateExhibitionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateExhibitionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateExhibitionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateExhibitionPictureMutation(
@@ -16187,15 +15906,16 @@ export function useCanRunUpdateExhibitionPictureMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateExhibitionPictureDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateExhibitionPictureDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateExhibitionPictureMutations(
@@ -16206,18 +15926,14 @@ export function useCanRunMultipleUpdateExhibitionPictureMutations(
     variableSets: Partial<UpdateExhibitionPictureMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateExhibitionPictureDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateExhibitionPictureDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateExhibitionSectionMutation(
@@ -16229,15 +15945,16 @@ export function useCanRunUpdateExhibitionSectionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateExhibitionSectionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateExhibitionSectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateExhibitionSectionMutations(
@@ -16248,18 +15965,14 @@ export function useCanRunMultipleUpdateExhibitionSectionMutations(
     variableSets: Partial<UpdateExhibitionSectionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateExhibitionSectionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateExhibitionSectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateFaceTagDirectionMutation(
@@ -16271,15 +15984,16 @@ export function useCanRunUpdateFaceTagDirectionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateFaceTagDirectionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateFaceTagDirectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateFaceTagDirectionMutations(
@@ -16290,18 +16004,14 @@ export function useCanRunMultipleUpdateFaceTagDirectionMutations(
     variableSets: Partial<UpdateFaceTagDirectionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateFaceTagDirectionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateFaceTagDirectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateKeywordNameMutation(
@@ -16313,15 +16023,16 @@ export function useCanRunUpdateKeywordNameMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateKeywordNameDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateKeywordNameDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateKeywordNameMutations(
@@ -16332,18 +16043,14 @@ export function useCanRunMultipleUpdateKeywordNameMutations(
     variableSets: Partial<UpdateKeywordNameMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateKeywordNameDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateKeywordNameDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateKeywordSynonymsMutation(
@@ -16355,15 +16062,16 @@ export function useCanRunUpdateKeywordSynonymsMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateKeywordSynonymsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateKeywordSynonymsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateKeywordSynonymsMutations(
@@ -16374,18 +16082,14 @@ export function useCanRunMultipleUpdateKeywordSynonymsMutations(
     variableSets: Partial<UpdateKeywordSynonymsMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateKeywordSynonymsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateKeywordSynonymsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateKeywordVisibilityMutation(
@@ -16397,15 +16101,16 @@ export function useCanRunUpdateKeywordVisibilityMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateKeywordVisibilityDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateKeywordVisibilityDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateKeywordVisibilityMutations(
@@ -16416,18 +16121,14 @@ export function useCanRunMultipleUpdateKeywordVisibilityMutations(
     variableSets: Partial<UpdateKeywordVisibilityMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateKeywordVisibilityDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateKeywordVisibilityDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateLinkMutation(
@@ -16439,15 +16140,16 @@ export function useCanRunUpdateLinkMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLinkDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateLinkDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateLinkMutations(
@@ -16458,18 +16160,14 @@ export function useCanRunMultipleUpdateLinkMutations(
     variableSets: Partial<UpdateLinkMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLinkDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateLinkDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateLocationAcceptanceMutation(
@@ -16481,15 +16179,16 @@ export function useCanRunUpdateLocationAcceptanceMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationAcceptanceDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateLocationAcceptanceDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateLocationAcceptanceMutations(
@@ -16500,18 +16199,14 @@ export function useCanRunMultipleUpdateLocationAcceptanceMutations(
     variableSets: Partial<UpdateLocationAcceptanceMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationAcceptanceDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateLocationAcceptanceDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateLocationChildMutation(
@@ -16523,15 +16218,16 @@ export function useCanRunUpdateLocationChildMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationChildDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateLocationChildDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateLocationChildMutations(
@@ -16542,18 +16238,14 @@ export function useCanRunMultipleUpdateLocationChildMutations(
     variableSets: Partial<UpdateLocationChildMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationChildDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateLocationChildDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateLocationCoordinatesMutation(
@@ -16565,15 +16257,16 @@ export function useCanRunUpdateLocationCoordinatesMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationCoordinatesDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateLocationCoordinatesDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateLocationCoordinatesMutations(
@@ -16584,18 +16277,14 @@ export function useCanRunMultipleUpdateLocationCoordinatesMutations(
     variableSets: Partial<UpdateLocationCoordinatesMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationCoordinatesDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateLocationCoordinatesDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateLocationNameMutation(
@@ -16607,15 +16296,16 @@ export function useCanRunUpdateLocationNameMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationNameDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateLocationNameDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateLocationNameMutations(
@@ -16626,18 +16316,14 @@ export function useCanRunMultipleUpdateLocationNameMutations(
     variableSets: Partial<UpdateLocationNameMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationNameDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateLocationNameDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateLocationParentMutation(
@@ -16649,15 +16335,16 @@ export function useCanRunUpdateLocationParentMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationParentDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateLocationParentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateLocationParentMutations(
@@ -16668,18 +16355,14 @@ export function useCanRunMultipleUpdateLocationParentMutations(
     variableSets: Partial<UpdateLocationParentMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationParentDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateLocationParentDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateLocationRootMutation(
@@ -16691,15 +16374,16 @@ export function useCanRunUpdateLocationRootMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationRootDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateLocationRootDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateLocationRootMutations(
@@ -16710,18 +16394,14 @@ export function useCanRunMultipleUpdateLocationRootMutations(
     variableSets: Partial<UpdateLocationRootMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationRootDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateLocationRootDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateLocationSynonymsMutation(
@@ -16733,15 +16413,16 @@ export function useCanRunUpdateLocationSynonymsMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationSynonymsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateLocationSynonymsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateLocationSynonymsMutations(
@@ -16752,18 +16433,14 @@ export function useCanRunMultipleUpdateLocationSynonymsMutations(
     variableSets: Partial<UpdateLocationSynonymsMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationSynonymsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateLocationSynonymsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateLocationVisibilityMutation(
@@ -16775,15 +16452,16 @@ export function useCanRunUpdateLocationVisibilityMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationVisibilityDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateLocationVisibilityDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateLocationVisibilityMutations(
@@ -16794,18 +16472,14 @@ export function useCanRunMultipleUpdateLocationVisibilityMutations(
     variableSets: Partial<UpdateLocationVisibilityMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateLocationVisibilityDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateLocationVisibilityDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateMeMutation(
@@ -16817,15 +16491,16 @@ export function useCanRunUpdateMeMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateMeDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateMeDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateMeMutations(
@@ -16836,18 +16511,14 @@ export function useCanRunMultipleUpdateMeMutations(
     variableSets: Partial<UpdateMeMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateMeDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateMeDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateOrientationTagDirectionMutation(
@@ -16859,15 +16530,16 @@ export function useCanRunUpdateOrientationTagDirectionMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateOrientationTagDirectionDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateOrientationTagDirectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateOrientationTagDirectionMutations(
@@ -16878,18 +16550,14 @@ export function useCanRunMultipleUpdateOrientationTagDirectionMutations(
     variableSets: Partial<UpdateOrientationTagDirectionMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateOrientationTagDirectionDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateOrientationTagDirectionDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdatePersonNameMutation(
@@ -16901,15 +16569,16 @@ export function useCanRunUpdatePersonNameMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdatePersonNameDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdatePersonNameDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdatePersonNameMutations(
@@ -16920,18 +16589,14 @@ export function useCanRunMultipleUpdatePersonNameMutations(
     variableSets: Partial<UpdatePersonNameMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdatePersonNameDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdatePersonNameDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdatePersonSynonymsMutation(
@@ -16943,15 +16608,16 @@ export function useCanRunUpdatePersonSynonymsMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdatePersonSynonymsDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdatePersonSynonymsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdatePersonSynonymsMutations(
@@ -16962,18 +16628,14 @@ export function useCanRunMultipleUpdatePersonSynonymsMutations(
     variableSets: Partial<UpdatePersonSynonymsMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdatePersonSynonymsDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdatePersonSynonymsDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdatePictureMutation(
@@ -16985,15 +16647,16 @@ export function useCanRunUpdatePictureMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdatePictureDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdatePictureDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdatePictureMutations(
@@ -17004,18 +16667,14 @@ export function useCanRunMultipleUpdatePictureMutations(
     variableSets: Partial<UpdatePictureMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdatePictureDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdatePictureDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdatePictureSequenceDataMutation(
@@ -17027,15 +16686,16 @@ export function useCanRunUpdatePictureSequenceDataMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdatePictureSequenceDataDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdatePictureSequenceDataDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdatePictureSequenceDataMutations(
@@ -17046,18 +16706,14 @@ export function useCanRunMultipleUpdatePictureSequenceDataMutations(
     variableSets: Partial<UpdatePictureSequenceDataMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdatePictureSequenceDataDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdatePictureSequenceDataDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }
 
 export function useCanRunUpdateUserMutation(
@@ -17069,15 +16725,16 @@ export function useCanRunUpdateUserMutation(
     withSomeVariables?: boolean;
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateUserDocument.loc?.source.body ?? '',
-      variableSets: [options?.variables ?? {}],
-      withSomeVariables: options?.withSomeVariables,
-    },
+  const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+  const { canRunMultiple, loading } = useCanRunOperation({
+    operation: UpdateUserDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets: [variables ?? {}],
+    withSomeVariables,
+    options: queryOptions,
   });
-  return { canRun: data?.canRunOperation?.[0] ?? (loading ? false : true), loading };
+  return { canRun: canRunMultiple[0], loading };
 }
 
 export function useCanRunMultipleUpdateUserMutations(
@@ -17088,16 +16745,12 @@ export function useCanRunMultipleUpdateUserMutations(
     variableSets: Partial<UpdateUserMutationVariables>[];
   }
 ) {
-  const { data, loading } = useCanRunOperationQuery({
-    ...options,
-    variables: {
-      operation: UpdateUserDocument.loc?.source.body ?? '',
-      variableSets: options.variableSets,
-    },
+  const { variableSets, ...queryOptions } = options;
+  return useCanRunOperation({
+    operation: UpdateUserDocument.loc?.source.body ?? '',
+    checkAtAllFirst: true,
+    assumeCanRunOnError: true,
+    variableSets,
+    options: queryOptions,
   });
-  return {
-    canRunMultiple:
-      data?.canRunOperation ?? options.variableSets.map(_ => (loading ? false : true)),
-    loading,
-  };
 }

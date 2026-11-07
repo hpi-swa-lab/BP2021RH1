@@ -6,6 +6,11 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import { DocumentNode, OperationDefinitionNode, concatAST, visit } from 'graphql';
 
+// For every GraphQL operation the app uses, this generates useCanRun<Operation> and
+// useCanRunMultiple<Operation>s. They ask Strapi whether the current user may run that operation
+// with the given variables, so the UI can hide what the user isn't allowed to do. The checking
+// itself is in hooks/can-run-operation.hook.ts; the generated hooks only pass the operation's text
+// and the caller's variables on to it.
 const plugin = {
   plugin(schema, documents, config) {
     const combinedAST = concatAST(
@@ -20,6 +25,7 @@ const plugin = {
     visit(combinedAST, visitor);
 
     return {
+      prepend: ["import { useCanRunOperation } from '../hooks/can-run-operation.hook';"],
       content: visitor.generatedHooks.join('\n'),
     };
   },
@@ -52,61 +58,48 @@ class Visitor extends ClientSideBaseVisitor<
     const multipleName =
       'Multiple' + operationName + (operationType === 'Query' ? 'Queries' : operationType + 's');
 
-    const fallbackCanRun = `loading ? false : ${
-      // Not loading and no data means error.
-      // We treat the case that there is actually no error
-      // and the query field canRunOperation just returns
-      // undefined (which shouldn't happen) as an error.
-      this.config.assumeCanRunOnError.toString()
-    }`;
+    // Strapi checks a login with the permissions of the user trying to log in, so whether the
+    // current user may log in at all says nothing about it.
+    const checkAtAllFirst = node.name?.value !== 'login';
+    const hookArguments = `
+      operation: ${documentVariableName}.loc?.source.body ?? '',
+      checkAtAllFirst: ${checkAtAllFirst.toString()},
+      assumeCanRunOnError: ${this.config.assumeCanRunOnError.toString()},`;
+    const optionsType = `Omit<
+      Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
+      'variables'
+    >`;
 
-    const generateHook = (
-      name: string,
-      optionsAreOptional: boolean,
-      variablesType: string,
-      variableSetsValue: string,
-      returnStatement: string
-    ) => {
-      this.generatedHooks.push(`
-        export function useCanRun${name}(
-          options${optionsAreOptional ? '?' : ''}: Omit<
-            Apollo.QueryHookOptions<CanRunOperationQuery, CanRunOperationQueryVariables>,
-            'variables'
-          > & {
-            ${variablesType};
-          }
-        ) {
-          const { data, loading } = useCanRunOperationQuery({
-            ...options,
-            variables: {
-              operation: ${documentVariableName}.loc?.source.body ?? '',
-              variableSets: ${variableSetsValue},
-            },
-          });
-          ${returnStatement}
+    this.generatedHooks.push(`
+      export function useCanRun${singleName}(
+        options?: ${optionsType} & {
+          variables?: Partial<${operationVariablesTypes}>;
+          withSomeVariables?: boolean;
         }
-      `);
-    };
-    generateHook(
-      singleName,
-      true,
-      `variables?: Partial<${operationVariablesTypes}>,
-       withSomeVariables?: boolean`,
-      `[options?.variables ?? {}],
-       withSomeVariables: options?.withSomeVariables`,
-      `return { canRun: data?.canRunOperation?.[0] ?? (${fallbackCanRun}), loading };`
-    );
-    generateHook(
-      multipleName,
-      false,
-      `variableSets: Partial<${operationVariablesTypes}>[]`,
-      `options.variableSets`,
-      `return {
-        canRunMultiple:
-          data?.canRunOperation ?? options.variableSets.map(_ => ${fallbackCanRun}),
-        loading,
-      };`
-    );
+      ) {
+        const { variables, withSomeVariables, ...queryOptions } = options ?? {};
+        const { canRunMultiple, loading } = useCanRunOperation({
+          ${hookArguments}
+          variableSets: [variables ?? {}],
+          withSomeVariables,
+          options: queryOptions,
+        });
+        return { canRun: canRunMultiple[0], loading };
+      }
+
+      export function useCanRun${multipleName}(
+        options: ${optionsType} & {
+          variableSets: Partial<${operationVariablesTypes}>[];
+        }
+      ) {
+        const { variableSets, ...queryOptions } = options;
+        return useCanRunOperation({
+          ${hookArguments}
+          variableSets,
+          options: queryOptions,
+        });
+      }
+    `);
 
     // we don't use the transformed AST, so this doesn't matter
     return '';
