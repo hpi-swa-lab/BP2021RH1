@@ -9,6 +9,9 @@ export default {
       updateKeywordTag(id: $tagId, data: { name: $name }) {
         data {
           id
+          attributes {
+            name
+          }
         }
       }
     }
