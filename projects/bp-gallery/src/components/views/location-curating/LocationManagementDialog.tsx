@@ -326,7 +326,6 @@ const LocationManagementDialogPreset = ({
                       (locationTag.child_tags?.map(tag => ({ ...tag, verified: true })) as any) ??
                       []
                     }
-                    allTags={(flattenedTags as any) ?? []}
                     onChange={
                       canSetChildTags
                         ? locations => {
@@ -360,7 +359,6 @@ const LocationManagementDialogPreset = ({
                         verified: true,
                       })) as any) ?? []
                     }
-                    allTags={(flattenedTags as any) ?? []}
                     onChange={
                       canSetParentTags
                         ? locations => {

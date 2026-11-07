@@ -1,26 +1,17 @@
 import { Description, Event, Folder, FolderSpecial, Place, Sell } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { pick } from 'lodash';
-import { ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Scalars,
   useCanRunCreateKeywordTagMutation,
   useCanRunCreateLocationTagMutation,
   useCanRunCreatePersonTagMutation,
-  useCanRunGetAllCollectionsQuery,
-  useCanRunGetAllKeywordTagsQuery,
-  useCanRunGetAllLocationTagsQuery,
-  useCanRunGetAllPersonTagsQuery,
   useCreateKeywordTagMutation,
   useCreateLocationTagMutation,
   useCreatePersonTagMutation,
-  useGetAllCollectionsLazyQuery,
-  useGetAllKeywordTagsLazyQuery,
-  useGetAllLocationTagsLazyQuery,
-  useGetAllPersonTagsLazyQuery,
 } from '../../../../../graphql/APIConnector';
-import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import { useFaceTagging } from '../../../../../hooks/context-hooks';
 import {
   FlatLocationTagWithoutRelations,
@@ -81,23 +72,8 @@ const PictureInfo = ({
     [onSave]
   );
 
-  const [getAllKeywords, keywordsResponse] = useGetAllKeywordTagsLazyQuery();
-  const [getAllLocations, locationsResponse] = useGetAllLocationTagsLazyQuery();
-  const [getAllPeople, peopleResponse] = useGetAllPersonTagsLazyQuery();
-  const [getAllCollections, collectionsResponse] = useGetAllCollectionsLazyQuery();
-
-  const { canRun: canGetAllKeywords } = useCanRunGetAllKeywordTagsQuery();
-  const { canRun: canGetAllLocations } = useCanRunGetAllLocationTagsQuery();
-  const { canRun: canGetAllPeople } = useCanRunGetAllPersonTagsQuery();
-  const { canRun: canGetAllCollections } = useCanRunGetAllCollectionsQuery();
-
   const addExhibitionPictures = useAddExhibitionPictures();
   const openAlert = useContext(AlertContext);
-
-  const allKeywords = useSimplifiedQueryResponseData(keywordsResponse.data)?.keywordTags;
-  const allLocations = useSimplifiedQueryResponseData(locationsResponse.data)?.getAllLocationTags;
-  const allPeople = useSimplifiedQueryResponseData(peopleResponse.data)?.personTags;
-  const allCollections = useSimplifiedQueryResponseData(collectionsResponse.data)?.collections;
 
   const [newPersonTagMutation, newPersonTagMutationResponse] = useCreatePersonTagMutation({
     refetchQueries: ['getAllPersonTags'],
@@ -121,27 +97,6 @@ const PictureInfo = ({
     newPersonTagMutationResponse.loading ||
     newLocationTagMutationResponse.loading ||
     newKeywordTagMutationResponse.loading;
-
-  useEffect(() => {
-    if (onSave && canGetAllKeywords) {
-      getAllKeywords();
-    }
-  }, [onSave, canGetAllKeywords, getAllKeywords]);
-  useEffect(() => {
-    if (onSave && canGetAllLocations) {
-      getAllLocations();
-    }
-  }, [onSave, canGetAllLocations, getAllLocations]);
-  useEffect(() => {
-    if (onSave && canGetAllPeople) {
-      getAllPeople();
-    }
-  }, [onSave, canGetAllPeople, getAllPeople]);
-  useEffect(() => {
-    if (onSave && canGetAllCollections) {
-      getAllCollections();
-    }
-  }, [onSave, canGetAllCollections, getAllCollections]);
 
   const exhibitionId = useContext(ExhibitionIdContext);
   return (
@@ -202,7 +157,6 @@ const PictureInfo = ({
       </PictureInfoField>
       <FaceTaggingUI
         tags={picture.person_tags ?? []}
-        allTags={allPeople ?? []}
         onChange={
           savePictureInfo
             ? people => {
@@ -226,7 +180,6 @@ const PictureInfo = ({
         <TagSelectionField
           type={TagType.LOCATION}
           tags={picture.location_tags ?? []}
-          allTags={allLocations ?? []}
           onChange={
             savePictureInfo
               ? (locations: (FlatLocationTagWithoutRelations & { verified?: boolean })[]) => {
@@ -243,13 +196,12 @@ const PictureInfo = ({
           createChildMutation={canCreateLocationTag ? newLocationTagMutation : undefined}
         />
       </PictureInfoField>
-      <OrientationTaggingUI allLocations={allLocations ?? []} />
+      <OrientationTaggingUI />
       {(savePictureInfo || Boolean(picture.keyword_tags?.length)) && (
         <PictureInfoField title={t('pictureFields.keywords')} icon={<Sell />} type='keywords'>
           <TagSelectionField
             type={TagType.KEYWORD}
             tags={picture.keyword_tags ?? []}
-            allTags={allKeywords ?? []}
             onChange={
               savePictureInfo
                 ? keywords => {
@@ -278,7 +230,6 @@ const PictureInfo = ({
           <TagSelectionField
             type={TagType.COLLECTION}
             tags={picture.collections ?? []}
-            allTags={allCollections ?? []}
             onChange={collections => {
               savePictureInfo({ collections });
             }}

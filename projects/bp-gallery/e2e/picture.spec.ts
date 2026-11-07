@@ -1,4 +1,4 @@
-import { expectText } from './helper';
+import { expectText, infoField, waitForCuratorPictureInfo } from './helper';
 import { expect, test } from './test';
 
 test.describe('Picture View called via link', () => {
@@ -52,6 +52,38 @@ test.describe('Picture View called via link as a curator', () => {
     await checkbox.click();
     await expect(checkbox).not.toHaveClass(/Mui-checked/);
     await page.keyboard.press('Escape');
+  });
+});
+
+test.describe('Tag lists in the picture sidebar', () => {
+  test.use({ curator: true });
+
+  test('load only when their field opens', async ({ page }) => {
+    const lists = [
+      'getAllKeywordTags',
+      'getAllLocationTags',
+      'getAllPersonTags',
+      'getAllCollections',
+    ];
+    const requested: string[] = [];
+    page.on('request', request => {
+      if (request.url().endsWith('/graphql') && request.method() === 'POST') {
+        const operations = [request.postDataJSON()].flat() as { operationName?: string }[];
+        requested.push(...operations.map(operation => operation.operationName ?? ''));
+      }
+    });
+    const requestedLists = () => requested.filter(name => lists.includes(name));
+
+    await page.goto('/picture/1');
+    await waitForCuratorPictureInfo(page);
+    await page.waitForLoadState('networkidle');
+    expect(requestedLists()).toEqual([]);
+
+    const input = infoField(page, 'Schlagworte').locator('input');
+    await input.click();
+    await input.fill('wine');
+    await expect(page.getByRole('option', { name: 'wine', exact: true })).toBeVisible();
+    expect(requestedLists()).toEqual(['getAllKeywordTags']);
   });
 });
 

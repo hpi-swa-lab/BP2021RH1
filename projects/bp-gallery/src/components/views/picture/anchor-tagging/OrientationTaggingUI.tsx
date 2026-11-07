@@ -20,11 +20,7 @@ const BaseOrientationTaggingUI = createAnchorTaggingUI({
   noTagsTranslationKey: 'pictureFields.noLocations',
 });
 
-export const OrientationTaggingUI = ({
-  allLocations,
-}: {
-  allLocations: FlatTagWithoutRelations[];
-}) => {
+export const OrientationTaggingUI = () => {
   const context = useContext(OrientationTaggingContext);
 
   const [pendingTags, setPendingTags] = useState<FlatTagWithoutRelations[]>([]);
@@ -101,7 +97,6 @@ export const OrientationTaggingUI = ({
   return (
     <BaseOrientationTaggingUI
       tags={tags}
-      allTags={allLocations}
       createMutation={canCreateLocationTag ? createLocationTagMutation : undefined}
       onChange={context.canAnchorTag ? setTags : undefined}
     />
