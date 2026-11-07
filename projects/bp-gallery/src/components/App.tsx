@@ -45,6 +45,9 @@ const apolloClient = new ApolloClient({
       ),
       Query: {
         fields: {
+          canRunOperation: {
+            keyArgs: ['operation', 'variableSets', 'withSomeVariables', '$user'],
+          },
           pictures: {
             keyArgs: picturesKeyArgsFunction,
             merge: mergeByRefWrappedInData,

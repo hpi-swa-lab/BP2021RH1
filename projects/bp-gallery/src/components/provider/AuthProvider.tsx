@@ -76,7 +76,13 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
 
   // Save fetched userInfo in state
   useEffect(() => {
-    if (!called || loading || error) return;
+    if (!called || loading) return;
+    if (error) {
+      // Permission checks wait until authLoading is false. If it stayed true after a failed
+      // request, they would stay loading (and the picture sidebar would spin) for the whole visit.
+      setAuthLoading(false);
+      return;
+    }
 
     forgetPermissionChecks();
     setUserId(data?.me?.id);
