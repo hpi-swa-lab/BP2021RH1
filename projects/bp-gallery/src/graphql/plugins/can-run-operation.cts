@@ -19,10 +19,7 @@ const plugin = {
     const visitor = new Visitor(schema, fragments, config, config);
     visit(combinedAST, visitor);
 
-    const imports = Array.from(visitor.imports).sort();
-
     return {
-      prepend: imports,
       content: visitor.generatedHooks.join('\n'),
     };
   },
@@ -41,7 +38,6 @@ class Visitor extends ClientSideBaseVisitor<
   ClientSideBasePluginConfig & Config
 > {
   public generatedHooks: string[] = [];
-  public imports: Set<string> = new Set();
 
   protected buildOperation(
     node: OperationDefinitionNode,
@@ -64,8 +60,6 @@ class Visitor extends ClientSideBaseVisitor<
       this.config.assumeCanRunOnError.toString()
     }`;
 
-    this.imports.add("import { useAuthChangeEffect } from '../hooks/auth-change-effect.hook';");
-
     const generateHook = (
       name: string,
       optionsAreOptional: boolean,
@@ -82,14 +76,13 @@ class Visitor extends ClientSideBaseVisitor<
             ${variablesType};
           }
         ) {
-          const { data, loading, refetch } = useCanRunOperationQuery({
+          const { data, loading } = useCanRunOperationQuery({
             ...options,
             variables: {
               operation: ${documentVariableName}.loc?.source.body ?? '',
               variableSets: ${variableSetsValue},
             },
           });
-          useAuthChangeEffect(refetch);
           ${returnStatement}
         }
       `);
