@@ -80,15 +80,16 @@ const PictureView = ({
     }
   }, []);
 
+  const fetchMoreRef = useRef(fetchMore);
   useEffect(() => {
-    if (
-      fetchMore &&
-      siblingIds &&
-      siblingIds.indexOf(pictureInSiblingsId) === siblingIds.length - 1
-    ) {
-      fetchMore(pictureInSiblingsId);
+    fetchMoreRef.current = fetchMore;
+  });
+  const lastSiblingId = siblingIds?.[siblingIds.length - 1];
+  useEffect(() => {
+    if (lastSiblingId !== undefined && pictureInSiblingsId === lastSiblingId) {
+      fetchMoreRef.current?.(pictureInSiblingsId);
     }
-  }, [fetchMore, siblingIds, pictureInSiblingsId]);
+  }, [lastSiblingId, pictureInSiblingsId]);
 
   const search = window.location.search;
   const [sessionId, isPresentationMode] = useMemo((): [string, boolean] => {
