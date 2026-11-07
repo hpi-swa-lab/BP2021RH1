@@ -74,7 +74,7 @@ const TagSelectionField = <T extends TagFields>({
 
   const allTagsResponse = allTagsLazyQuery();
   const allCollectionsResponse = useGetAllCollectionsLazyQuery();
-  const [getAllTags, { data, called, loading: allTagsLoading }] = isCollection
+  const [getAllTags, { data, loading: allTagsLoading }] = isCollection
     ? allCollectionsResponse
     : allTagsResponse;
   const flattened = useSimplifiedQueryResponseData(data);
@@ -87,6 +87,14 @@ const TagSelectionField = <T extends TagFields>({
   const { canRun: canGetAllTagsOfType } = canGetAllTagsQuery();
   const { canRun: canGetAllCollections } = useCanRunGetAllCollectionsQuery();
   const canGetAllTags = isCollection ? canGetAllCollections : canGetAllTagsOfType;
+
+  // The permission check can still be loading when the field opens
+  const [opened, setOpened] = useState(false);
+  useEffect(() => {
+    if (opened && canGetAllTags) {
+      getAllTags();
+    }
+  }, [opened, canGetAllTags, getAllTags]);
 
   const { tagTree, tagChildTags, tagSiblingTags, tagSupertagList } =
     useGetTagStructures(flattenedTags);
@@ -317,11 +325,7 @@ const TagSelectionField = <T extends TagFields>({
         <Autocomplete<T, true>
           multiple
           autoHighlight
-          onOpen={() => {
-            if (canGetAllTags && !called) {
-              getAllTags();
-            }
-          }}
+          onOpen={() => setOpened(true)}
           loading={allTagsLoading}
           loadingText={t('common.loading')}
           isOptionEqualToValue={(option, value) => option.id === value.id}
