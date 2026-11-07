@@ -7,7 +7,11 @@ import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { useTranslation } from 'react-i18next';
 import { root } from '../../../helpers/app-helpers';
 import hashCode from '../../../helpers/hash-code';
-import { pushHistoryWithoutRouter, replaceHistoryWithoutRouter } from '../../../helpers/history';
+import {
+  pushHistoryWithoutRouter,
+  replaceHistoryWithoutRouter,
+  useOverlayStack,
+} from '../../../helpers/history';
 import { ExternalCanRun } from '../../../hooks/bulk-operations.hook';
 import {
   useCanBulkEditSomePictures,
@@ -73,7 +77,18 @@ const PictureGrid = ({
   const [table, setTable] = useState<(FlatPicture | undefined)[][]>([[]]);
   const [focusedPicture, setFocusedPicture] = useState<string | undefined>(undefined);
   const [bulkEditPictureIds, setBulkEditPictureIds] = useState<string[] | undefined>(undefined);
-  const [transitioning, setTransitioning] = useState<boolean>(false);
+  const [transitioning, setTransitioning] = useState<false | 'in' | 'out'>(false);
+
+  // Back during the zoom-in has to cancel the opening: the URL is already pushed, but the view
+  // isn't open yet
+  useOverlayStack(
+    transitioning === 'in'
+      ? () => {
+          setFocusedPicture(undefined);
+          setTransitioning(false);
+        }
+      : undefined
+  );
 
   const minRowLength = Math.max(2, maxRowLength - 2);
 
@@ -169,7 +184,7 @@ const PictureGrid = ({
 
   const transitionToPicture = useCallback(
     (id: string) => {
-      setTransitioning(true);
+      setTransitioning('in');
       navigateToPicture(id);
       zoomIntoPicture(`picture-preview-for-${id}`).then(() => {
         setTransitioning(false);
@@ -405,7 +420,7 @@ const PictureGrid = ({
             initialPictureId={focusedPicture}
             siblingIds={pictures.map(p => p.id)}
             onBack={(picid: string) => {
-              setTransitioning(true);
+              setTransitioning('out');
               zoomOutOfPicture(`picture-preview-for-${picid}`).then(() => {
                 setTransitioning(false);
                 setFocusedPicture(undefined);

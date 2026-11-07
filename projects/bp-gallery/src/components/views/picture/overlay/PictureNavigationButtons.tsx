@@ -12,11 +12,20 @@ export enum PictureNavigationTarget {
 }
 
 const PictureNavigationButtons = () => {
-  const { navigatePicture, hasNext, hasPrevious, hasNextInSequence, hasPreviousInSequence } =
-    useContext(PictureViewContext);
+  const {
+    navigatePicture,
+    hasNext,
+    hasPrevious,
+    hasNextInSequence,
+    hasPreviousInSequence,
+    isTopView,
+  } = useContext(PictureViewContext);
 
   useEffect(() => {
     const navigateKeyboardAction = (event: KeyboardEvent) => {
+      if (!isTopView()) {
+        return;
+      }
       if (event.key === 'ArrowRight' && hasNext && navigatePicture) {
         navigatePicture(PictureNavigationTarget.NEXT);
       } else if (event.key === 'ArrowLeft' && hasPrevious && navigatePicture) {
@@ -27,7 +36,7 @@ const PictureNavigationButtons = () => {
     return () => {
       window.removeEventListener('keyup', navigateKeyboardAction);
     };
-  }, [hasNext, hasPrevious, navigatePicture]);
+  }, [hasNext, hasPrevious, navigatePicture, isTopView]);
 
   const noDistractionModeStyle = useNoDistractionModeStyle();
 

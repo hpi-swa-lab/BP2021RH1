@@ -1,13 +1,12 @@
-import { History } from 'history';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import {
   PictureFiltersInput,
   useBulkEditMutation,
   useGetMultiplePictureInfoQuery,
 } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
+import { useOverlayStack } from '../../../helpers/history';
 import { useCanUseBulkEditView } from '../../../hooks/can-do-hooks';
 import { TextFilter } from '../../../hooks/get-pictures.hook';
 import { FlatPicture } from '../../../types/additionalFlatTypes';
@@ -45,25 +44,19 @@ const BulkEditView = ({
 }) => {
   const { t } = useTranslation();
 
-  const history: History = useHistory();
-
   const { data, loading, error, refetch } = useGetMultiplePictureInfoQuery({
     variables: {
       pictureIds,
     },
   });
 
-  useEffect(() => {
-    const unblock = history.block(() => {
-      if (onBack) {
+  useOverlayStack(
+    onBack &&
+      (() => {
         refetch();
         onBack(pictureIds);
-      }
-    });
-    return () => {
-      unblock();
-    };
-  }, [history, pictureIds, onBack, refetch]);
+      })
+  );
 
   const pictures: FlatPicture[] | undefined = useSimplifiedQueryResponseData(data)?.pictures;
 

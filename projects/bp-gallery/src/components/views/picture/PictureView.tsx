@@ -1,4 +1,3 @@
-import { History } from 'history';
 import {
   createContext,
   Dispatch,
@@ -9,12 +8,11 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useHistory } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useGetPictureInfoQuery } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import { asUploadPath } from '../../../helpers/app-helpers';
-import { replaceHistoryWithoutRouter } from '../../../helpers/history';
+import { replaceHistoryWithoutRouter, useOverlayStack } from '../../../helpers/history';
 import { useBlockImageContextMenuByPictureId } from '../../../hooks/block-image-context-menu.hook';
 import { useMouseIsIdle } from '../../../hooks/mouse-position.hook';
 import usePrefetchPictureHook from '../../../hooks/prefetch.hook';
@@ -41,10 +39,14 @@ export interface PictureViewContextFields {
   noDistractionMode?: boolean;
   setSideBarOpen?: Dispatch<SetStateAction<boolean>>;
   calledViaLink?: boolean;
+  isTopView: () => boolean;
   img: HTMLImageElement | null;
 }
 
-export const PictureViewContext = createContext<PictureViewContextFields>({ img: null });
+export const PictureViewContext = createContext<PictureViewContextFields>({
+  isTopView: () => true,
+  img: null,
+});
 
 // Used for the sidebar (in px) --> same as in shared.scss
 const MOBILE_BREAKPOINT = 750;
@@ -65,8 +67,6 @@ const PictureView = ({
   onBack?: (picid: string) => void;
   fetchMore?: (currentPictureId: string) => void;
 }) => {
-  const history: History = useHistory();
-
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [pictureInSiblingsId, setPictureInSiblingsId] = useState<string>(initialPictureId);
@@ -80,15 +80,16 @@ const PictureView = ({
     }
   }, []);
 
+  const fetchMoreRef = useRef(fetchMore);
   useEffect(() => {
-    if (
-      fetchMore &&
-      siblingIds &&
-      siblingIds.indexOf(pictureInSiblingsId) === siblingIds.length - 1
-    ) {
-      fetchMore(pictureInSiblingsId);
+    fetchMoreRef.current = fetchMore;
+  });
+  const lastSiblingId = siblingIds?.[siblingIds.length - 1];
+  useEffect(() => {
+    if (lastSiblingId !== undefined && pictureInSiblingsId === lastSiblingId) {
+      fetchMoreRef.current?.(pictureInSiblingsId);
     }
-  }, [fetchMore, siblingIds, pictureInSiblingsId]);
+  }, [lastSiblingId, pictureInSiblingsId]);
 
   const search = window.location.search;
   const [sessionId, isPresentationMode] = useMemo((): [string, boolean] => {
@@ -177,6 +178,14 @@ const PictureView = ({
   const mouseIsIdle = useMouseIsIdle(minMouseIdleMillisecondsForNoDistractionMode);
   const noDistractionMode = !sideBarOpen && mouseIsIdle;
 
+  const isTopView = useOverlayStack(
+    onBack &&
+      (() => {
+        setSideBarOpen(false);
+        onBack(pictureInSiblingsId);
+      })
+  );
+
   // Wrap all context information in this variable
   const contextValue: PictureViewContextFields = {
     navigatePicture,
@@ -188,22 +197,9 @@ const PictureView = ({
     noDistractionMode,
     setSideBarOpen,
     calledViaLink: !onBack,
+    isTopView,
     img,
   };
-
-  // Block navigation and handle yourself, i.e. block browser navigation and
-  // just close picture if it was called from the picture grid
-  useEffect(() => {
-    const unblock = history.block(() => {
-      setSideBarOpen(false);
-      if (onBack) {
-        onBack(pictureInSiblingsId);
-      }
-    });
-    return () => {
-      unblock();
-    };
-  }, [history, pictureInSiblingsId, onBack]);
 
   const onImageContextMenu = useBlockImageContextMenuByPictureId(pictureInSequenceId);
 
