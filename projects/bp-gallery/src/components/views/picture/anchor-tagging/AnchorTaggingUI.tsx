@@ -27,12 +27,10 @@ export const createAnchorTaggingUI = ({
 }) => {
   const AnchorTaggingUI = ({
     tags,
-    allTags,
     onChange,
     createMutation,
   }: {
     tags: FlatTagWithoutRelations[];
-    allTags: FlatTagWithoutRelations[];
     onChange?: (tags: FlatTagWithoutRelations[]) => void;
     createMutation?: (attr: any) => Promise<any>;
   }) => {
@@ -93,7 +91,6 @@ export const createAnchorTaggingUI = ({
             <TagSelectionField
               type={tagType}
               tags={tags}
-              allTags={allTags}
               onChange={onChange}
               noContentText={t(noTagsTranslationKey)}
               createMutation={createMutation}

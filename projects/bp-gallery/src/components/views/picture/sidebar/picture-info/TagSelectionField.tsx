@@ -4,6 +4,10 @@ import Fuse from 'fuse.js';
 import { unionWith } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  useCanRunGetAllCollectionsQuery,
+  useGetAllCollectionsLazyQuery,
+} from '../../../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../../../hooks/generic-endpoints.hook';
 import { FlatTag, TagType } from '../../../../../types/additionalFlatTypes';
@@ -33,7 +37,6 @@ interface TagFields {
 
 const TagSelectionField = <T extends TagFields>({
   tags,
-  allTags,
   onChange,
   createMutation,
   createChildMutation,
@@ -46,7 +49,6 @@ const TagSelectionField = <T extends TagFields>({
   customChipOnClick,
 }: {
   tags: T[];
-  allTags: T[];
   onChange?: (tags: T[]) => void;
   createMutation?: (attr: any) => Promise<any>;
   createChildMutation?: (attr: any) => Promise<any>;
@@ -61,26 +63,30 @@ const TagSelectionField = <T extends TagFields>({
   const { t } = useTranslation();
   const prompt = useDialog();
 
+  const isCollection = type === TagType.COLLECTION;
   const { allTagsLazyQuery, canGetAllTagsQuery } = useGenericTagEndpoints(type);
 
-  const [options, setOptions] = useState<T[]>(allTags);
+  const [options, setOptions] = useState<T[]>([]);
   // TODO: check the conditions using this
   const [prioritizedOptions, setPrioritizedOptions] = useState<T[]>();
   const [lastAddedTag, setLastAddedTag] = useState<T | undefined>();
   const [highlight, setHighlight] = useState<T | null>();
 
-  const [getAllTags, { data }] = allTagsLazyQuery();
+  const allTagsResponse = allTagsLazyQuery();
+  const allCollectionsResponse = useGetAllCollectionsLazyQuery();
+  const [getAllTags, { data, called, loading: allTagsLoading }] = isCollection
+    ? allCollectionsResponse
+    : allTagsResponse;
   const flattened = useSimplifiedQueryResponseData(data);
-  const flattenedTags: FlatTag[] | undefined =
-    flattened && type !== TagType.COLLECTION ? Object.values(flattened)[0] : undefined;
+  const allTags = useMemo(
+    () => (flattened ? (Object.values(flattened)[0] as T[]) : []),
+    [flattened]
+  );
+  const flattenedTags = flattened && !isCollection ? (allTags as unknown as FlatTag[]) : undefined;
 
-  const { canRun: canGetAllTags } = canGetAllTagsQuery();
-
-  useEffect(() => {
-    if (onChange && canGetAllTags) {
-      getAllTags();
-    }
-  }, [onChange, canGetAllTags, getAllTags]);
+  const { canRun: canGetAllTagsOfType } = canGetAllTagsQuery();
+  const { canRun: canGetAllCollections } = useCanRunGetAllCollectionsQuery();
+  const canGetAllTags = isCollection ? canGetAllCollections : canGetAllTagsOfType;
 
   const { tagTree, tagChildTags, tagSiblingTags, tagSupertagList } =
     useGetTagStructures(flattenedTags);
@@ -311,9 +317,21 @@ const TagSelectionField = <T extends TagFields>({
         <Autocomplete<T, true>
           multiple
           autoHighlight
+          onOpen={() => {
+            if (canGetAllTags && !called) {
+              getAllTags();
+            }
+          }}
+          loading={allTagsLoading}
+          loadingText={t('common.loading')}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           options={unitedOptions}
           filterOptions={(options, { inputValue }) => {
+            // Offering to create a tag before the list is there would let Enter create a
+            // duplicate of an existing one
+            if (allTagsLoading) {
+              return [];
+            }
             let filtered = options;
             // avoid tags with the same name in the same position in path
             if (fixedParentTag) {
