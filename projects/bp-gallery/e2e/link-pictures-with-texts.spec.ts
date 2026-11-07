@@ -152,4 +152,31 @@ test.describe('link pictures with texts', () => {
     }
     await page.close();
   });
+
+  test('back from a linked text keeps the picture and its grid open', async ({ browser }) => {
+    const page = await browser.newPage();
+    const grid = '/archives/1/show-more/pictures';
+    await page.goto(grid);
+    await preview(page, '2').first().click();
+    await expect(page).toHaveURL('/picture/2');
+    await preview(page, '1', '.picture-info-field[data-type="links"]').click();
+    await expect(page).toHaveURL('/picture/1');
+    // Picture 2 is the last in the grid
+    await test.step('arrow keys move only the linked text', async () => {
+      await page.keyboard.press('ArrowLeft');
+      await expect(page).toHaveURL('/picture/1');
+    });
+    await page.goBack();
+    await expect(page).toHaveURL('/picture/2');
+    await expect(page.locator('.picture-view-container')).toHaveCount(1);
+    await expect(page.locator('.picture-toolbar').getByRole('button')).toHaveText('Zurück');
+    await test.step('arrow keys still go through the grid', async () => {
+      await page.keyboard.press('ArrowLeft');
+      await expect(page).toHaveURL(/\/picture\/(?!2$)\d+$/);
+    });
+    await page.goBack();
+    await expect(page).toHaveURL(grid);
+    await expect(page.locator('.picture-view-container')).toHaveCount(0);
+    await page.close();
+  });
 });
