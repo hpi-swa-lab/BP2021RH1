@@ -6,18 +6,7 @@ export default {
   isAllowed: always,
   document: graphql`
     query getAllKeywordTags {
-      keywordTags {
-        data {
-          id
-          attributes {
-            name
-            visible
-            synonyms {
-              name
-            }
-          }
-        }
-      }
+      getAllKeywordTags
     }
   `,
 } satisfies Operation;

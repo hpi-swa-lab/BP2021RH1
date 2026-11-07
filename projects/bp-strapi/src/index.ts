@@ -9,6 +9,7 @@ import {
 } from './api/collection/services/custom-resolver';
 import { contact } from './api/contact/services/contact';
 import { mergeSourceTagIntoTargetTag } from './api/custom-tag-resolver';
+import { getAllKeywordTags } from './api/keyword-tag/services/custom-resolver';
 import {
   getAllLocationTags,
   getLocationTagsWithThumbnail,
@@ -19,6 +20,7 @@ import {
   preventPublicUserFromCreatingArchive,
   removeUser,
 } from './api/parameterized-permission/services/custom-update';
+import { getAllPersonTags } from './api/person-tag/services/custom-resolver';
 import {
   archivePictureCounts,
   bulkEdit,
@@ -110,6 +112,20 @@ export default {
                 sourceId,
                 targetId
               );
+            },
+          }),
+          queryField('getAllKeywordTags', {
+            type: 'JSON',
+            args: {},
+            resolve() {
+              return getAllKeywordTags(strapi as StrapiExtended);
+            },
+          }),
+          queryField('getAllPersonTags', {
+            type: 'JSON',
+            args: {},
+            resolve() {
+              return getAllPersonTags(strapi as StrapiExtended);
             },
           }),
           queryField('getAllLocationTags', {

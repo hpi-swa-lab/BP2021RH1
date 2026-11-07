@@ -9,6 +9,9 @@ export default {
       updatePersonTag(id: $tagId, data: { name: $name }) {
         data {
           id
+          attributes {
+            name
+          }
         }
       }
     }

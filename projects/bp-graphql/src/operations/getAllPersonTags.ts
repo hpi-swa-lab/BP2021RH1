@@ -6,17 +6,7 @@ export default {
   isAllowed: always,
   document: graphql`
     query getAllPersonTags {
-      personTags {
-        data {
-          id
-          attributes {
-            name
-            synonyms {
-              name
-            }
-          }
-        }
-      }
+      getAllPersonTags
     }
   `,
 } satisfies Operation;

@@ -2039,7 +2039,9 @@ export type Query = {
   faceTag?: Maybe<FaceTagEntityResponse>;
   faceTags?: Maybe<FaceTagEntityResponseCollection>;
   findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
+  getAllKeywordTags?: Maybe<Scalars['JSON']>;
   getAllLocationTags?: Maybe<Scalars['JSON']>;
+  getAllPersonTags?: Maybe<Scalars['JSON']>;
   getLocationTagsWithThumbnail?: Maybe<Scalars['JSON']>;
   keywordTag?: Maybe<KeywordTagEntityResponse>;
   keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
@@ -2814,18 +2816,7 @@ export type GetAllCollectionsQuery = {
 
 export type GetAllKeywordTagsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAllKeywordTagsQuery = {
-  keywordTags?: {
-    data: Array<{
-      id?: string | null;
-      attributes?: {
-        name: string;
-        visible?: boolean | null;
-        synonyms?: Array<{ name: string } | null> | null;
-      } | null;
-    }>;
-  } | null;
-};
+export type GetAllKeywordTagsQuery = { getAllKeywordTags?: any | null };
 
 export type GetAllLocationTagsQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -2833,14 +2824,7 @@ export type GetAllLocationTagsQuery = { getAllLocationTags?: any | null };
 
 export type GetAllPersonTagsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAllPersonTagsQuery = {
-  personTags?: {
-    data: Array<{
-      id?: string | null;
-      attributes?: { name: string; synonyms?: Array<{ name: string } | null> | null } | null;
-    }>;
-  } | null;
-};
+export type GetAllPersonTagsQuery = { getAllPersonTags?: any | null };
 
 export type GetAllPictureIdsQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -4400,7 +4384,9 @@ export type UpdateKeywordNameMutationVariables = Exact<{
 }>;
 
 export type UpdateKeywordNameMutation = {
-  updateKeywordTag?: { data?: { id?: string | null } | null } | null;
+  updateKeywordTag?: {
+    data?: { id?: string | null; attributes?: { name: string } | null } | null;
+  } | null;
 };
 
 export type UpdateKeywordSynonymsMutationVariables = Exact<{
@@ -4411,7 +4397,12 @@ export type UpdateKeywordSynonymsMutationVariables = Exact<{
 }>;
 
 export type UpdateKeywordSynonymsMutation = {
-  updateKeywordTag?: { data?: { id?: string | null } | null } | null;
+  updateKeywordTag?: {
+    data?: {
+      id?: string | null;
+      attributes?: { synonyms?: Array<{ name: string } | null> | null } | null;
+    } | null;
+  } | null;
 };
 
 export type UpdateKeywordVisibilityMutationVariables = Exact<{
@@ -4420,7 +4411,9 @@ export type UpdateKeywordVisibilityMutationVariables = Exact<{
 }>;
 
 export type UpdateKeywordVisibilityMutation = {
-  updateKeywordTag?: { data?: { id?: string | null } | null } | null;
+  updateKeywordTag?: {
+    data?: { id?: string | null; attributes?: { visible?: boolean | null } | null } | null;
+  } | null;
 };
 
 export type UpdateLinkMutationVariables = Exact<{
@@ -4526,7 +4519,9 @@ export type UpdatePersonNameMutationVariables = Exact<{
 }>;
 
 export type UpdatePersonNameMutation = {
-  updatePersonTag?: { data?: { id?: string | null } | null } | null;
+  updatePersonTag?: {
+    data?: { id?: string | null; attributes?: { name: string } | null } | null;
+  } | null;
 };
 
 export type UpdatePersonSynonymsMutationVariables = Exact<{
@@ -4537,7 +4532,12 @@ export type UpdatePersonSynonymsMutationVariables = Exact<{
 }>;
 
 export type UpdatePersonSynonymsMutation = {
-  updatePersonTag?: { data?: { id?: string | null } | null } | null;
+  updatePersonTag?: {
+    data?: {
+      id?: string | null;
+      attributes?: { synonyms?: Array<{ name: string } | null> | null } | null;
+    } | null;
+  } | null;
 };
 
 export type UpdatePictureMutationVariables = Exact<{
@@ -4765,18 +4765,7 @@ export type GetAllCollectionsQueryResult = Apollo.QueryResult<
 
 export const GetAllKeywordTagsDocument = gql`
   query getAllKeywordTags {
-    keywordTags {
-      data {
-        id
-        attributes {
-          name
-          visible
-          synonyms {
-            name
-          }
-        }
-      }
-    }
+    getAllKeywordTags
   }
 `;
 
@@ -4881,17 +4870,7 @@ export type GetAllLocationTagsQueryResult = Apollo.QueryResult<
 
 export const GetAllPersonTagsDocument = gql`
   query getAllPersonTags {
-    personTags {
-      data {
-        id
-        attributes {
-          name
-          synonyms {
-            name
-          }
-        }
-      }
-    }
+    getAllPersonTags
   }
 `;
 
@@ -8318,6 +8297,8 @@ export type ContactMutationFn = Apollo.MutationFunction<ContactMutation, Contact
  *      reply_email: // value for 'reply_email'
  *      subject: // value for 'subject'
  *      message: // value for 'message'
+ *      honeypot: // value for 'honeypot'
+ *      fill_time: // value for 'fill_time'
  *   },
  * });
  */
@@ -11170,6 +11151,9 @@ export const UpdateKeywordNameDocument = gql`
     updateKeywordTag(id: $tagId, data: { name: $name }) {
       data {
         id
+        attributes {
+          name
+        }
       }
     }
   }
@@ -11225,6 +11209,11 @@ export const UpdateKeywordSynonymsDocument = gql`
     updateKeywordTag(id: $tagId, data: { synonyms: $synonyms }) {
       data {
         id
+        attributes {
+          synonyms {
+            name
+          }
+        }
       }
     }
   }
@@ -11283,6 +11272,9 @@ export const UpdateKeywordVisibilityDocument = gql`
     updateKeywordTag(id: $tagId, data: { visible: $visible }) {
       data {
         id
+        attributes {
+          visible
+        }
       }
     }
   }
@@ -11953,6 +11945,9 @@ export const UpdatePersonNameDocument = gql`
     updatePersonTag(id: $tagId, data: { name: $name }) {
       data {
         id
+        attributes {
+          name
+        }
       }
     }
   }
@@ -12008,6 +12003,11 @@ export const UpdatePersonSynonymsDocument = gql`
     updatePersonTag(id: $tagId, data: { synonyms: $synonyms }) {
       data {
         id
+        attributes {
+          synonyms {
+            name
+          }
+        }
       }
     }
   }

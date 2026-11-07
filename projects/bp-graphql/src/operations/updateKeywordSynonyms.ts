@@ -9,6 +9,11 @@ export default {
       updateKeywordTag(id: $tagId, data: { synonyms: $synonyms }) {
         data {
           id
+          attributes {
+            synonyms {
+              name
+            }
+          }
         }
       }
     }
