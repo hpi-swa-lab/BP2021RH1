@@ -21,7 +21,9 @@ compose exec -T postgres pg_restore -h 127.0.0.1 -U postgres -d bpgallery --no-o
 psql -c 'CREATE SCHEMA IF NOT EXISTS public'
 compose exec -T -e PGOPTIONS="-c search_path=$schema" postgres \
   psql -h 127.0.0.1 -U postgres -d bpgallery -v ON_ERROR_STOP=1 -q < compose/dev-admin.sql
+compose exec -T -e PGOPTIONS="-c search_path=$schema" postgres \
+  psql -h 127.0.0.1 -U postgres -d bpgallery -v ON_ERROR_STOP=1 -q < compose/dump-curator.sql
 
 compose up -d --wait strapi gallery
-echo "Gallery: http://localhost:3000, admin panel: http://localhost:9000/admin (dev@example.com / Dev12345)"
+echo "Gallery: http://localhost:3000 (testCurator / 1234abc), admin panel: http://localhost:9000/admin (dev@example.com / Dev12345)"
 echo "Stop and delete the copy: docker compose -p bp-dump down -v"
