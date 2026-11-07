@@ -68,15 +68,22 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
     }
   }, [apolloClient, called, getUserInfo, openAlert, t]);
 
+  // Permission checks on screen fetch again once their cached answer is gone.
+  const forgetPermissionChecks = useCallback(() => {
+    apolloClient.cache.evict({ id: 'ROOT_QUERY', fieldName: 'canRunOperation' });
+    apolloClient.cache.gc();
+  }, [apolloClient]);
+
   // Save fetched userInfo in state
   useEffect(() => {
     if (!called || loading || error) return;
 
+    forgetPermissionChecks();
     setUserId(data?.me?.id);
     setUsername(data?.me?.username);
     setEmail(data?.me?.email ?? undefined);
     setAuthLoading(false);
-  }, [data, loading, error, called]);
+  }, [data, loading, error, called, forgetPermissionChecks]);
 
   const displaySuccess = useCallback(
     (message: string) => {
@@ -134,11 +141,12 @@ const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
   const logout = useCallback(() => {
     apolloClient.setLink(buildHttpLink(null, { openAlert, t }));
     sessionStorage.removeItem('jwt');
+    forgetPermissionChecks();
     setUserId(undefined);
     setUsername(undefined);
     setEmail(undefined);
     displaySuccess(t('login.successful-logout'));
-  }, [apolloClient, displaySuccess, t, openAlert]);
+  }, [apolloClient, displaySuccess, t, openAlert, forgetPermissionChecks]);
 
   return (
     <AuthContext.Provider
