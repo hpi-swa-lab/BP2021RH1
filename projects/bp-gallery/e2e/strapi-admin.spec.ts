@@ -5,7 +5,9 @@ test.describe('Strapi admin panel', () => {
     await page.goto(`${stack.strapi}/admin/auth/login`);
     await page.locator('input[name="email"]').fill('dev@example.com');
     await page.locator('input[name="password"]').fill('Dev12345');
+    const login = page.waitForResponse(response => response.url().endsWith('/admin/login'));
     await page.locator('button[type="submit"]').click();
+    expect((await login).status()).toBe(200);
     await expect(page).not.toHaveURL(/\/auth/);
     await page.goto(
       `${stack.strapi}/admin/content-manager/collectionType/api::keyword-tag.keyword-tag`
