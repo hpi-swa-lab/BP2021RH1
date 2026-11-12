@@ -27,7 +27,9 @@ const useGetTagTree = (
     // set child tags for each tag in tree
     for (const tag of Object.values(tagsById)) {
       tag.parent_tags?.forEach(parentTag => {
-        tagsById[parentTag.id].child_tags?.push(tag);
+        if (parentTag.id in tagsById) {
+          tagsById[parentTag.id].child_tags?.push(tag);
+        }
       });
     }
     for (const tag of Object.values(tagsById)) {
@@ -159,12 +161,43 @@ export const useGetTagStructures = (
     return paths;
   }, [tagTree, topologicalOrder]);
 
+  const tagSubtagList = useMemo(() => {
+    if (!tagsById || !flattenedTags || !tagTree) {
+      return undefined;
+    }
+    const tagSubtags = Object.fromEntries(flattenedTags.map(tag => [tag.id, [] as FlatTag[]]));
+
+    const visit = (tag: FlatTag) => {
+      if (!tag.child_tags) {
+        return [];
+      }
+      for (const childTag of tag.child_tags) {
+        tagSubtags[tag.id] = [
+          ...tagSubtags[tag.id].concat(
+            visit(childTag).filter(
+              filterTag =>
+                tagSubtags[tag.id].findIndex(indexTag => indexTag.id === filterTag.id) === -1
+            )
+          ),
+          childTag,
+        ];
+      }
+      return tagSubtags[tag.id];
+    };
+
+    for (const tag of tagTree) {
+      visit(tag);
+    }
+    return tagSubtags;
+  }, [flattenedTags, tagsById, tagTree]);
+
   return {
     tagTree,
     flattenedTagTree: tagsById,
     tagChildTags,
     tagSiblingTags,
     tagSupertagList,
+    tagSubtagList,
   };
 };
 
