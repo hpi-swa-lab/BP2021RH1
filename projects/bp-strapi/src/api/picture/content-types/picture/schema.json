@@ -111,7 +111,7 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::picture.picture",
-      "inversedBy": "linked_pictures"
+      "mappedBy": "linked_pictures"
     },
     "linked_pictures": {
       "type": "relation",
