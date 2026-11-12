@@ -40,5 +40,7 @@ jobs:
         run: git diff --exit-code -- src/graphql
       - name: Lint bp-gallery
         run: pnpm lint
+      - name: Check the formatting of bp-strapi and bp-graphql
+        run: pnpm prettier --check '../bp-strapi/{src,config}/**/*.{ts,js}' '../bp-graphql/src/**/*.ts'
       - name: Type check bp-gallery
         run: pnpm tsc && pnpm tsc -p e2e

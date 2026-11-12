@@ -44,6 +44,6 @@ The pictures from the test data were uploaded before, so they still come from `p
 - Regenerate the gallery's GraphQL client (`src/graphql/APIConnector.tsx` and `operation.graphql`) after changing an operation in `projects/bp-graphql`: `docker compose exec gallery pnpm generate-api`. It reads the schema from `src/graphql/schema/schema.json`; after changing Strapi's GraphQL schema (a content type, a custom query), update that file first with `docker compose exec gallery pnpm refresh-schema`, which reads it from the running Strapi. CI fails when the generated files differ from what is committed.
 - Run a command in a project: `docker compose exec gallery pnpm lint`, `docker compose exec strapi pnpm strapi …`.
 - Type-check and lint the gallery and its e2e tests, also without the stack running: `docker compose run --rm --no-deps install sh -c 'cd /repo/projects/bp-gallery && pnpm check'`. CI runs the same checks.
-- Format the gallery code before committing: `docker compose exec gallery pnpm format`. The gallery's pre-commit hook (Husky) normally does this, but this setup doesn't install it because it needs pnpm on the host.
+- Format the code before committing: `docker compose exec gallery pnpm format` formats the gallery, Strapi and `bp-graphql`. The pre-commit hook (Husky, in `projects/bp-gallery/.husky`) normally does this, but this setup doesn't install it because it needs pnpm on the host. CI checks the formatting of Strapi and `bp-graphql`.
 
 The services listen on 127.0.0.1 only.
