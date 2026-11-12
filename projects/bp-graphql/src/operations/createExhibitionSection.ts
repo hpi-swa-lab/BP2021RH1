@@ -5,10 +5,8 @@ export default {
   group: 'exhibition',
   isAllowed: checkExhibition('exhibitionId'),
   document: graphql`
-    mutation createExhibitionSection($exhibitionId: ID!, $order: Int, $publishedAt: DateTime!) {
-      createExhibitionSection(
-        data: { exhibition: $exhibitionId, order: $order, publishedAt: $publishedAt }
-      ) {
+    mutation createExhibitionSection($exhibitionId: ID!, $order: Int) {
+      createExhibitionSection(data: { exhibition: $exhibitionId, order: $order }) {
         data {
           id
         }

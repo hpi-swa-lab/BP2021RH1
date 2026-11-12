@@ -264,7 +264,7 @@ const ExhibitionOverview = ({
 
   const newExhibition = async () => {
     const result = await createExhibition({
-      variables: { archiveId: archiveId ?? '0', publishedAt: new Date().toISOString() },
+      variables: { archiveId: archiveId ?? '0' },
     });
     const id = result.data?.createExhibition?.data?.id;
     id && visit(`/exhibitiontool/${id}`);

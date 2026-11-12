@@ -6,10 +6,8 @@ export default {
   needsParameters: [],
   isAllowed: always,
   document: graphql`
-    mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateTime!) {
-      createCollection(
-        data: { name: $name, parent_collections: [$parentId], publishedAt: $publishedAt }
-      ) {
+    mutation createSubCollection($name: String!, $parentId: ID!) {
+      createCollection(data: { name: $name, parent_collections: [$parentId] }) {
         data {
           id
         }

@@ -7,7 +7,7 @@
     "displayName": "Browse root collection"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "attributes": {
     "current": {
