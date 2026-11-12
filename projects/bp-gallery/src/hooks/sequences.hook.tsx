@@ -72,6 +72,7 @@ export const useCreateSequence = () => {
       const pictureSequence = await createPictureSequence({
         variables: {
           pictures: pictures.map(picture => picture.id),
+          publishedAt: new Date().toISOString(),
         },
       });
       updatePictureSequenceOrder(pictures);

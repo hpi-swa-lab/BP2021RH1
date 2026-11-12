@@ -26,8 +26,8 @@ const ExhibitionCard = ({
   canEdit: boolean;
   isBig: boolean;
 }) => {
-  const titlePictureLink = exhibition.title_picture
-    ? asUploadPath(exhibition.title_picture.picture?.media)
+  const titlePictureLink = exhibition.title_picture?.picture?.media
+    ? asUploadPath(exhibition.title_picture.picture.media)
     : '/bad-harzburg-stiftung-logo.png';
   const link = `/exhibition/${exhibition.id}`;
   const editLink = `/exhibitiontool/${exhibition.id}`;

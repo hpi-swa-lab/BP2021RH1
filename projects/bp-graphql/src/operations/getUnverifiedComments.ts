@@ -7,7 +7,7 @@ export default {
   isAllowed: always,
   document: graphql`
     query getUnverifiedComments {
-      comments(filters: { publishedAt: { null: true } }, publicationState: PREVIEW) {
+      comments(filters: { accepted: { eq: false } }) {
         data {
           id
           attributes {

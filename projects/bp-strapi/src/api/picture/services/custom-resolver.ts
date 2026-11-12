@@ -170,8 +170,7 @@ const buildWhere = (
     });
   }
 
-  // Only retrieve published pictures
-  queryBuilder = queryBuilder.whereNotNull('pictures.published_at');
+  queryBuilder = queryBuilder.where('pictures.deleted', false);
 
   switch (textFilter) {
     case TextFilter.ONLY_PICTURES:
@@ -243,10 +242,9 @@ const findPicturesByAllSearch = async (
 const archivePictureCounts = async (knexEngine: KnexEngine) => {
   const archivePictures = table('pictures_archive_tag_links');
   const archivePictureCounts = await knexEngine(archivePictures)
-    //necessary to sort out unpublished pictures
     .join(table('pictures'), `${archivePictures}.picture_id`, `${table('pictures')}.id`)
     .select('archive_tag_id as id')
-    .whereNotNull('published_at')
+    .where(`${table('pictures')}.deleted`, false)
     .count('picture_id')
     .groupBy('archive_tag_id')
     .orderBy('id', 'asc');

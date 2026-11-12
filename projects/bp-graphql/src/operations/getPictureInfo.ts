@@ -90,7 +90,7 @@ export default {
                 }
               }
             }
-            collections(publicationState: PREVIEW) {
+            collections {
               data {
                 id
                 attributes {
@@ -98,11 +98,7 @@ export default {
                 }
               }
             }
-            comments(
-              publicationState: PREVIEW
-              sort: "date:desc"
-              filters: { picture: { id: { eq: $pictureId } } }
-            ) {
+            comments(sort: "date:desc", filters: { picture: { id: { eq: $pictureId } } }) {
               data {
                 id
                 attributes {
@@ -119,12 +115,12 @@ export default {
                       id
                     }
                   }
-                  childComments(publicationState: PREVIEW, sort: "date:asc") {
+                  childComments(sort: "date:asc") {
                     data {
                       id
                     }
                   }
-                  publishedAt
+                  accepted
                   pinned
                 }
               }

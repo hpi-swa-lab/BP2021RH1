@@ -189,7 +189,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
             {dayjs(comment.date as string).format('DD.MM.YYYY')}:
           </p>
         </div>
-        {comment.publishedAt && (pinned ? canUnpinComment : canPinComment) && !depth ? (
+        {comment.accepted && (pinned ? canUnpinComment : canPinComment) && !depth ? (
           <button
             className={`pin-button ${pinned ? 'pinned' : ''}`}
             onClick={() => {
@@ -226,7 +226,7 @@ const FormattedComment = ({ comment, depth = 0 }: { comment: FlatComment; depth?
           )}
         </CollapsibleContainer>
         <div className='flex gap-0.5 flex-wrap'>
-          {comment.publishedAt &&
+          {comment.accepted &&
             commentActions.map(commentAction => (
               <button
                 key={commentAction.text}

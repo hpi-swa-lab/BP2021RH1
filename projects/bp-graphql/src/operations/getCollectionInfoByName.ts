@@ -7,19 +7,19 @@ export default {
   isAllowed: always,
   document: graphql`
     query getCollectionInfoByName($collectionName: String) {
-      collections(filters: { name: { eq: $collectionName } }, publicationState: PREVIEW) {
+      collections(filters: { name: { eq: $collectionName } }) {
         data {
           id
           attributes {
             name
             description
-            child_collections(sort: "name:asc", publicationState: PREVIEW) {
+            child_collections(sort: "name:asc") {
               data {
                 id
                 attributes {
                   name
                   thumbnail
-                  publishedAt
+                  visible
                 }
               }
             }

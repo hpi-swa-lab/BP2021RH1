@@ -7,7 +7,7 @@ export default {
   isAllowed: checkPicture('id'),
   document: graphql`
     mutation unpublishPicture($id: ID!) {
-      updatePicture(id: $id, data: { publishedAt: null }) {
+      updatePicture(id: $id, data: { deleted: true }) {
         data {
           id
         }
