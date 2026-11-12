@@ -27,10 +27,6 @@ module.exports = ({ env }) => ({
       },
     },
   },
-  'bulk-import': {
-    enabled: true,
-    resolve: './src/plugins/bulk-import',
-  },
   'users-permissions': {
     config: {
       jwtSecret: env('JWT_SECRET'),
