@@ -4,11 +4,11 @@ export default {
   isEssential: true,
   document: graphql`
     query getDailyPictureInfo($pictureId: ID!) {
-      picture(id: $pictureId) {
+      picture(documentId: $pictureId) {
         data {
           id
           attributes {
-            descriptions(sort: "createdAt:asc") {
+            descriptions: descriptions_connection(sort: "createdAt:asc") {
               data {
                 id
                 attributes {
@@ -36,7 +36,7 @@ export default {
                 }
               }
             }
-            comments(filters: { accepted: { eq: true } }) {
+            comments: comments_connection(filters: { accepted: { eq: true } }) {
               data {
                 id
               }

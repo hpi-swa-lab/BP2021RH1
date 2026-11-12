@@ -1,3 +1,4 @@
+import { reindexPictures } from '../../picture/services/custom-update';
 import { Parameter, groups, operations } from 'bp-graphql/build';
 import { UsersPermissionsUser } from 'bp-graphql/build/db-types';
 import { addPermission } from '../../parameterized-permission/services/custom-update';
@@ -73,6 +74,7 @@ export const removeArchiveTag = async (id: string) => {
       })
     )
   );
+  await reindexPictures(pictures.map(picture => picture.id));
 
   const permissionQuery = strapi.db.query('api::parameterized-permission.parameterized-permission');
   // deleteMany currently doesn't support relational filters:

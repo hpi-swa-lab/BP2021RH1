@@ -4,7 +4,9 @@ export default {
   isEssential: true,
   document: graphql`
     query getOrientationTags($pictureId: ID!) {
-      orientationTags(filters: { picture: { id: { eq: $pictureId } } }) {
+      orientationTags: orientationTags_connection(
+        filters: { picture: { id: { eq: $pictureId } } }
+      ) {
         data {
           id
           attributes {

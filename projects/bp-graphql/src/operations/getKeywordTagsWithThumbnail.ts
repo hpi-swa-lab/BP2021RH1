@@ -9,12 +9,16 @@ export default {
       $pagination: PaginationArg!
       $sortBy: [String]
     ) {
-      keywordTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
+      keywordTags: keywordTags_connection(
+        filters: $filters
+        pagination: $pagination
+        sort: $sortBy
+      ) {
         data {
           id
           attributes {
             name
-            thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
+            thumbnail: pictures_connection(filters: $thumbnailFilters, pagination: { limit: 1 }) {
               data {
                 attributes {
                   media {
@@ -28,7 +32,7 @@ export default {
                 }
               }
             }
-            verified_thumbnail: verified_pictures(
+            verified_thumbnail: verified_pictures_connection(
               filters: $thumbnailFilters
               pagination: { limit: 1 }
             ) {

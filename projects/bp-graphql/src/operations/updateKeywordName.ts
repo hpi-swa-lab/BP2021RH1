@@ -6,7 +6,7 @@ export default {
   isAllowed: always,
   document: graphql`
     mutation updateKeywordName($tagId: ID!, $name: String!) {
-      updateKeywordTag(id: $tagId, data: { name: $name }) {
+      updateKeywordTag(documentId: $tagId, data: { name: $name }) {
         data {
           id
           attributes {

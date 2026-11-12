@@ -488,7 +488,7 @@ const processPictureSequenceUpdates = (data: {
 const removeUnusedPictureSequences = async (strapi: StrapiExtended) => {
   const knexEngine = strapi.db.connection;
   const sequencesTable = table('picture_sequences');
-  const linksTable = table('pictures_picture_sequence_links');
+  const linksTable = table('pictures_picture_sequence_lnk');
   // remove links to sequences of length 1
   await knexEngine(linksTable)
     .whereIn(
@@ -526,6 +526,7 @@ const updatePictureWithTagCleanup = async (id: string, data: any) => {
     where: { id },
     data,
   });
+  await reindexPictures([Number(id)]);
 
   await removeUnusedPictureSequences(strapi as unknown as StrapiExtended);
 
@@ -568,10 +569,8 @@ const bulkEditTimeRangeTag = async (
 
   const timeRangeTagData = pick(data, [TIME_RANGE_TAG_KEY, withVerifiedPrefix(TIME_RANGE_TAG_KEY)]);
   await processUpdatesForTimeRangeTag(pictureQuery, timeRangeTagData);
-  const unverifiedLinksTable = table(`${PICTURES_KEY}_${TIME_RANGE_TAG_KEY}_links`);
-  const verifiedLinksTable = table(
-    `${PICTURES_KEY}_${withVerifiedPrefix(TIME_RANGE_TAG_KEY)}_links`
-  );
+  const unverifiedLinksTable = table(`${PICTURES_KEY}_${TIME_RANGE_TAG_KEY}_lnk`);
+  const verifiedLinksTable = table(`${PICTURES_KEY}_${withVerifiedPrefix(TIME_RANGE_TAG_KEY)}_lnk`);
 
   const removedIds = [];
 
@@ -622,7 +621,7 @@ const bulkEditArchiveTag = async (
   // Check whether we actually need to update stuff for that tag type.
   if (!(ARCHIVE_TAG_KEY in data)) return 0;
 
-  const linksTable = table(`${PICTURES_KEY}_${ARCHIVE_TAG_KEY}_links`);
+  const linksTable = table(`${PICTURES_KEY}_${ARCHIVE_TAG_KEY}_lnk`);
   await knexEngine(linksTable).whereIn('picture_id', pictureIds).del();
   const newArchiveId = data[ARCHIVE_TAG_KEY];
   if (newArchiveId !== null) {
@@ -648,7 +647,7 @@ const bulkEditDescriptions = async (
 
   if (diff.added.length === 0 && diff.removed.length === 0) return 0;
 
-  const linksTable = table(`${PICTURES_KEY}_${DESCRIPTIONS_KEY}_links`);
+  const linksTable = table(`${PICTURES_KEY}_${DESCRIPTIONS_KEY}_lnk`);
 
   // delete relations to be removed (don't remove the actual descriptions yet)
   const removedIds = diff.removed.map((removed: { id: any }) => removed.id);
@@ -720,8 +719,8 @@ const bulkEditTags = async (
 
   const singularIdKey = `${singular(tagsKey)}_id`;
 
-  const unverifiedLinksTable = table(`${PICTURES_KEY}_${tagsKey}_links`);
-  const verifiedLinksTable = table(`${PICTURES_KEY}_${withVerifiedPrefix(tagsKey)}_links`);
+  const unverifiedLinksTable = table(`${PICTURES_KEY}_${tagsKey}_lnk`);
+  const verifiedLinksTable = table(`${PICTURES_KEY}_${withVerifiedPrefix(tagsKey)}_lnk`);
 
   const removedUnverified = diff.removed.filter((removed: { verified: any }) => !removed.verified);
   const removedVerified = diff.removed.filter((removed: { verified: any }) => removed.verified);
@@ -783,7 +782,7 @@ const bulkEditLinks = async (
   const columnNames = ['picture_id', 'inv_picture_id'];
   const [left, right] = isInverse ? columnNames.reverse() : columnNames;
 
-  const linksTable = table('pictures_linked_pictures_links');
+  const linksTable = table('pictures_linked_pictures_lnk');
 
   const removedIds = diff.removed.map((picture: { id: any }) => picture.id);
 
@@ -832,13 +831,7 @@ const bulkEdit = async (knexEngine: KnexEngine, pictureIds: number[], data: any)
   );
   shouldWriteUpdatedAt |= await bulkEditLinks(knexEngine, pictureIds, data, LINKED_TEXTS_KEY, true);
   shouldWriteUpdatedAt |= await bulkEditTags(knexEngine, pictureIds, data, COLLECTIONS_KEY, false);
-  // added to trigger a change to the picture index of Meilisearch
-  strapi.db.lifecycles.run('afterUpdateMany', 'api::picture.picture', {
-    params: {
-      where: { id: { $in: pictureIds } },
-    },
-    result: { count: pictureIds.length },
-  });
+  await reindexPictures(pictureIds);
 
   if (shouldWriteUpdatedAt) {
     const updatedAt = new Date();
@@ -860,11 +853,7 @@ const like = async (knexEngine: KnexEngine, pictureId: number, dislike?: boolean
     'likes',
     knexEngine.raw(dislike ? 'GREATEST(COALESCE(likes, 0) - 1, 0)' : 'COALESCE(likes, 0) + 1')
   );
-  // added to trigger a change to the picture index of Meilisearch
-  strapi.db.lifecycles.run('afterUpdate', 'api::picture.picture', {
-    params: { where: { id: pictureId } },
-    result: { id: pictureId },
-  });
+  await reindexPictures([pictureId]);
 };
 
 const incNotAPlaceCount = async (knexEngine: KnexEngine, pictureId: number) => {
@@ -873,11 +862,32 @@ const incNotAPlaceCount = async (knexEngine: KnexEngine, pictureId: number) => {
     'is_not_a_place_count',
     knexEngine.raw('COALESCE(is_not_a_place_count, 0) + 1')
   );
-  // added to trigger a change to the picture index of Meilisearch
-  strapi.db.lifecycles.run('afterUpdate', 'api::picture.picture', {
-    params: { where: { id: pictureId } },
-    result: { id: pictureId },
-  });
+  await reindexPictures([pictureId]);
 };
 
-export { bulkEdit, incNotAPlaceCount, like, updatePictureWithTagCleanup };
+// The Meilisearch plugin updates its index only after Document Service calls, not after
+// strapi.db.query or SQL writes.
+const reindexPictures = async (pictureIds: number[]) => {
+  const meilisearch = strapi.plugin('meilisearch');
+  const uid = 'api::picture.picture';
+  if (
+    pictureIds.length === 0 ||
+    !meilisearch ||
+    !(await meilisearch.service('store').getListenedContentTypes()).includes(uid)
+  ) {
+    return;
+  }
+  const service = meilisearch.service('meilisearch');
+  try {
+    const entries = await strapi.documents(uid).findMany({
+      ...service.entriesQuery({ contentType: uid }),
+      filters: { id: { $in: pictureIds } },
+      limit: pictureIds.length,
+    });
+    await service.updateEntriesInMeilisearch({ contentType: uid, entries });
+  } catch (error) {
+    strapi.log.error('Could not update the Meilisearch index of pictures', error);
+  }
+};
+
+export { bulkEdit, incNotAPlaceCount, like, reindexPictures, updatePictureWithTagCleanup };

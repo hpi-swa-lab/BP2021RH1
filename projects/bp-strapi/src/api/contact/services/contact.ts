@@ -41,11 +41,10 @@ export const contact = async ({
   let archive;
 
   try {
-    archive = await strapi.entityService.findOne(
-      'api::archive-tag.archive-tag',
-      Number(recipient),
-      { fields: ['email', 'name'] }
-    );
+    archive = await strapi.db.query('api::archive-tag.archive-tag').findOne({
+      select: ['email', 'name'],
+      where: { id: Number(recipient) },
+    });
   } catch (error) {
     strapi.log.error(`Error while querying database with archive id '${recipient}':`, error);
 

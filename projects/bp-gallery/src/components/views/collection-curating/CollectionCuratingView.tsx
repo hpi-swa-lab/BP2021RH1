@@ -13,7 +13,7 @@ const CollectionCuratingView = () => {
 
   useEffect(() => {
     // No flattening since we only need the id here
-    const id = rootCollection?.browseRootCollection?.data?.attributes?.current?.data?.id;
+    const id = rootCollection?.browseRootCollection?.data.attributes.current?.data.id;
     if (id) {
       setPanels([id]);
     }

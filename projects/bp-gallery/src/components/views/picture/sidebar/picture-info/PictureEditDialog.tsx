@@ -99,7 +99,7 @@ const PictureEditDialog = memo(function PictureEditDialog({
         files: [file],
       },
     });
-    const uploadedId = uploadedPicture.data?.multipleUpload[0]?.data?.id;
+    const uploadedId = uploadedPicture.data?.multipleUpload[0]?.data.id;
     if (!uploadedId) {
       return;
     }

@@ -28,7 +28,7 @@
     "events": "^3.3.0",
     "extract-files": "^11.0.0",
     "fuse.js": "^6.6.2",
-    "graphql": "16.0.1",
+    "graphql": "16.15.0",
     "i18next": "^22.4.0",
     "i18next-browser-languagedetector": "^7.0.1",
     "i18next-http-backend": "^2.1.0",

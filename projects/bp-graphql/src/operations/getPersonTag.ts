@@ -4,7 +4,7 @@ export default {
   isEssential: true,
   document: graphql`
     query getPersonTag($id: ID!) {
-      personTag(id: $id) {
+      personTag(documentId: $id) {
         data {
           attributes {
             name

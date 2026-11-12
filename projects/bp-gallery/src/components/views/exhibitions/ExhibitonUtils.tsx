@@ -732,7 +732,7 @@ const useExhibitionDatabaseSaver = () => {
           order: order,
         },
       });
-      const id = result.data?.createExhibitionSection?.data?.id;
+      const id = result.data?.createExhibitionSection?.data.id;
       return id;
     },
 

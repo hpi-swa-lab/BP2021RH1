@@ -7,7 +7,7 @@ export default {
   isAllowed: always,
   document: graphql`
     query getUnverifiedComments {
-      comments(filters: { accepted: { eq: false } }) {
+      comments: comments_connection(filters: { accepted: { eq: false } }) {
         data {
           id
           attributes {

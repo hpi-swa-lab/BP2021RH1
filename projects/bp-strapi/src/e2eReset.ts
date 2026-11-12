@@ -87,21 +87,22 @@ export const registerE2eReset = (strapi: StrapiExtended) => {
     };
     const tasks: number[] = [];
     for (const contentType of (await store.getIndexedContentTypes()) as string[]) {
-      const index = service.getIndexNameOfContentType({ contentType }) as string;
-      tasks.push(
-        ((await request(`/indexes/${index}/documents`, 'DELETE')) as MeilisearchTask).taskUid
-      );
+      for (const index of service.getIndexNamesOfContentType({ contentType }) as string[]) {
+        tasks.push(
+          ((await request(`/indexes/${index}/documents`, 'DELETE')) as MeilisearchTask).taskUid
+        );
+      }
       await meilisearch()
         .service('contentType')
         .actionInBatches({
           contentType,
           entriesQuery: service.entriesQuery({ contentType }),
           callback: async ({ entries }: { entries: unknown[] }) => {
-            const task = (await service.addEntriesToMeilisearch({
+            const added = (await service.addEntriesToMeilisearch({
               contentType,
               entries,
-            })) as MeilisearchTask;
-            tasks.push(task.taskUid);
+            })) as MeilisearchTask[];
+            tasks.push(...added.map(task => task.taskUid));
           },
         });
     }

@@ -4,7 +4,7 @@ export default {
   isEssential: true,
   document: graphql`
     query getArchive($archiveId: ID!) {
-      archiveTag(id: $archiveId) {
+      archiveTag(documentId: $archiveId) {
         data {
           id
           attributes {
@@ -49,7 +49,7 @@ export default {
                 }
               }
             }
-            links {
+            links: links_connection {
               data {
                 id
                 attributes {

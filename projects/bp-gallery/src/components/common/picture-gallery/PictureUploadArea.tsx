@@ -99,7 +99,7 @@ const PictureUploadArea = ({
         })
       ).data?.multipleUpload ?? []
     )
-      .map(upload => upload?.data?.id)
+      .map(upload => upload?.data.id)
       .map(initializePictureFromFile);
     // don't turn into Promise.all, as the order of the pictures
     // (specifically their ids) should be preserved

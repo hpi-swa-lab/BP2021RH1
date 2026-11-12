@@ -535,8 +535,8 @@ export const useDeleteTag = (
       return (
         data?.locationTags?.data.map(
           ({ attributes }) =>
-            (attributes?.pictures?.data.length ?? 0) +
-            (attributes?.verified_pictures?.data.length ?? 0)
+            (attributes.pictures?.data.length ?? 0) +
+            (attributes.verified_pictures?.data.length ?? 0)
         ) ?? []
       );
     };

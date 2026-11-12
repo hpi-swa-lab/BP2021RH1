@@ -4,7 +4,7 @@ export default {
   isEssential: true,
   document: graphql`
     query getAllPictureIds {
-      pictures {
+      pictures: pictures_connection {
         data {
           id
         }

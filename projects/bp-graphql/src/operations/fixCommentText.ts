@@ -7,7 +7,7 @@ export default {
   isAllowed: checkComment('commentId'),
   document: graphql`
     mutation fixCommentText($commentId: ID!, $text: String!) {
-      updateComment(id: $commentId, data: { text: $text }) {
+      updateComment(documentId: $commentId, data: { text: $text }) {
         data {
           id
         }

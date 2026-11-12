@@ -7,7 +7,10 @@ export default {
   isAllowed: always,
   document: graphql`
     mutation updateCollectionParents($collectionId: ID!, $parentCollectionIds: [ID]!) {
-      updateCollection(id: $collectionId, data: { parent_collections: $parentCollectionIds }) {
+      updateCollection(
+        documentId: $collectionId
+        data: { parent_collections: $parentCollectionIds }
+      ) {
         data {
           id
         }

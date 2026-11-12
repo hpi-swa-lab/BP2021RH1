@@ -6,10 +6,8 @@ export default {
   isAllowed: checkExhibition('id'),
   document: graphql`
     mutation deleteExhibition($id: ID!) {
-      deleteExhibition(id: $id) {
-        data {
-          id
-        }
+      deleteExhibition(documentId: $id) {
+        documentId
       }
     }
   `,

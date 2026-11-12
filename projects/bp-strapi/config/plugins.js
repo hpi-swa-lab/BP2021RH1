@@ -1,6 +1,9 @@
 const {
   apolloPlugin: apolloParameterizedPermissionsPlugin,
 } = require('../src/parameterizedPermissions/apolloServerPlugin');
+const {
+  enforcePasswordRequirements,
+} = require('../src/extensions/users-permissions/passwordRequirements');
 
 /* eslint-disable no-unused-vars */
 
@@ -15,7 +18,7 @@ module.exports = ({ env }) => ({
     config: {
       endpoint: '/graphql',
       shadowCRUD: true,
-      playgroundAlways: false,
+      v4CompatibilityMode: true,
       defaultLimit: -1,
       // Any other value turns off the batched relation loading in src/batchRelationLoads.ts.
       maxLimit: -1,
@@ -23,6 +26,8 @@ module.exports = ({ env }) => ({
         tracing: false,
         // https://www.apollographql.com/docs/apollo-server/api/apollo-server/#introspection
         introspection: true,
+        // The gallery batches some operations, see buildHttpLink in bp-gallery
+        allowBatchedHttpRequests: true,
         plugins: [apolloParameterizedPermissionsPlugin],
       },
     },
@@ -32,6 +37,12 @@ module.exports = ({ env }) => ({
       jwtSecret: env('JWT_SECRET'),
       // addUser in src/api/parameterized-permission/services/custom-update.ts only sends the default fields
       register: { allowedFields: [] },
+      validationRules: {
+        validatePassword(password) {
+          enforcePasswordRequirements(password);
+          return true;
+        },
+      },
       resetPasswordTokenExpirationTimeMilliseconds:
         Number(env('RESET_PASSWORD_TOKEN_EXPIRATION_TIME_MILLISECONDS')) ||
         // default: 1 day
@@ -98,6 +109,8 @@ module.exports = ({ env }) => ({
         },
         transformEntry({ entry }) {
           const transformedEntry = {
+            // The plugin builds the ids of the documents from it
+            documentId: entry?.documentId,
             id: entry?.id,
             is_text: entry?.is_text,
             likes: entry?.likes ?? 0,
@@ -198,6 +211,8 @@ module.exports = ({ env }) => ({
         },
         transformEntry({ entry }) {
           const transformedEntry = {
+            // The plugin builds the ids of the documents from it
+            documentId: entry?.documentId,
             id: entry?.id,
             pictureId: entry?.picture?.id ?? null,
             author: entry?.author,
@@ -261,19 +276,25 @@ module.exports = ({ env }) => ({
   ...(env('AWS_ENABLED', 'false') === 'true' && {
     upload: {
       config: {
-        provider: 'strapi-provider-upload-aws-s3-advanced',
+        provider: 'aws-s3',
         providerOptions: {
-          accessKeyId: env('AWS_ACCESS_KEY_ID'),
-          secretAccessKey: env('AWS_ACCESS_SECRET'),
-          region: env('AWS_REGION'),
-          // only set for a local S3 server, see docs/local-setup.md
-          endpoint: env('AWS_ENDPOINT'),
-          forcePathStyle: env.bool('AWS_FORCE_PATH_STYLE', false),
-          params: {
-            bucket: env('AWS_BUCKET_NAME'),
-          },
           baseUrl: env('CDN_BASE_URL'), // e.g. "https://cdn.example.com", this is stored in strapi's database to point to the file
-          prefix: env('BUCKET_PREFIX'), // e.g. "strapi-assets". If BUCKET_PREFIX contains leading or trailing slashes, they are removed internally to construct the URL safely
+          rootPath: env('BUCKET_PREFIX'), // e.g. "strapi-assets", without a leading slash
+          s3Options: {
+            credentials: {
+              accessKeyId: env('AWS_ACCESS_KEY_ID'),
+              secretAccessKey: env('AWS_ACCESS_SECRET'),
+            },
+            region: env('AWS_REGION'),
+            // only set for a local S3 server, see docs/local-setup.md
+            endpoint: env('AWS_ENDPOINT'),
+            forcePathStyle: env.bool('AWS_FORCE_PATH_STYLE', false),
+            params: {
+              Bucket: env('AWS_BUCKET_NAME'),
+              // Without this key the provider sends a public-read ACL, which a bucket with ACLs turned off refuses.
+              ACL: undefined,
+            },
+          },
         },
       },
     },

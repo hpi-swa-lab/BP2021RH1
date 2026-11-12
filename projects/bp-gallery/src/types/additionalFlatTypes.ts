@@ -1,29 +1,60 @@
 import {
-  ArchiveTag,
-  Collection,
-  Comment,
-  ComponentCommonSynonyms,
-  ComponentLocationCoordinates,
-  Description,
-  Exhibition,
-  ExhibitionPicture,
-  ExhibitionSection,
-  FaceTag,
-  KeywordTag,
-  Link,
-  LocationTag,
-  ParameterizedPermission,
-  PersonTag,
-  Picture,
-  PictureGeoInfo,
-  PictureSequence,
+  ArchiveTag as ArchiveTagType,
+  Collection as CollectionType,
+  Comment as CommentType,
+  ComponentCommonSynonyms as ComponentCommonSynonymsType,
+  ComponentLocationCoordinates as ComponentLocationCoordinatesType,
+  Description as DescriptionType,
+  Exhibition as ExhibitionType,
+  ExhibitionPicture as ExhibitionPictureType,
+  ExhibitionSection as ExhibitionSectionType,
+  FaceTag as FaceTagType,
+  KeywordTag as KeywordTagType,
+  Link as LinkType,
+  LocationTag as LocationTagType,
+  ParameterizedPermission as ParameterizedPermissionType,
+  PersonTag as PersonTagType,
+  Picture as PictureType,
+  PictureGeoInfo as PictureGeoInfoType,
+  PictureSequence as PictureSequenceType,
+  TimeRangeTag as TimeRangeTagType,
+  UploadFile as UploadFileType,
+  UsersPermissionsPermission as UsersPermissionsPermissionType,
+  UsersPermissionsRole as UsersPermissionsRoleType,
+  UsersPermissionsUser as UsersPermissionsUserType,
   Scalars,
-  TimeRangeTag,
-  UploadFile,
-  UsersPermissionsPermission,
-  UsersPermissionsRole,
-  UsersPermissionsUser,
 } from '../graphql/APIConnector';
+
+// Without the fields of Strapi's GraphQL schema that only exist for the response shape. Relations
+// are lists that can't be null there, but an operation selects only some of them.
+type ListKeys<T> = { [K in keyof T]-?: NonNullable<T[K]> extends unknown[] ? K : never }[keyof T];
+type ShapeKeys = 'data' | 'attributes' | 'documentId' | `${string}_connection`;
+type Fields<T> = Omit<T, ShapeKeys | ListKeys<T>> &
+  Partial<Pick<T, Exclude<ListKeys<T>, ShapeKeys>>>;
+type ArchiveTag = Fields<ArchiveTagType>;
+type Collection = Fields<CollectionType>;
+type Comment = Fields<CommentType>;
+export type ComponentCommonSynonyms = Fields<ComponentCommonSynonymsType>;
+
+type ComponentLocationCoordinates = Fields<ComponentLocationCoordinatesType>;
+type Description = Fields<DescriptionType>;
+type Exhibition = Fields<ExhibitionType>;
+type ExhibitionPicture = Fields<ExhibitionPictureType>;
+type ExhibitionSection = Fields<ExhibitionSectionType>;
+type FaceTag = Fields<FaceTagType>;
+type KeywordTag = Fields<KeywordTagType>;
+type Link = Fields<LinkType>;
+type LocationTag = Fields<LocationTagType>;
+type ParameterizedPermission = Fields<ParameterizedPermissionType>;
+type PersonTag = Fields<PersonTagType>;
+type Picture = Fields<PictureType>;
+type PictureGeoInfo = Fields<PictureGeoInfoType>;
+type PictureSequence = Fields<PictureSequenceType>;
+type TimeRangeTag = Fields<TimeRangeTagType>;
+type UploadFile = Fields<UploadFileType>;
+type UsersPermissionsPermission = Fields<UsersPermissionsPermissionType>;
+type UsersPermissionsRole = Fields<UsersPermissionsRoleType>;
+type UsersPermissionsUser = Fields<UsersPermissionsUserType>;
 
 type ID = { id: Scalars['ID'] };
 

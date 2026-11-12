@@ -266,7 +266,7 @@ const ExhibitionOverview = ({
     const result = await createExhibition({
       variables: { archiveId: archiveId ?? '0' },
     });
-    const id = result.data?.createExhibition?.data?.id;
+    const id = result.data?.createExhibition?.data.id;
     id && visit(`/exhibitiontool/${id}`);
   };
 

@@ -1,8 +1,8 @@
-import { getIntrospectionQuery } from 'graphql';
 import { OperationDefinitionNode } from 'graphql/language/ast';
 
-const introspectionQuery = getIntrospectionQuery();
-
-export const isIntrospectionQuery = (operation: OperationDefinitionNode) => {
-  return operation.loc?.source.body === introspectionQuery;
-};
+// The query text of an introspection depends on the client's graphql version, so check its fields.
+export const isIntrospectionQuery = (operation: OperationDefinitionNode) =>
+  operation.operation === 'query' &&
+  operation.selectionSet.selections.every(
+    selection => selection.kind === 'Field' && selection.name.value.startsWith('__')
+  );

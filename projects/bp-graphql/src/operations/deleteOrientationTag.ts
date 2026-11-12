@@ -6,10 +6,8 @@ export default {
   isAllowed: checkOrientationTag('id'),
   document: graphql`
     mutation deleteOrientationTag($id: ID!) {
-      deleteOrientationTag(id: $id) {
-        data {
-          id
-        }
+      deleteOrientationTag(documentId: $id) {
+        documentId
       }
     }
   `,

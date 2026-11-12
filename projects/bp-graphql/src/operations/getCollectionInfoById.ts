@@ -6,29 +6,29 @@ export default {
   isAllowed: always,
   document: graphql`
     query getCollectionInfoById($collectionId: ID!) {
-      collection(id: $collectionId) {
+      collection(documentId: $collectionId) {
         data {
           id
           attributes {
             name
             description
-            child_collections(sort: "name:asc") {
+            child_collections: child_collections_connection(sort: "name:asc") {
               data {
                 id
                 attributes {
                   name
                   visible
-                  pictures(pagination: { limit: 1 }) {
+                  pictures: pictures_connection(pagination: { limit: 1 }) {
                     data {
                       id
                     }
                   }
-                  child_collections(pagination: { limit: 1 }) {
+                  child_collections: child_collections_connection(pagination: { limit: 1 }) {
                     data {
                       id
                     }
                   }
-                  parent_collections {
+                  parent_collections: parent_collections_connection {
                     data {
                       id
                       attributes {

@@ -7,7 +7,7 @@ export default {
   isAllowed: always,
   document: graphql`
     mutation updateCollection($collectionId: ID!, $data: CollectionInput!) {
-      updateCollection(id: $collectionId, data: $data) {
+      updateCollection(documentId: $collectionId, data: $data) {
         data {
           id
         }

@@ -36,9 +36,7 @@ export const AdvancedSearch = ({
   const isLoggedIn = authContext.loggedIn;
   const { data } = useGetAllArchiveTagsQuery();
   const archiveTags = data?.archiveTags?.data
-    ? data.archiveTags.data.map(tagData =>
-        tagData.attributes?.name ? tagData.attributes.name : ''
-      )
+    ? data.archiveTags.data.map(tagData => (tagData.attributes.name ? tagData.attributes.name : ''))
     : [''];
 
   const { t } = useTranslation();

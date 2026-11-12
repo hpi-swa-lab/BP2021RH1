@@ -7,7 +7,7 @@ export default {
   isAllowed: always,
   document: graphql`
     mutation updateLocationAcceptance($tagId: ID!, $accepted: Boolean) {
-      updateLocationTag(id: $tagId, data: { accepted: $accepted }) {
+      updateLocationTag(documentId: $tagId, data: { accepted: $accepted }) {
         data {
           id
         }

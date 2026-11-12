@@ -4,7 +4,7 @@ export default {
   isEssential: true,
   document: graphql`
     query getMostLikedPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
-      pictures(
+      pictures: pictures_connection(
         filters: { and: [{ likes: { gt: 0 } }, $filters] }
         pagination: $pagination
         sort: ["likes:desc"]
@@ -13,7 +13,7 @@ export default {
           id
           attributes {
             is_text
-            comments(filters: { accepted: { eq: true } }) {
+            comments: comments_connection(filters: { accepted: { eq: true } }) {
               data {
                 id
               }
@@ -36,7 +36,7 @@ export default {
               data {
                 id
                 attributes {
-                  pictures(sort: "picture_sequence_order:asc") {
+                  pictures: pictures_connection(sort: "picture_sequence_order:asc") {
                     data {
                       id
                     }

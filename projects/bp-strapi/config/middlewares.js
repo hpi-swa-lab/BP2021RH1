@@ -17,7 +17,7 @@ module.exports = ({ env }) => [
   {
     name: 'strapi::cors',
     config: {
-      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept', 'Apollo-Require-Preflight'],
     },
   },
   'strapi::poweredBy',
@@ -28,4 +28,5 @@ module.exports = ({ env }) => [
   'strapi::public',
   'global::denyEndpoints',
   'global::readGraphQLBody',
+  'global::graphqlUpload',
 ];

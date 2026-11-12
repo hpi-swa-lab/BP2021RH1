@@ -6,12 +6,12 @@ export default {
   isAllowed: always,
   document: graphql`
     query getAllCollections {
-      collections {
+      collections: collections_connection {
         data {
           id
           attributes {
             name
-            parent_collections {
+            parent_collections: parent_collections_connection {
               data {
                 id
                 attributes {

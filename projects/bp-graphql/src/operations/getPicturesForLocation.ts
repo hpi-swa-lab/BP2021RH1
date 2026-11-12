@@ -4,16 +4,16 @@ export default {
   isEssential: true,
   document: graphql`
     query getPicturesForLocation($tagIDs: [ID!]) {
-      locationTags(filters: { id: { in: $tagIDs } }) {
+      locationTags: locationTags_connection(filters: { id: { in: $tagIDs } }) {
         data {
           id
           attributes {
-            pictures {
+            pictures: pictures_connection {
               data {
                 id
               }
             }
-            verified_pictures {
+            verified_pictures: verified_pictures_connection {
               data {
                 id
               }

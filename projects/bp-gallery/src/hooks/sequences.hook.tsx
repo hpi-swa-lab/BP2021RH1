@@ -75,7 +75,7 @@ export const useCreateSequence = () => {
         },
       });
       updatePictureSequenceOrder(pictures);
-      return pictureSequence.data?.createPictureSequence?.data?.id;
+      return pictureSequence.data?.createPictureSequence?.data.id;
     },
     [dialog, t, createPictureSequence, updatePictureSequenceOrder]
   );

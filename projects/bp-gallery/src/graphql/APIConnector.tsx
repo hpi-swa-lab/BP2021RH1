@@ -39,26 +39,43 @@ export type ArchivePictureCountEntityResponseCollection = {
 };
 
 export type ArchiveTag = {
+  /** @deprecated Use root level fields instead */
+  attributes: ArchiveTag;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: ArchiveTag;
   deleted?: Maybe<Scalars['Boolean']>;
+  documentId: Scalars['ID'];
   email?: Maybe<Scalars['String']>;
-  exhibitions?: Maybe<ExhibitionRelationResponseCollection>;
+  exhibitions: Array<Maybe<Exhibition>>;
+  exhibitions_connection?: Maybe<ExhibitionRelationResponseCollection>;
   hidden?: Maybe<Scalars['Boolean']>;
-  links?: Maybe<LinkRelationResponseCollection>;
-  logo?: Maybe<UploadFileEntityResponse>;
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  links: Array<Maybe<Link>>;
+  links_connection?: Maybe<LinkRelationResponseCollection>;
+  logo?: Maybe<UploadFile>;
   longDescription?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   paypalClient?: Maybe<Scalars['String']>;
   paypalDonationText?: Maybe<Scalars['String']>;
   paypalPurpose?: Maybe<Scalars['String']>;
-  pictures?: Maybe<PictureRelationResponseCollection>;
+  pictures: Array<Maybe<Picture>>;
+  pictures_connection?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   restrictImageDownloading?: Maybe<Scalars['Boolean']>;
   shortDescription?: Maybe<Scalars['String']>;
-  showcasePicture?: Maybe<PictureEntityResponse>;
+  showcasePicture?: Maybe<Picture>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type ArchiveTagExhibitionsArgs = {
+  filters?: InputMaybe<ExhibitionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ArchiveTagExhibitions_ConnectionArgs = {
   filters?: InputMaybe<ExhibitionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -70,30 +87,38 @@ export type ArchiveTagLinksArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type ArchiveTagLinks_ConnectionArgs = {
+  filters?: InputMaybe<LinkFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type ArchiveTagPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type ArchiveTagEntity = {
-  attributes?: Maybe<ArchiveTag>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type ArchiveTagEntityResponse = {
-  data?: Maybe<ArchiveTagEntity>;
+export type ArchiveTagPictures_ConnectionArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type ArchiveTagEntityResponseCollection = {
-  data: Array<ArchiveTagEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<ArchiveTag>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<ArchiveTag>;
+  pageInfo: Pagination;
 };
 
 export type ArchiveTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ArchiveTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   deleted?: InputMaybe<BooleanFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   email?: InputMaybe<StringFilterInput>;
   exhibitions?: InputMaybe<ExhibitionFiltersInput>;
   hidden?: InputMaybe<BooleanFilterInput>;
@@ -107,6 +132,7 @@ export type ArchiveTagFiltersInput = {
   paypalDonationText?: InputMaybe<StringFilterInput>;
   paypalPurpose?: InputMaybe<StringFilterInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   restrictImageDownloading?: InputMaybe<BooleanFilterInput>;
   shortDescription?: InputMaybe<StringFilterInput>;
   showcasePicture?: InputMaybe<PictureFiltersInput>;
@@ -119,6 +145,7 @@ export type ArchiveTagInput = {
   exhibitions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   hidden?: InputMaybe<Scalars['Boolean']>;
   links?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  locale?: InputMaybe<Scalars['String']>;
   logo?: InputMaybe<Scalars['ID']>;
   longDescription?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
@@ -126,6 +153,7 @@ export type ArchiveTagInput = {
   paypalDonationText?: InputMaybe<Scalars['String']>;
   paypalPurpose?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   restrictImageDownloading?: InputMaybe<Scalars['Boolean']>;
   shortDescription?: InputMaybe<Scalars['String']>;
   showcasePicture?: InputMaybe<Scalars['ID']>;
@@ -157,31 +185,43 @@ export type BooleanFilterInput = {
 };
 
 export type BrowseRootCollection = {
+  /** @deprecated Use root level fields instead */
+  attributes: BrowseRootCollection;
   createdAt?: Maybe<Scalars['DateTime']>;
-  current?: Maybe<CollectionEntityResponse>;
+  current?: Maybe<Collection>;
+  /** @deprecated Use root level fields instead */
+  data: BrowseRootCollection;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  publishedAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
-};
-
-export type BrowseRootCollectionEntity = {
-  attributes?: Maybe<BrowseRootCollection>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type BrowseRootCollectionEntityResponse = {
-  data?: Maybe<BrowseRootCollectionEntity>;
 };
 
 export type BrowseRootCollectionInput = {
   current?: InputMaybe<Scalars['ID']>;
+  locale?: InputMaybe<Scalars['String']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
 export type Collection = {
-  child_collections?: Maybe<CollectionRelationResponseCollection>;
+  /** @deprecated Use root level fields instead */
+  attributes: Collection;
+  child_collections: Array<Maybe<Collection>>;
+  child_collections_connection?: Maybe<CollectionRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: Collection;
   description?: Maybe<Scalars['String']>;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   name: Scalars['String'];
-  parent_collections?: Maybe<CollectionRelationResponseCollection>;
-  pictures?: Maybe<PictureRelationResponseCollection>;
+  parent_collections: Array<Maybe<Collection>>;
+  parent_collections_connection?: Maybe<CollectionRelationResponseCollection>;
+  pictures: Array<Maybe<Picture>>;
+  pictures_connection?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   thumbnail?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   visible: Scalars['Boolean'];
@@ -193,7 +233,19 @@ export type CollectionChild_CollectionsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type CollectionChild_Collections_ConnectionArgs = {
+  filters?: InputMaybe<CollectionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type CollectionParent_CollectionsArgs = {
+  filters?: InputMaybe<CollectionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type CollectionParent_Collections_ConnectionArgs = {
   filters?: InputMaybe<CollectionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -205,18 +257,19 @@ export type CollectionPicturesArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type CollectionEntity = {
-  attributes?: Maybe<Collection>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type CollectionEntityResponse = {
-  data?: Maybe<CollectionEntity>;
+export type CollectionPictures_ConnectionArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CollectionEntityResponseCollection = {
-  data: Array<CollectionEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<Collection>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<Collection>;
+  pageInfo: Pagination;
 };
 
 export type CollectionFiltersInput = {
@@ -224,12 +277,14 @@ export type CollectionFiltersInput = {
   child_collections?: InputMaybe<CollectionFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   description?: InputMaybe<StringFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<CollectionFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<CollectionFiltersInput>>>;
   parent_collections?: InputMaybe<CollectionFiltersInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   thumbnail?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   visible?: InputMaybe<BooleanFilterInput>;
@@ -238,26 +293,39 @@ export type CollectionFiltersInput = {
 export type CollectionInput = {
   child_collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   description?: InputMaybe<Scalars['String']>;
+  locale?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   parent_collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   thumbnail?: InputMaybe<Scalars['String']>;
   visible?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CollectionRelationResponseCollection = {
-  data: Array<CollectionEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<Collection>;
+  nodes: Array<Collection>;
 };
 
 export type Comment = {
   accepted: Scalars['Boolean'];
+  /** @deprecated Use root level fields instead */
+  attributes: Comment;
   author?: Maybe<Scalars['String']>;
-  childComments?: Maybe<CommentRelationResponseCollection>;
+  childComments: Array<Maybe<Comment>>;
+  childComments_connection?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: Comment;
   date: Scalars['DateTime'];
-  parentComment?: Maybe<CommentEntityResponse>;
-  picture?: Maybe<PictureEntityResponse>;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  parentComment?: Maybe<Comment>;
+  picture?: Maybe<Picture>;
   pinned?: Maybe<Scalars['Boolean']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   text: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
@@ -268,18 +336,19 @@ export type CommentChildCommentsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type CommentEntity = {
-  attributes?: Maybe<Comment>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type CommentEntityResponse = {
-  data?: Maybe<CommentEntity>;
+export type CommentChildComments_ConnectionArgs = {
+  filters?: InputMaybe<CommentFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CommentEntityResponseCollection = {
-  data: Array<CommentEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<Comment>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<Comment>;
+  pageInfo: Pagination;
 };
 
 export type CommentFiltersInput = {
@@ -289,12 +358,14 @@ export type CommentFiltersInput = {
   childComments?: InputMaybe<CommentFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   date?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<CommentFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<CommentFiltersInput>>>;
   parentComment?: InputMaybe<CommentFiltersInput>;
   picture?: InputMaybe<PictureFiltersInput>;
   pinned?: InputMaybe<BooleanFilterInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   text?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
@@ -304,17 +375,25 @@ export type CommentInput = {
   author?: InputMaybe<Scalars['String']>;
   childComments?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   date?: InputMaybe<Scalars['DateTime']>;
+  locale?: InputMaybe<Scalars['String']>;
   parentComment?: InputMaybe<Scalars['ID']>;
   picture?: InputMaybe<Scalars['ID']>;
   pinned?: InputMaybe<Scalars['Boolean']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   text?: InputMaybe<Scalars['String']>;
 };
 
 export type CommentRelationResponseCollection = {
-  data: Array<CommentEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<Comment>;
+  nodes: Array<Comment>;
 };
 
 export type ComponentCommonSynonyms = {
+  /** @deprecated Use root level fields instead */
+  attributes: ComponentCommonSynonyms;
+  /** @deprecated Use root level fields instead */
+  data: ComponentCommonSynonyms;
   id: Scalars['ID'];
   name: Scalars['String'];
 };
@@ -332,6 +411,10 @@ export type ComponentCommonSynonymsInput = {
 };
 
 export type ComponentLocationCoordinates = {
+  /** @deprecated Use root level fields instead */
+  attributes: ComponentLocationCoordinates;
+  /** @deprecated Use root level fields instead */
+  data: ComponentLocationCoordinates;
   id: Scalars['ID'];
   latitude: Scalars['Float'];
   longitude: Scalars['Float'];
@@ -376,9 +459,22 @@ export type DateTimeFilterInput = {
   startsWith?: InputMaybe<Scalars['DateTime']>;
 };
 
+export type DeleteMutationResponse = {
+  documentId: Scalars['ID'];
+};
+
 export type Description = {
+  /** @deprecated Use root level fields instead */
+  attributes: Description;
   createdAt?: Maybe<Scalars['DateTime']>;
-  pictures?: Maybe<PictureRelationResponseCollection>;
+  /** @deprecated Use root level fields instead */
+  data: Description;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  pictures: Array<Maybe<Picture>>;
+  pictures_connection?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   text: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
@@ -389,53 +485,76 @@ export type DescriptionPicturesArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type DescriptionEntity = {
-  attributes?: Maybe<Description>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type DescriptionEntityResponse = {
-  data?: Maybe<DescriptionEntity>;
+export type DescriptionPictures_ConnectionArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type DescriptionEntityResponseCollection = {
-  data: Array<DescriptionEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<Description>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<Description>;
+  pageInfo: Pagination;
 };
 
 export type DescriptionFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<DescriptionFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<DescriptionFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<DescriptionFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   text?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
 
 export type DescriptionInput = {
+  locale?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   text?: InputMaybe<Scalars['String']>;
 };
 
 export type DescriptionRelationResponseCollection = {
-  data: Array<DescriptionEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<Description>;
+  nodes: Array<Description>;
 };
 
 export type Exhibition = {
-  archive_tag?: Maybe<ArchiveTagEntityResponse>;
+  archive_tag?: Maybe<ArchiveTag>;
+  /** @deprecated Use root level fields instead */
+  attributes: Exhibition;
   createdAt?: Maybe<Scalars['DateTime']>;
-  exhibition_sections?: Maybe<ExhibitionSectionRelationResponseCollection>;
-  idealot_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
+  /** @deprecated Use root level fields instead */
+  data: Exhibition;
+  documentId: Scalars['ID'];
+  exhibition_sections: Array<Maybe<ExhibitionSection>>;
+  exhibition_sections_connection?: Maybe<ExhibitionSectionRelationResponseCollection>;
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  idealot_pictures: Array<Maybe<ExhibitionPicture>>;
+  idealot_pictures_connection?: Maybe<ExhibitionPictureRelationResponseCollection>;
   introduction?: Maybe<Scalars['String']>;
   is_published?: Maybe<Scalars['Boolean']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   title?: Maybe<Scalars['String']>;
-  title_picture?: Maybe<ExhibitionPictureEntityResponse>;
+  title_picture?: Maybe<ExhibitionPicture>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type ExhibitionExhibition_SectionsArgs = {
+  filters?: InputMaybe<ExhibitionSectionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ExhibitionExhibition_Sections_ConnectionArgs = {
   filters?: InputMaybe<ExhibitionSectionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -447,24 +566,26 @@ export type ExhibitionIdealot_PicturesArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type ExhibitionEntity = {
-  attributes?: Maybe<Exhibition>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type ExhibitionEntityResponse = {
-  data?: Maybe<ExhibitionEntity>;
+export type ExhibitionIdealot_Pictures_ConnectionArgs = {
+  filters?: InputMaybe<ExhibitionPictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type ExhibitionEntityResponseCollection = {
-  data: Array<ExhibitionEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<Exhibition>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<Exhibition>;
+  pageInfo: Pagination;
 };
 
 export type ExhibitionFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ExhibitionFiltersInput>>>;
   archive_tag?: InputMaybe<ArchiveTagFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   exhibition_sections?: InputMaybe<ExhibitionSectionFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   idealot_pictures?: InputMaybe<ExhibitionPictureFiltersInput>;
@@ -472,6 +593,7 @@ export type ExhibitionFiltersInput = {
   is_published?: InputMaybe<BooleanFilterInput>;
   not?: InputMaybe<ExhibitionFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ExhibitionFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   title?: InputMaybe<StringFilterInput>;
   title_picture?: InputMaybe<ExhibitionPictureFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -483,37 +605,43 @@ export type ExhibitionInput = {
   idealot_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   introduction?: InputMaybe<Scalars['String']>;
   is_published?: InputMaybe<Scalars['Boolean']>;
+  locale?: InputMaybe<Scalars['String']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   title?: InputMaybe<Scalars['String']>;
   title_picture?: InputMaybe<Scalars['ID']>;
 };
 
 export type ExhibitionPicture = {
+  /** @deprecated Use root level fields instead */
+  attributes: ExhibitionPicture;
   createdAt?: Maybe<Scalars['DateTime']>;
-  exhibition_idealot?: Maybe<ExhibitionEntityResponse>;
-  exhibition_section?: Maybe<ExhibitionSectionEntityResponse>;
+  /** @deprecated Use root level fields instead */
+  data: ExhibitionPicture;
+  documentId: Scalars['ID'];
+  exhibition_idealot?: Maybe<Exhibition>;
+  exhibition_section?: Maybe<ExhibitionSection>;
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   order?: Maybe<Scalars['Int']>;
-  picture?: Maybe<PictureEntityResponse>;
+  picture?: Maybe<Picture>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   subtitle?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
-export type ExhibitionPictureEntity = {
-  attributes?: Maybe<ExhibitionPicture>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type ExhibitionPictureEntityResponse = {
-  data?: Maybe<ExhibitionPictureEntity>;
-};
-
 export type ExhibitionPictureEntityResponseCollection = {
-  data: Array<ExhibitionPictureEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<ExhibitionPicture>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<ExhibitionPicture>;
+  pageInfo: Pagination;
 };
 
 export type ExhibitionPictureFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ExhibitionPictureFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   exhibition_idealot?: InputMaybe<ExhibitionFiltersInput>;
   exhibition_section?: InputMaybe<ExhibitionSectionFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
@@ -521,6 +649,7 @@ export type ExhibitionPictureFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<ExhibitionPictureFiltersInput>>>;
   order?: InputMaybe<IntFilterInput>;
   picture?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   subtitle?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
@@ -528,24 +657,39 @@ export type ExhibitionPictureFiltersInput = {
 export type ExhibitionPictureInput = {
   exhibition_idealot?: InputMaybe<Scalars['ID']>;
   exhibition_section?: InputMaybe<Scalars['ID']>;
+  locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<Scalars['Int']>;
   picture?: InputMaybe<Scalars['ID']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   subtitle?: InputMaybe<Scalars['String']>;
 };
 
 export type ExhibitionPictureRelationResponseCollection = {
-  data: Array<ExhibitionPictureEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<ExhibitionPicture>;
+  nodes: Array<ExhibitionPicture>;
 };
 
 export type ExhibitionRelationResponseCollection = {
-  data: Array<ExhibitionEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<Exhibition>;
+  nodes: Array<Exhibition>;
 };
 
 export type ExhibitionSection = {
+  /** @deprecated Use root level fields instead */
+  attributes: ExhibitionSection;
   createdAt?: Maybe<Scalars['DateTime']>;
-  exhibition?: Maybe<ExhibitionEntityResponse>;
-  exhibition_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
+  /** @deprecated Use root level fields instead */
+  data: ExhibitionSection;
+  documentId: Scalars['ID'];
+  exhibition?: Maybe<Exhibition>;
+  exhibition_pictures: Array<Maybe<ExhibitionPicture>>;
+  exhibition_pictures_connection?: Maybe<ExhibitionPictureRelationResponseCollection>;
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   order?: Maybe<Scalars['Int']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   text?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -557,29 +701,32 @@ export type ExhibitionSectionExhibition_PicturesArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type ExhibitionSectionEntity = {
-  attributes?: Maybe<ExhibitionSection>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type ExhibitionSectionEntityResponse = {
-  data?: Maybe<ExhibitionSectionEntity>;
+export type ExhibitionSectionExhibition_Pictures_ConnectionArgs = {
+  filters?: InputMaybe<ExhibitionPictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type ExhibitionSectionEntityResponseCollection = {
-  data: Array<ExhibitionSectionEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<ExhibitionSection>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<ExhibitionSection>;
+  pageInfo: Pagination;
 };
 
 export type ExhibitionSectionFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ExhibitionSectionFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   exhibition?: InputMaybe<ExhibitionFiltersInput>;
   exhibition_pictures?: InputMaybe<ExhibitionPictureFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<ExhibitionSectionFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ExhibitionSectionFiltersInput>>>;
   order?: InputMaybe<IntFilterInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   text?: InputMaybe<StringFilterInput>;
   title?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -588,47 +735,56 @@ export type ExhibitionSectionFiltersInput = {
 export type ExhibitionSectionInput = {
   exhibition?: InputMaybe<Scalars['ID']>;
   exhibition_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<Scalars['Int']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   text?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
 };
 
 export type ExhibitionSectionRelationResponseCollection = {
-  data: Array<ExhibitionSectionEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<ExhibitionSection>;
+  nodes: Array<ExhibitionSection>;
 };
 
 export type FaceTag = {
+  /** @deprecated Use root level fields instead */
+  attributes: FaceTag;
   createdAt?: Maybe<Scalars['DateTime']>;
-  person_tag?: Maybe<PersonTagEntityResponse>;
-  picture?: Maybe<PictureEntityResponse>;
+  /** @deprecated Use root level fields instead */
+  data: FaceTag;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  person_tag?: Maybe<PersonTag>;
+  picture?: Maybe<Picture>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   tag_direction?: Maybe<Scalars['Int']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   x?: Maybe<Scalars['Float']>;
   y?: Maybe<Scalars['Float']>;
 };
 
-export type FaceTagEntity = {
-  attributes?: Maybe<FaceTag>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type FaceTagEntityResponse = {
-  data?: Maybe<FaceTagEntity>;
-};
-
 export type FaceTagEntityResponseCollection = {
-  data: Array<FaceTagEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<FaceTag>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<FaceTag>;
+  pageInfo: Pagination;
 };
 
 export type FaceTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<FaceTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<FaceTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<FaceTagFiltersInput>>>;
   person_tag?: InputMaybe<PersonTagFiltersInput>;
   picture?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   tag_direction?: InputMaybe<IntFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   x?: InputMaybe<FloatFilterInput>;
@@ -636,15 +792,19 @@ export type FaceTagFiltersInput = {
 };
 
 export type FaceTagInput = {
+  locale?: InputMaybe<Scalars['String']>;
   person_tag?: InputMaybe<Scalars['ID']>;
   picture?: InputMaybe<Scalars['ID']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   tag_direction?: InputMaybe<Scalars['Int']>;
   x?: InputMaybe<Scalars['Float']>;
   y?: InputMaybe<Scalars['Float']>;
 };
 
 export type FaceTagRelationResponseCollection = {
-  data: Array<FaceTagEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<FaceTag>;
+  nodes: Array<FaceTag>;
 };
 
 export type FileInfoInput = {
@@ -690,6 +850,7 @@ export type GenericMorph =
   | ExhibitionPicture
   | ExhibitionSection
   | FaceTag
+  | I18NLocale
   | KeywordTag
   | Link
   | LocationTag
@@ -699,12 +860,49 @@ export type GenericMorph =
   | Picture
   | PictureGeoInfo
   | PictureSequence
+  | ReviewWorkflowsWorkflow
+  | ReviewWorkflowsWorkflowStage
   | TimeRangeTag
   | UploadFile
-  | UploadFolder
   | UsersPermissionsPermission
   | UsersPermissionsRole
   | UsersPermissionsUser;
+
+export type I18NLocale = {
+  /** @deprecated Use root level fields instead */
+  attributes: I18NLocale;
+  code?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: I18NLocale;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type I18NLocaleEntityResponseCollection = {
+  /** @deprecated Use `nodes` field instead */
+  data: Array<I18NLocale>;
+  /** @deprecated Use the `pageInfo` field instead */
+  meta: ResponseCollectionMeta;
+  nodes: Array<I18NLocale>;
+  pageInfo: Pagination;
+};
+
+export type I18NLocaleFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<I18NLocaleFiltersInput>>>;
+  code?: InputMaybe<StringFilterInput>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<I18NLocaleFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<I18NLocaleFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
 
 export type IdFilterInput = {
   and?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -782,16 +980,32 @@ export type JsonFilterInput = {
 };
 
 export type KeywordTag = {
+  /** @deprecated Use root level fields instead */
+  attributes: KeywordTag;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: KeywordTag;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   name: Scalars['String'];
-  pictures?: Maybe<PictureRelationResponseCollection>;
+  pictures: Array<Maybe<Picture>>;
+  pictures_connection?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
-  verified_pictures?: Maybe<PictureRelationResponseCollection>;
+  verified_pictures: Array<Maybe<Picture>>;
+  verified_pictures_connection?: Maybe<PictureRelationResponseCollection>;
   visible?: Maybe<Scalars['Boolean']>;
 };
 
 export type KeywordTagPicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type KeywordTagPictures_ConnectionArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -809,28 +1023,31 @@ export type KeywordTagVerified_PicturesArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type KeywordTagEntity = {
-  attributes?: Maybe<KeywordTag>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type KeywordTagEntityResponse = {
-  data?: Maybe<KeywordTagEntity>;
+export type KeywordTagVerified_Pictures_ConnectionArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type KeywordTagEntityResponseCollection = {
-  data: Array<KeywordTagEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<KeywordTag>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<KeywordTag>;
+  pageInfo: Pagination;
 };
 
 export type KeywordTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<KeywordTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<KeywordTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<KeywordTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   synonyms?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
@@ -838,46 +1055,55 @@ export type KeywordTagFiltersInput = {
 };
 
 export type KeywordTagInput = {
+  locale?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   visible?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type KeywordTagRelationResponseCollection = {
-  data: Array<KeywordTagEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<KeywordTag>;
+  nodes: Array<KeywordTag>;
 };
 
 export type Link = {
-  archive_tag?: Maybe<ArchiveTagEntityResponse>;
+  archive_tag?: Maybe<ArchiveTag>;
+  /** @deprecated Use root level fields instead */
+  attributes: Link;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: Link;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  publishedAt?: Maybe<Scalars['DateTime']>;
   title?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   url: Scalars['String'];
 };
 
-export type LinkEntity = {
-  attributes?: Maybe<Link>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type LinkEntityResponse = {
-  data?: Maybe<LinkEntity>;
-};
-
 export type LinkEntityResponseCollection = {
-  data: Array<LinkEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<Link>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<Link>;
+  pageInfo: Pagination;
 };
 
 export type LinkFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<LinkFiltersInput>>>;
   archive_tag?: InputMaybe<ArchiveTagFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<LinkFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<LinkFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   title?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   url?: InputMaybe<StringFilterInput>;
@@ -885,30 +1111,52 @@ export type LinkFiltersInput = {
 
 export type LinkInput = {
   archive_tag?: InputMaybe<Scalars['ID']>;
+  locale?: InputMaybe<Scalars['String']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   title?: InputMaybe<Scalars['String']>;
   url?: InputMaybe<Scalars['String']>;
 };
 
 export type LinkRelationResponseCollection = {
-  data: Array<LinkEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<Link>;
+  nodes: Array<Link>;
 };
 
 export type LocationTag = {
   accepted?: Maybe<Scalars['Boolean']>;
-  child_tags?: Maybe<LocationTagRelationResponseCollection>;
+  /** @deprecated Use root level fields instead */
+  attributes: LocationTag;
+  child_tags: Array<Maybe<LocationTag>>;
+  child_tags_connection?: Maybe<LocationTagRelationResponseCollection>;
   coordinates?: Maybe<ComponentLocationCoordinates>;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: LocationTag;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   name: Scalars['String'];
-  parent_tags?: Maybe<LocationTagRelationResponseCollection>;
-  pictures?: Maybe<PictureRelationResponseCollection>;
+  parent_tags: Array<Maybe<LocationTag>>;
+  parent_tags_connection?: Maybe<LocationTagRelationResponseCollection>;
+  pictures: Array<Maybe<Picture>>;
+  pictures_connection?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   root?: Maybe<Scalars['Boolean']>;
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
-  verified_pictures?: Maybe<PictureRelationResponseCollection>;
+  verified_pictures: Array<Maybe<Picture>>;
+  verified_pictures_connection?: Maybe<PictureRelationResponseCollection>;
   visible?: Maybe<Scalars['Boolean']>;
 };
 
 export type LocationTagChild_TagsArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type LocationTagChild_Tags_ConnectionArgs = {
   filters?: InputMaybe<LocationTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -920,7 +1168,19 @@ export type LocationTagParent_TagsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type LocationTagParent_Tags_ConnectionArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type LocationTagPicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type LocationTagPictures_ConnectionArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -938,18 +1198,19 @@ export type LocationTagVerified_PicturesArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type LocationTagEntity = {
-  attributes?: Maybe<LocationTag>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type LocationTagEntityResponse = {
-  data?: Maybe<LocationTagEntity>;
+export type LocationTagVerified_Pictures_ConnectionArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type LocationTagEntityResponseCollection = {
-  data: Array<LocationTagEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<LocationTag>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<LocationTag>;
+  pageInfo: Pagination;
 };
 
 export type LocationTagFiltersInput = {
@@ -958,12 +1219,14 @@ export type LocationTagFiltersInput = {
   child_tags?: InputMaybe<LocationTagFiltersInput>;
   coordinates?: InputMaybe<ComponentLocationCoordinatesFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<LocationTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<LocationTagFiltersInput>>>;
   parent_tags?: InputMaybe<LocationTagFiltersInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   root?: InputMaybe<BooleanFilterInput>;
   synonyms?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -975,9 +1238,11 @@ export type LocationTagInput = {
   accepted?: InputMaybe<Scalars['Boolean']>;
   child_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   coordinates?: InputMaybe<ComponentLocationCoordinatesInput>;
+  locale?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   parent_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   root?: InputMaybe<Scalars['Boolean']>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -985,7 +1250,9 @@ export type LocationTagInput = {
 };
 
 export type LocationTagRelationResponseCollection = {
-  data: Array<LocationTagEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<LocationTag>;
+  nodes: Array<LocationTag>;
 };
 
 export type Mutation = {
@@ -995,51 +1262,52 @@ export type Mutation = {
   /** Change user password. Confirm with the current password. */
   changePassword?: Maybe<UsersPermissionsLoginPayload>;
   contact?: Maybe<Scalars['Int']>;
-  createArchiveTag?: Maybe<ArchiveTagEntityResponse>;
-  createCollection?: Maybe<CollectionEntityResponse>;
-  createComment?: Maybe<CommentEntityResponse>;
-  createDescription?: Maybe<DescriptionEntityResponse>;
-  createExhibition?: Maybe<ExhibitionEntityResponse>;
-  createExhibitionPicture?: Maybe<ExhibitionPictureEntityResponse>;
-  createExhibitionSection?: Maybe<ExhibitionSectionEntityResponse>;
-  createFaceTag?: Maybe<FaceTagEntityResponse>;
-  createKeywordTag?: Maybe<KeywordTagEntityResponse>;
-  createLink?: Maybe<LinkEntityResponse>;
-  createLocationTag?: Maybe<LocationTagEntityResponse>;
-  createOrientationTag?: Maybe<OrientationTagEntityResponse>;
-  createParameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
-  createPersonTag?: Maybe<PersonTagEntityResponse>;
-  createPicture?: Maybe<PictureEntityResponse>;
-  createPictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
-  createPictureSequence?: Maybe<PictureSequenceEntityResponse>;
-  createTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
-  createUploadFile?: Maybe<UploadFileEntityResponse>;
-  createUploadFolder?: Maybe<UploadFolderEntityResponse>;
+  createArchiveTag?: Maybe<ArchiveTag>;
+  createCollection?: Maybe<Collection>;
+  createComment?: Maybe<Comment>;
+  createDescription?: Maybe<Description>;
+  createExhibition?: Maybe<Exhibition>;
+  createExhibitionPicture?: Maybe<ExhibitionPicture>;
+  createExhibitionSection?: Maybe<ExhibitionSection>;
+  createFaceTag?: Maybe<FaceTag>;
+  createKeywordTag?: Maybe<KeywordTag>;
+  createLink?: Maybe<Link>;
+  createLocationTag?: Maybe<LocationTag>;
+  createOrientationTag?: Maybe<OrientationTag>;
+  createParameterizedPermission?: Maybe<ParameterizedPermission>;
+  createPersonTag?: Maybe<PersonTag>;
+  createPicture?: Maybe<Picture>;
+  createPictureGeoInfo?: Maybe<PictureGeoInfo>;
+  createPictureSequence?: Maybe<PictureSequence>;
+  createReviewWorkflowsWorkflow?: Maybe<ReviewWorkflowsWorkflow>;
+  createReviewWorkflowsWorkflowStage?: Maybe<ReviewWorkflowsWorkflowStage>;
+  createTimeRangeTag?: Maybe<TimeRangeTag>;
   /** Create a new role */
   createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>;
   /** Create a new user */
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
-  deleteArchiveTag?: Maybe<ArchiveTagEntityResponse>;
-  deleteBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
-  deleteCollection?: Maybe<CollectionEntityResponse>;
-  deleteComment?: Maybe<CommentEntityResponse>;
-  deleteDescription?: Maybe<DescriptionEntityResponse>;
-  deleteExhibition?: Maybe<ExhibitionEntityResponse>;
-  deleteExhibitionPicture?: Maybe<ExhibitionPictureEntityResponse>;
-  deleteExhibitionSection?: Maybe<ExhibitionSectionEntityResponse>;
-  deleteFaceTag?: Maybe<FaceTagEntityResponse>;
-  deleteKeywordTag?: Maybe<KeywordTagEntityResponse>;
-  deleteLink?: Maybe<LinkEntityResponse>;
-  deleteLocationTag?: Maybe<LocationTagEntityResponse>;
-  deleteOrientationTag?: Maybe<OrientationTagEntityResponse>;
-  deleteParameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
-  deletePersonTag?: Maybe<PersonTagEntityResponse>;
-  deletePicture?: Maybe<PictureEntityResponse>;
-  deletePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
-  deletePictureSequence?: Maybe<PictureSequenceEntityResponse>;
-  deleteTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
-  deleteUploadFile?: Maybe<UploadFileEntityResponse>;
-  deleteUploadFolder?: Maybe<UploadFolderEntityResponse>;
+  deleteArchiveTag?: Maybe<DeleteMutationResponse>;
+  deleteBrowseRootCollection?: Maybe<DeleteMutationResponse>;
+  deleteCollection?: Maybe<DeleteMutationResponse>;
+  deleteComment?: Maybe<DeleteMutationResponse>;
+  deleteDescription?: Maybe<DeleteMutationResponse>;
+  deleteExhibition?: Maybe<DeleteMutationResponse>;
+  deleteExhibitionPicture?: Maybe<DeleteMutationResponse>;
+  deleteExhibitionSection?: Maybe<DeleteMutationResponse>;
+  deleteFaceTag?: Maybe<DeleteMutationResponse>;
+  deleteKeywordTag?: Maybe<DeleteMutationResponse>;
+  deleteLink?: Maybe<DeleteMutationResponse>;
+  deleteLocationTag?: Maybe<DeleteMutationResponse>;
+  deleteOrientationTag?: Maybe<DeleteMutationResponse>;
+  deleteParameterizedPermission?: Maybe<DeleteMutationResponse>;
+  deletePersonTag?: Maybe<DeleteMutationResponse>;
+  deletePicture?: Maybe<DeleteMutationResponse>;
+  deletePictureGeoInfo?: Maybe<DeleteMutationResponse>;
+  deletePictureSequence?: Maybe<DeleteMutationResponse>;
+  deleteReviewWorkflowsWorkflow?: Maybe<DeleteMutationResponse>;
+  deleteReviewWorkflowsWorkflowStage?: Maybe<DeleteMutationResponse>;
+  deleteTimeRangeTag?: Maybe<DeleteMutationResponse>;
+  deleteUploadFile?: Maybe<UploadFile>;
   /** Delete an existing role */
   deleteUsersPermissionsRole?: Maybe<UsersPermissionsDeleteRolePayload>;
   /** Delete an existing user */
@@ -1056,43 +1324,42 @@ export type Mutation = {
   mergeKeywordTags?: Maybe<Scalars['ID']>;
   mergeLocationTags?: Maybe<Scalars['ID']>;
   mergePersonTags?: Maybe<Scalars['ID']>;
-  multipleUpload: Array<Maybe<UploadFileEntityResponse>>;
+  multipleUpload: Array<Maybe<UploadFile>>;
   /** Register a user */
   register: UsersPermissionsLoginPayload;
   removeArchiveTag?: Maybe<Scalars['Int']>;
-  removeFile?: Maybe<UploadFileEntityResponse>;
+  removeFile?: Maybe<UploadFile>;
   removeUser?: Maybe<Scalars['Int']>;
   /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
-  updateArchiveTag?: Maybe<ArchiveTagEntityResponse>;
-  updateBrowseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
-  updateCollection?: Maybe<CollectionEntityResponse>;
-  updateComment?: Maybe<CommentEntityResponse>;
-  updateDescription?: Maybe<DescriptionEntityResponse>;
-  updateExhibition?: Maybe<ExhibitionEntityResponse>;
-  updateExhibitionPicture?: Maybe<ExhibitionPictureEntityResponse>;
-  updateExhibitionSection?: Maybe<ExhibitionSectionEntityResponse>;
-  updateFaceTag?: Maybe<FaceTagEntityResponse>;
-  updateFileInfo: UploadFileEntityResponse;
-  updateKeywordTag?: Maybe<KeywordTagEntityResponse>;
-  updateLink?: Maybe<LinkEntityResponse>;
-  updateLocationTag?: Maybe<LocationTagEntityResponse>;
+  updateArchiveTag?: Maybe<ArchiveTag>;
+  updateBrowseRootCollection?: Maybe<BrowseRootCollection>;
+  updateCollection?: Maybe<Collection>;
+  updateComment?: Maybe<Comment>;
+  updateDescription?: Maybe<Description>;
+  updateExhibition?: Maybe<Exhibition>;
+  updateExhibitionPicture?: Maybe<ExhibitionPicture>;
+  updateExhibitionSection?: Maybe<ExhibitionSection>;
+  updateFaceTag?: Maybe<FaceTag>;
+  updateKeywordTag?: Maybe<KeywordTag>;
+  updateLink?: Maybe<Link>;
+  updateLocationTag?: Maybe<LocationTag>;
   updateMe?: Maybe<Scalars['Int']>;
-  updateOrientationTag?: Maybe<OrientationTagEntityResponse>;
-  updateParameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
-  updatePersonTag?: Maybe<PersonTagEntityResponse>;
-  updatePicture?: Maybe<PictureEntityResponse>;
-  updatePictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
-  updatePictureSequence?: Maybe<PictureSequenceEntityResponse>;
+  updateOrientationTag?: Maybe<OrientationTag>;
+  updateParameterizedPermission?: Maybe<ParameterizedPermission>;
+  updatePersonTag?: Maybe<PersonTag>;
+  updatePicture?: Maybe<Picture>;
+  updatePictureGeoInfo?: Maybe<PictureGeoInfo>;
+  updatePictureSequence?: Maybe<PictureSequence>;
   updatePictureWithTagCleanup?: Maybe<Scalars['ID']>;
-  updateTimeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
-  updateUploadFile?: Maybe<UploadFileEntityResponse>;
-  updateUploadFolder?: Maybe<UploadFolderEntityResponse>;
+  updateReviewWorkflowsWorkflow?: Maybe<ReviewWorkflowsWorkflow>;
+  updateReviewWorkflowsWorkflowStage?: Maybe<ReviewWorkflowsWorkflowStage>;
+  updateTimeRangeTag?: Maybe<TimeRangeTag>;
+  updateUploadFile: UploadFile;
   /** Update an existing role */
   updateUsersPermissionsRole?: Maybe<UsersPermissionsUpdateRolePayload>;
   /** Update an existing user */
   updateUsersPermissionsUser: UsersPermissionsUserEntityResponse;
-  upload: UploadFileEntityResponse;
 };
 
 export type MutationAddArchiveTagArgs = {
@@ -1129,82 +1396,102 @@ export type MutationContactArgs = {
 
 export type MutationCreateArchiveTagArgs = {
   data: ArchiveTagInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateCollectionArgs = {
   data: CollectionInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateCommentArgs = {
   data: CommentInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateDescriptionArgs = {
   data: DescriptionInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateExhibitionArgs = {
   data: ExhibitionInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateExhibitionPictureArgs = {
   data: ExhibitionPictureInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateExhibitionSectionArgs = {
   data: ExhibitionSectionInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateFaceTagArgs = {
   data: FaceTagInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateKeywordTagArgs = {
   data: KeywordTagInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateLinkArgs = {
   data: LinkInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateLocationTagArgs = {
   data: LocationTagInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateOrientationTagArgs = {
   data: OrientationTagInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateParameterizedPermissionArgs = {
   data: ParameterizedPermissionInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreatePersonTagArgs = {
   data: PersonTagInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreatePictureArgs = {
   data: PictureInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreatePictureGeoInfoArgs = {
   data: PictureGeoInfoInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreatePictureSequenceArgs = {
   data: PictureSequenceInput;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type MutationCreateReviewWorkflowsWorkflowArgs = {
+  data: ReviewWorkflowsWorkflowInput;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type MutationCreateReviewWorkflowsWorkflowStageArgs = {
+  data: ReviewWorkflowsWorkflowStageInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateTimeRangeTagArgs = {
   data: TimeRangeTagInput;
-};
-
-export type MutationCreateUploadFileArgs = {
-  data: UploadFileInput;
-};
-
-export type MutationCreateUploadFolderArgs = {
-  data: UploadFolderInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationCreateUsersPermissionsRoleArgs = {
@@ -1216,82 +1503,86 @@ export type MutationCreateUsersPermissionsUserArgs = {
 };
 
 export type MutationDeleteArchiveTagArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteCollectionArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteCommentArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteDescriptionArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteExhibitionArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteExhibitionPictureArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteExhibitionSectionArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteFaceTagArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteKeywordTagArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteLinkArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteLocationTagArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteOrientationTagArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteParameterizedPermissionArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeletePersonTagArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeletePictureArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeletePictureGeoInfoArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeletePictureSequenceArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+};
+
+export type MutationDeleteReviewWorkflowsWorkflowArgs = {
+  documentId: Scalars['ID'];
+};
+
+export type MutationDeleteReviewWorkflowsWorkflowStageArgs = {
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteTimeRangeTagArgs = {
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
 };
 
 export type MutationDeleteUploadFileArgs = {
-  id: Scalars['ID'];
-};
-
-export type MutationDeleteUploadFolderArgs = {
   id: Scalars['ID'];
 };
 
@@ -1350,10 +1641,7 @@ export type MutationMergePersonTagsArgs = {
 };
 
 export type MutationMultipleUploadArgs = {
-  field?: InputMaybe<Scalars['String']>;
   files: Array<InputMaybe<Scalars['Upload']>>;
-  ref?: InputMaybe<Scalars['String']>;
-  refId?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationRegisterArgs = {
@@ -1380,66 +1668,73 @@ export type MutationResetPasswordArgs = {
 
 export type MutationUpdateArchiveTagArgs = {
   data: ArchiveTagInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateBrowseRootCollectionArgs = {
   data: BrowseRootCollectionInput;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateCollectionArgs = {
   data: CollectionInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateCommentArgs = {
   data: CommentInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateDescriptionArgs = {
   data: DescriptionInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateExhibitionArgs = {
   data: ExhibitionInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateExhibitionPictureArgs = {
   data: ExhibitionPictureInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateExhibitionSectionArgs = {
   data: ExhibitionSectionInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateFaceTagArgs = {
   data: FaceTagInput;
-  id: Scalars['ID'];
-};
-
-export type MutationUpdateFileInfoArgs = {
-  id: Scalars['ID'];
-  info?: InputMaybe<FileInfoInput>;
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateKeywordTagArgs = {
   data: KeywordTagInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateLinkArgs = {
   data: LinkInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateLocationTagArgs = {
   data: LocationTagInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateMeArgs = {
@@ -1449,32 +1744,38 @@ export type MutationUpdateMeArgs = {
 
 export type MutationUpdateOrientationTagArgs = {
   data: OrientationTagInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateParameterizedPermissionArgs = {
   data: ParameterizedPermissionInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdatePersonTagArgs = {
   data: PersonTagInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdatePictureArgs = {
   data: PictureInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdatePictureGeoInfoArgs = {
   data: PictureGeoInfoInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdatePictureSequenceArgs = {
   data: PictureSequenceInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdatePictureWithTagCleanupArgs = {
@@ -1482,19 +1783,27 @@ export type MutationUpdatePictureWithTagCleanupArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
 
+export type MutationUpdateReviewWorkflowsWorkflowArgs = {
+  data: ReviewWorkflowsWorkflowInput;
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type MutationUpdateReviewWorkflowsWorkflowStageArgs = {
+  data: ReviewWorkflowsWorkflowStageInput;
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
+};
+
 export type MutationUpdateTimeRangeTagArgs = {
   data: TimeRangeTagInput;
-  id: Scalars['ID'];
+  documentId: Scalars['ID'];
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type MutationUpdateUploadFileArgs = {
-  data: UploadFileInput;
   id: Scalars['ID'];
-};
-
-export type MutationUpdateUploadFolderArgs = {
-  data: UploadFolderInput;
-  id: Scalars['ID'];
+  info?: InputMaybe<FileInfoInput>;
 };
 
 export type MutationUpdateUsersPermissionsRoleArgs = {
@@ -1507,46 +1816,43 @@ export type MutationUpdateUsersPermissionsUserArgs = {
   id: Scalars['ID'];
 };
 
-export type MutationUploadArgs = {
-  field?: InputMaybe<Scalars['String']>;
-  file: Scalars['Upload'];
-  info?: InputMaybe<FileInfoInput>;
-  ref?: InputMaybe<Scalars['String']>;
-  refId?: InputMaybe<Scalars['ID']>;
-};
-
 export type OrientationTag = {
+  /** @deprecated Use root level fields instead */
+  attributes: OrientationTag;
   createdAt?: Maybe<Scalars['DateTime']>;
-  location_tag?: Maybe<LocationTagEntityResponse>;
-  picture?: Maybe<PictureEntityResponse>;
+  /** @deprecated Use root level fields instead */
+  data: OrientationTag;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  location_tag?: Maybe<LocationTag>;
+  picture?: Maybe<Picture>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   tag_direction?: Maybe<Scalars['Int']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   x?: Maybe<Scalars['Float']>;
   y?: Maybe<Scalars['Float']>;
 };
 
-export type OrientationTagEntity = {
-  attributes?: Maybe<OrientationTag>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type OrientationTagEntityResponse = {
-  data?: Maybe<OrientationTagEntity>;
-};
-
 export type OrientationTagEntityResponseCollection = {
-  data: Array<OrientationTagEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<OrientationTag>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<OrientationTag>;
+  pageInfo: Pagination;
 };
 
 export type OrientationTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<OrientationTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   location_tag?: InputMaybe<LocationTagFiltersInput>;
   not?: InputMaybe<OrientationTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<OrientationTagFiltersInput>>>;
   picture?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   tag_direction?: InputMaybe<IntFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   x?: InputMaybe<FloatFilterInput>;
@@ -1554,15 +1860,19 @@ export type OrientationTagFiltersInput = {
 };
 
 export type OrientationTagInput = {
+  locale?: InputMaybe<Scalars['String']>;
   location_tag?: InputMaybe<Scalars['ID']>;
   picture?: InputMaybe<Scalars['ID']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   tag_direction?: InputMaybe<Scalars['Int']>;
   x?: InputMaybe<Scalars['Float']>;
   y?: InputMaybe<Scalars['Float']>;
 };
 
 export type OrientationTagRelationResponseCollection = {
-  data: Array<OrientationTagEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<OrientationTag>;
+  nodes: Array<OrientationTag>;
 };
 
 export type Pagination = {
@@ -1580,58 +1890,81 @@ export type PaginationArg = {
 };
 
 export type ParameterizedPermission = {
-  archive_tag?: Maybe<ArchiveTagEntityResponse>;
+  archive_tag?: Maybe<ArchiveTag>;
+  /** @deprecated Use root level fields instead */
+  attributes: ParameterizedPermission;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: ParameterizedPermission;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   on_other_users?: Maybe<Scalars['Boolean']>;
   operation_name?: Maybe<Scalars['String']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
-  users_permissions_user?: Maybe<UsersPermissionsUserEntityResponse>;
-};
-
-export type ParameterizedPermissionEntity = {
-  attributes?: Maybe<ParameterizedPermission>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type ParameterizedPermissionEntityResponse = {
-  data?: Maybe<ParameterizedPermissionEntity>;
+  users_permissions_user?: Maybe<UsersPermissionsUser>;
 };
 
 export type ParameterizedPermissionEntityResponseCollection = {
-  data: Array<ParameterizedPermissionEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<ParameterizedPermission>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<ParameterizedPermission>;
+  pageInfo: Pagination;
 };
 
 export type ParameterizedPermissionFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ParameterizedPermissionFiltersInput>>>;
   archive_tag?: InputMaybe<ArchiveTagFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<ParameterizedPermissionFiltersInput>;
   on_other_users?: InputMaybe<BooleanFilterInput>;
   operation_name?: InputMaybe<StringFilterInput>;
   or?: InputMaybe<Array<InputMaybe<ParameterizedPermissionFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   users_permissions_user?: InputMaybe<UsersPermissionsUserFiltersInput>;
 };
 
 export type ParameterizedPermissionInput = {
   archive_tag?: InputMaybe<Scalars['ID']>;
+  locale?: InputMaybe<Scalars['String']>;
   on_other_users?: InputMaybe<Scalars['Boolean']>;
   operation_name?: InputMaybe<Scalars['String']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   users_permissions_user?: InputMaybe<Scalars['ID']>;
 };
 
 export type PersonTag = {
+  /** @deprecated Use root level fields instead */
+  attributes: PersonTag;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: PersonTag;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   name: Scalars['String'];
-  pictures?: Maybe<PictureRelationResponseCollection>;
+  pictures: Array<Maybe<Picture>>;
+  pictures_connection?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   synonyms?: Maybe<Array<Maybe<ComponentCommonSynonyms>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
-  verified_pictures?: Maybe<PictureRelationResponseCollection>;
+  verified_pictures: Array<Maybe<Picture>>;
+  verified_pictures_connection?: Maybe<PictureRelationResponseCollection>;
 };
 
 export type PersonTagPicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PersonTagPictures_ConnectionArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1649,77 +1982,113 @@ export type PersonTagVerified_PicturesArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type PersonTagEntity = {
-  attributes?: Maybe<PersonTag>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type PersonTagEntityResponse = {
-  data?: Maybe<PersonTagEntity>;
+export type PersonTagVerified_Pictures_ConnectionArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PersonTagEntityResponseCollection = {
-  data: Array<PersonTagEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<PersonTag>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<PersonTag>;
+  pageInfo: Pagination;
 };
 
 export type PersonTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<PersonTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<PersonTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PersonTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   synonyms?: InputMaybe<ComponentCommonSynonymsFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
 };
 
 export type PersonTagInput = {
+  locale?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   synonyms?: InputMaybe<Array<InputMaybe<ComponentCommonSynonymsInput>>>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
 export type PersonTagRelationResponseCollection = {
-  data: Array<PersonTagEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<PersonTag>;
+  nodes: Array<PersonTag>;
 };
 
 export type Picture = {
   archive_identifier?: Maybe<Scalars['String']>;
-  archive_tag?: Maybe<ArchiveTagEntityResponse>;
-  collections?: Maybe<CollectionRelationResponseCollection>;
-  comments?: Maybe<CommentRelationResponseCollection>;
+  archive_tag?: Maybe<ArchiveTag>;
+  /** @deprecated Use root level fields instead */
+  attributes: Picture;
+  collections: Array<Maybe<Collection>>;
+  collections_connection?: Maybe<CollectionRelationResponseCollection>;
+  comments: Array<Maybe<Comment>>;
+  comments_connection?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: Picture;
   deleted?: Maybe<Scalars['Boolean']>;
-  descriptions?: Maybe<DescriptionRelationResponseCollection>;
-  exhibition_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
-  face_tags?: Maybe<FaceTagRelationResponseCollection>;
+  descriptions: Array<Maybe<Description>>;
+  descriptions_connection?: Maybe<DescriptionRelationResponseCollection>;
+  documentId: Scalars['ID'];
+  exhibition_pictures: Array<Maybe<ExhibitionPicture>>;
+  exhibition_pictures_connection?: Maybe<ExhibitionPictureRelationResponseCollection>;
+  face_tags: Array<Maybe<FaceTag>>;
+  face_tags_connection?: Maybe<FaceTagRelationResponseCollection>;
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   is_not_a_place_count?: Maybe<Scalars['Int']>;
   is_text?: Maybe<Scalars['Boolean']>;
-  keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
+  keyword_tags: Array<Maybe<KeywordTag>>;
+  keyword_tags_connection?: Maybe<KeywordTagRelationResponseCollection>;
   likes?: Maybe<Scalars['Int']>;
-  linked_pictures?: Maybe<PictureRelationResponseCollection>;
-  linked_texts?: Maybe<PictureRelationResponseCollection>;
-  location_tags?: Maybe<LocationTagRelationResponseCollection>;
-  media: UploadFileEntityResponse;
-  orientation_tags?: Maybe<OrientationTagRelationResponseCollection>;
-  person_tags?: Maybe<PersonTagRelationResponseCollection>;
-  picture_geo_infos?: Maybe<PictureGeoInfoRelationResponseCollection>;
-  picture_sequence?: Maybe<PictureSequenceEntityResponse>;
+  linked_pictures: Array<Maybe<Picture>>;
+  linked_pictures_connection?: Maybe<PictureRelationResponseCollection>;
+  linked_texts: Array<Maybe<Picture>>;
+  linked_texts_connection?: Maybe<PictureRelationResponseCollection>;
+  location_tags: Array<Maybe<LocationTag>>;
+  location_tags_connection?: Maybe<LocationTagRelationResponseCollection>;
+  media: UploadFile;
+  orientation_tags: Array<Maybe<OrientationTag>>;
+  orientation_tags_connection?: Maybe<OrientationTagRelationResponseCollection>;
+  person_tags: Array<Maybe<PersonTag>>;
+  person_tags_connection?: Maybe<PersonTagRelationResponseCollection>;
+  picture_geo_infos: Array<Maybe<PictureGeoInfo>>;
+  picture_geo_infos_connection?: Maybe<PictureGeoInfoRelationResponseCollection>;
+  picture_sequence?: Maybe<PictureSequence>;
   picture_sequence_order?: Maybe<Scalars['Int']>;
-  time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  time_range_tag?: Maybe<TimeRangeTag>;
   updatedAt?: Maybe<Scalars['DateTime']>;
-  verified_keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
-  verified_location_tags?: Maybe<LocationTagRelationResponseCollection>;
-  verified_person_tags?: Maybe<PersonTagRelationResponseCollection>;
-  verified_time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
+  verified_keyword_tags: Array<Maybe<KeywordTag>>;
+  verified_keyword_tags_connection?: Maybe<KeywordTagRelationResponseCollection>;
+  verified_location_tags: Array<Maybe<LocationTag>>;
+  verified_location_tags_connection?: Maybe<LocationTagRelationResponseCollection>;
+  verified_person_tags: Array<Maybe<PersonTag>>;
+  verified_person_tags_connection?: Maybe<PersonTagRelationResponseCollection>;
+  verified_time_range_tag?: Maybe<TimeRangeTag>;
   wordpress_id?: Maybe<Scalars['Int']>;
 };
 
 export type PictureCollectionsArgs = {
+  filters?: InputMaybe<CollectionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureCollections_ConnectionArgs = {
   filters?: InputMaybe<CollectionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1731,7 +2100,19 @@ export type PictureCommentsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type PictureComments_ConnectionArgs = {
+  filters?: InputMaybe<CommentFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type PictureDescriptionsArgs = {
+  filters?: InputMaybe<DescriptionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureDescriptions_ConnectionArgs = {
   filters?: InputMaybe<DescriptionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1743,7 +2124,19 @@ export type PictureExhibition_PicturesArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type PictureExhibition_Pictures_ConnectionArgs = {
+  filters?: InputMaybe<ExhibitionPictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type PictureFace_TagsArgs = {
+  filters?: InputMaybe<FaceTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureFace_Tags_ConnectionArgs = {
   filters?: InputMaybe<FaceTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1755,7 +2148,19 @@ export type PictureKeyword_TagsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type PictureKeyword_Tags_ConnectionArgs = {
+  filters?: InputMaybe<KeywordTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type PictureLinked_PicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureLinked_Pictures_ConnectionArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1767,7 +2172,19 @@ export type PictureLinked_TextsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type PictureLinked_Texts_ConnectionArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type PictureLocation_TagsArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureLocation_Tags_ConnectionArgs = {
   filters?: InputMaybe<LocationTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1779,7 +2196,19 @@ export type PictureOrientation_TagsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type PictureOrientation_Tags_ConnectionArgs = {
+  filters?: InputMaybe<OrientationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type PicturePerson_TagsArgs = {
+  filters?: InputMaybe<PersonTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PicturePerson_Tags_ConnectionArgs = {
   filters?: InputMaybe<PersonTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1791,7 +2220,19 @@ export type PicturePicture_Geo_InfosArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type PicturePicture_Geo_Infos_ConnectionArgs = {
+  filters?: InputMaybe<PictureGeoInfoFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type PictureVerified_Keyword_TagsArgs = {
+  filters?: InputMaybe<KeywordTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PictureVerified_Keyword_Tags_ConnectionArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1803,24 +2244,31 @@ export type PictureVerified_Location_TagsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type PictureVerified_Location_Tags_ConnectionArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type PictureVerified_Person_TagsArgs = {
   filters?: InputMaybe<PersonTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type PictureEntity = {
-  attributes?: Maybe<Picture>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type PictureEntityResponse = {
-  data?: Maybe<PictureEntity>;
+export type PictureVerified_Person_Tags_ConnectionArgs = {
+  filters?: InputMaybe<PersonTagFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureEntityResponseCollection = {
-  data: Array<PictureEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<Picture>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<Picture>;
+  pageInfo: Pagination;
 };
 
 export type PictureFiltersInput = {
@@ -1832,6 +2280,7 @@ export type PictureFiltersInput = {
   createdAt?: InputMaybe<DateTimeFilterInput>;
   deleted?: InputMaybe<BooleanFilterInput>;
   descriptions?: InputMaybe<DescriptionFiltersInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   exhibition_pictures?: InputMaybe<ExhibitionPictureFiltersInput>;
   face_tags?: InputMaybe<FaceTagFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
@@ -1849,6 +2298,7 @@ export type PictureFiltersInput = {
   picture_geo_infos?: InputMaybe<PictureGeoInfoFiltersInput>;
   picture_sequence?: InputMaybe<PictureSequenceFiltersInput>;
   picture_sequence_order?: InputMaybe<IntFilterInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
@@ -1859,50 +2309,59 @@ export type PictureFiltersInput = {
 };
 
 export type PictureGeoInfo = {
+  /** @deprecated Use root level fields instead */
+  attributes: PictureGeoInfo;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: PictureGeoInfo;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   latitude?: Maybe<Scalars['Float']>;
   longitude?: Maybe<Scalars['Float']>;
-  picture?: Maybe<PictureEntityResponse>;
+  picture?: Maybe<Picture>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   radius?: Maybe<Scalars['Float']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
-export type PictureGeoInfoEntity = {
-  attributes?: Maybe<PictureGeoInfo>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type PictureGeoInfoEntityResponse = {
-  data?: Maybe<PictureGeoInfoEntity>;
-};
-
 export type PictureGeoInfoEntityResponseCollection = {
-  data: Array<PictureGeoInfoEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<PictureGeoInfo>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<PictureGeoInfo>;
+  pageInfo: Pagination;
 };
 
 export type PictureGeoInfoFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<PictureGeoInfoFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   latitude?: InputMaybe<FloatFilterInput>;
   longitude?: InputMaybe<FloatFilterInput>;
   not?: InputMaybe<PictureGeoInfoFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PictureGeoInfoFiltersInput>>>;
   picture?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   radius?: InputMaybe<FloatFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
 
 export type PictureGeoInfoInput = {
   latitude?: InputMaybe<Scalars['Float']>;
+  locale?: InputMaybe<Scalars['String']>;
   longitude?: InputMaybe<Scalars['Float']>;
   picture?: InputMaybe<Scalars['ID']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   radius?: InputMaybe<Scalars['Float']>;
 };
 
 export type PictureGeoInfoRelationResponseCollection = {
-  data: Array<PictureGeoInfoEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<PictureGeoInfo>;
+  nodes: Array<PictureGeoInfo>;
 };
 
 export type PictureInput = {
@@ -1920,6 +2379,7 @@ export type PictureInput = {
   likes?: InputMaybe<Scalars['Int']>;
   linked_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   linked_texts?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  locale?: InputMaybe<Scalars['String']>;
   location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   media?: InputMaybe<Scalars['ID']>;
   orientation_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1927,6 +2387,7 @@ export type PictureInput = {
   picture_geo_infos?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   picture_sequence?: InputMaybe<Scalars['ID']>;
   picture_sequence_order?: InputMaybe<Scalars['Int']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   time_range_tag?: InputMaybe<Scalars['ID']>;
   verified_keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   verified_location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1936,12 +2397,23 @@ export type PictureInput = {
 };
 
 export type PictureRelationResponseCollection = {
-  data: Array<PictureEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<Picture>;
+  nodes: Array<Picture>;
 };
 
 export type PictureSequence = {
+  /** @deprecated Use root level fields instead */
+  attributes: PictureSequence;
   createdAt?: Maybe<Scalars['DateTime']>;
-  pictures?: Maybe<PictureRelationResponseCollection>;
+  /** @deprecated Use root level fields instead */
+  data: PictureSequence;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  pictures: Array<Maybe<Picture>>;
+  pictures_connection?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
@@ -1951,98 +2423,168 @@ export type PictureSequencePicturesArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type PictureSequenceEntity = {
-  attributes?: Maybe<PictureSequence>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type PictureSequenceEntityResponse = {
-  data?: Maybe<PictureSequenceEntity>;
+export type PictureSequencePictures_ConnectionArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureSequenceEntityResponseCollection = {
-  data: Array<PictureSequenceEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<PictureSequence>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<PictureSequence>;
+  pageInfo: Pagination;
 };
 
 export type PictureSequenceFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<PictureSequenceFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<PictureSequenceFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PictureSequenceFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
 
 export type PictureSequenceInput = {
+  locale?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
 };
+
+export enum PublicationFilter {
+  HasPublishedVersion = 'HAS_PUBLISHED_VERSION',
+  HasPublishedVersionDocument = 'HAS_PUBLISHED_VERSION_DOCUMENT',
+  Modified = 'MODIFIED',
+  NeverPublished = 'NEVER_PUBLISHED',
+  NeverPublishedDocument = 'NEVER_PUBLISHED_DOCUMENT',
+  PublishedWithoutDraft = 'PUBLISHED_WITHOUT_DRAFT',
+  PublishedWithDraft = 'PUBLISHED_WITH_DRAFT',
+  Unmodified = 'UNMODIFIED',
+}
+
+export enum PublicationStatus {
+  Draft = 'DRAFT',
+  Published = 'PUBLISHED',
+}
 
 export type Query = {
   archivePictureCounts?: Maybe<ArchivePictureCountEntityResponseCollection>;
-  archiveTag?: Maybe<ArchiveTagEntityResponse>;
-  archiveTags?: Maybe<ArchiveTagEntityResponseCollection>;
-  browseRootCollection?: Maybe<BrowseRootCollectionEntityResponse>;
+  archiveTag?: Maybe<ArchiveTag>;
+  archiveTags: Array<Maybe<ArchiveTag>>;
+  archiveTags_connection?: Maybe<ArchiveTagEntityResponseCollection>;
+  browseRootCollection?: Maybe<BrowseRootCollection>;
   canRunOperation?: Maybe<Array<Maybe<Scalars['Boolean']>>>;
-  collection?: Maybe<CollectionEntityResponse>;
-  collections?: Maybe<CollectionEntityResponseCollection>;
-  comment?: Maybe<CommentEntityResponse>;
-  comments?: Maybe<CommentEntityResponseCollection>;
-  description?: Maybe<DescriptionEntityResponse>;
-  descriptions?: Maybe<DescriptionEntityResponseCollection>;
-  exhibition?: Maybe<ExhibitionEntityResponse>;
-  exhibitionPicture?: Maybe<ExhibitionPictureEntityResponse>;
-  exhibitionPictures?: Maybe<ExhibitionPictureEntityResponseCollection>;
-  exhibitionSection?: Maybe<ExhibitionSectionEntityResponse>;
-  exhibitionSections?: Maybe<ExhibitionSectionEntityResponseCollection>;
-  exhibitions?: Maybe<ExhibitionEntityResponseCollection>;
-  faceTag?: Maybe<FaceTagEntityResponse>;
-  faceTags?: Maybe<FaceTagEntityResponseCollection>;
-  findPicturesByAllSearch?: Maybe<Array<Maybe<PictureEntity>>>;
+  collection?: Maybe<Collection>;
+  collections: Array<Maybe<Collection>>;
+  collections_connection?: Maybe<CollectionEntityResponseCollection>;
+  comment?: Maybe<Comment>;
+  comments: Array<Maybe<Comment>>;
+  comments_connection?: Maybe<CommentEntityResponseCollection>;
+  description?: Maybe<Description>;
+  descriptions: Array<Maybe<Description>>;
+  descriptions_connection?: Maybe<DescriptionEntityResponseCollection>;
+  exhibition?: Maybe<Exhibition>;
+  exhibitionPicture?: Maybe<ExhibitionPicture>;
+  exhibitionPictures: Array<Maybe<ExhibitionPicture>>;
+  exhibitionPictures_connection?: Maybe<ExhibitionPictureEntityResponseCollection>;
+  exhibitionSection?: Maybe<ExhibitionSection>;
+  exhibitionSections: Array<Maybe<ExhibitionSection>>;
+  exhibitionSections_connection?: Maybe<ExhibitionSectionEntityResponseCollection>;
+  exhibitions: Array<Maybe<Exhibition>>;
+  exhibitions_connection?: Maybe<ExhibitionEntityResponseCollection>;
+  faceTag?: Maybe<FaceTag>;
+  faceTags: Array<Maybe<FaceTag>>;
+  faceTags_connection?: Maybe<FaceTagEntityResponseCollection>;
+  findPicturesByAllSearch?: Maybe<Array<Maybe<Picture>>>;
   getAllKeywordTags?: Maybe<Scalars['JSON']>;
   getAllLocationTags?: Maybe<Scalars['JSON']>;
   getAllPersonTags?: Maybe<Scalars['JSON']>;
   getLocationTagsWithThumbnail?: Maybe<Scalars['JSON']>;
-  keywordTag?: Maybe<KeywordTagEntityResponse>;
-  keywordTags?: Maybe<KeywordTagEntityResponseCollection>;
-  link?: Maybe<LinkEntityResponse>;
-  links?: Maybe<LinkEntityResponseCollection>;
-  locationTag?: Maybe<LocationTagEntityResponse>;
-  locationTags?: Maybe<LocationTagEntityResponseCollection>;
+  i18NLocale?: Maybe<I18NLocale>;
+  i18NLocales: Array<Maybe<I18NLocale>>;
+  i18NLocales_connection?: Maybe<I18NLocaleEntityResponseCollection>;
+  keywordTag?: Maybe<KeywordTag>;
+  keywordTags: Array<Maybe<KeywordTag>>;
+  keywordTags_connection?: Maybe<KeywordTagEntityResponseCollection>;
+  link?: Maybe<Link>;
+  links: Array<Maybe<Link>>;
+  links_connection?: Maybe<LinkEntityResponseCollection>;
+  locationTag?: Maybe<LocationTag>;
+  locationTags: Array<Maybe<LocationTag>>;
+  locationTags_connection?: Maybe<LocationTagEntityResponseCollection>;
   me?: Maybe<UsersPermissionsMe>;
-  orientationTag?: Maybe<OrientationTagEntityResponse>;
-  orientationTags?: Maybe<OrientationTagEntityResponseCollection>;
-  parameterizedPermission?: Maybe<ParameterizedPermissionEntityResponse>;
-  parameterizedPermissions?: Maybe<ParameterizedPermissionEntityResponseCollection>;
-  personTag?: Maybe<PersonTagEntityResponse>;
-  personTags?: Maybe<PersonTagEntityResponseCollection>;
-  picture?: Maybe<PictureEntityResponse>;
-  pictureGeoInfo?: Maybe<PictureGeoInfoEntityResponse>;
-  pictureGeoInfos?: Maybe<PictureGeoInfoEntityResponseCollection>;
-  pictureSequence?: Maybe<PictureSequenceEntityResponse>;
-  pictureSequences?: Maybe<PictureSequenceEntityResponseCollection>;
-  pictures?: Maybe<PictureEntityResponseCollection>;
-  timeRangeTag?: Maybe<TimeRangeTagEntityResponse>;
-  timeRangeTags?: Maybe<TimeRangeTagEntityResponseCollection>;
-  uploadFile?: Maybe<UploadFileEntityResponse>;
-  uploadFiles?: Maybe<UploadFileEntityResponseCollection>;
-  uploadFolder?: Maybe<UploadFolderEntityResponse>;
-  uploadFolders?: Maybe<UploadFolderEntityResponseCollection>;
-  usersPermissionsRole?: Maybe<UsersPermissionsRoleEntityResponse>;
-  usersPermissionsRoles?: Maybe<UsersPermissionsRoleEntityResponseCollection>;
-  usersPermissionsUser?: Maybe<UsersPermissionsUserEntityResponse>;
-  usersPermissionsUsers?: Maybe<UsersPermissionsUserEntityResponseCollection>;
+  orientationTag?: Maybe<OrientationTag>;
+  orientationTags: Array<Maybe<OrientationTag>>;
+  orientationTags_connection?: Maybe<OrientationTagEntityResponseCollection>;
+  parameterizedPermission?: Maybe<ParameterizedPermission>;
+  parameterizedPermissions: Array<Maybe<ParameterizedPermission>>;
+  parameterizedPermissions_connection?: Maybe<ParameterizedPermissionEntityResponseCollection>;
+  personTag?: Maybe<PersonTag>;
+  personTags: Array<Maybe<PersonTag>>;
+  personTags_connection?: Maybe<PersonTagEntityResponseCollection>;
+  picture?: Maybe<Picture>;
+  pictureGeoInfo?: Maybe<PictureGeoInfo>;
+  pictureGeoInfos: Array<Maybe<PictureGeoInfo>>;
+  pictureGeoInfos_connection?: Maybe<PictureGeoInfoEntityResponseCollection>;
+  pictureSequence?: Maybe<PictureSequence>;
+  pictureSequences: Array<Maybe<PictureSequence>>;
+  pictureSequences_connection?: Maybe<PictureSequenceEntityResponseCollection>;
+  pictures: Array<Maybe<Picture>>;
+  pictures_connection?: Maybe<PictureEntityResponseCollection>;
+  reviewWorkflowsWorkflow?: Maybe<ReviewWorkflowsWorkflow>;
+  reviewWorkflowsWorkflowStage?: Maybe<ReviewWorkflowsWorkflowStage>;
+  reviewWorkflowsWorkflowStages: Array<Maybe<ReviewWorkflowsWorkflowStage>>;
+  reviewWorkflowsWorkflowStages_connection?: Maybe<ReviewWorkflowsWorkflowStageEntityResponseCollection>;
+  reviewWorkflowsWorkflows: Array<Maybe<ReviewWorkflowsWorkflow>>;
+  reviewWorkflowsWorkflows_connection?: Maybe<ReviewWorkflowsWorkflowEntityResponseCollection>;
+  timeRangeTag?: Maybe<TimeRangeTag>;
+  timeRangeTags: Array<Maybe<TimeRangeTag>>;
+  timeRangeTags_connection?: Maybe<TimeRangeTagEntityResponseCollection>;
+  uploadFile?: Maybe<UploadFile>;
+  uploadFiles: Array<Maybe<UploadFile>>;
+  uploadFiles_connection?: Maybe<UploadFileEntityResponseCollection>;
+  usersPermissionsRole?: Maybe<UsersPermissionsRole>;
+  usersPermissionsRoles: Array<Maybe<UsersPermissionsRole>>;
+  usersPermissionsRoles_connection?: Maybe<UsersPermissionsRoleEntityResponseCollection>;
+  usersPermissionsUser?: Maybe<UsersPermissionsUser>;
+  usersPermissionsUsers: Array<Maybe<UsersPermissionsUser>>;
+  usersPermissionsUsers_connection?: Maybe<UsersPermissionsUserEntityResponseCollection>;
 };
 
 export type QueryArchiveTagArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryArchiveTagsArgs = {
   filters?: InputMaybe<ArchiveTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryArchiveTags_ConnectionArgs = {
+  filters?: InputMaybe<ArchiveTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryBrowseRootCollectionArgs = {
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryCanRunOperationArgs = {
@@ -2052,73 +2594,178 @@ export type QueryCanRunOperationArgs = {
 };
 
 export type QueryCollectionArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryCollectionsArgs = {
   filters?: InputMaybe<CollectionFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryCollections_ConnectionArgs = {
+  filters?: InputMaybe<CollectionFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryCommentArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryCommentsArgs = {
   filters?: InputMaybe<CommentFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryComments_ConnectionArgs = {
+  filters?: InputMaybe<CommentFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryDescriptionArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryDescriptionsArgs = {
   filters?: InputMaybe<DescriptionFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryDescriptions_ConnectionArgs = {
+  filters?: InputMaybe<DescriptionFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryExhibitionArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryExhibitionPictureArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryExhibitionPicturesArgs = {
   filters?: InputMaybe<ExhibitionPictureFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryExhibitionPictures_ConnectionArgs = {
+  filters?: InputMaybe<ExhibitionPictureFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryExhibitionSectionArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryExhibitionSectionsArgs = {
   filters?: InputMaybe<ExhibitionSectionFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryExhibitionSections_ConnectionArgs = {
+  filters?: InputMaybe<ExhibitionSectionFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryExhibitionsArgs = {
   filters?: InputMaybe<ExhibitionFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryExhibitions_ConnectionArgs = {
+  filters?: InputMaybe<ExhibitionFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryFaceTagArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryFaceTagsArgs = {
   filters?: InputMaybe<FaceTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryFaceTags_ConnectionArgs = {
+  filters?: InputMaybe<FaceTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryFindPicturesByAllSearchArgs = {
@@ -2135,148 +2782,522 @@ export type QueryGetLocationTagsWithThumbnailArgs = {
   thumbnailFilters?: InputMaybe<PictureFiltersInput>;
 };
 
+export type QueryI18NLocaleArgs = {
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryI18NLocalesArgs = {
+  filters?: InputMaybe<I18NLocaleFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryI18NLocales_ConnectionArgs = {
+  filters?: InputMaybe<I18NLocaleFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
 export type QueryKeywordTagArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryKeywordTagsArgs = {
   filters?: InputMaybe<KeywordTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryKeywordTags_ConnectionArgs = {
+  filters?: InputMaybe<KeywordTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryLinkArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryLinksArgs = {
   filters?: InputMaybe<LinkFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryLinks_ConnectionArgs = {
+  filters?: InputMaybe<LinkFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryLocationTagArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryLocationTagsArgs = {
   filters?: InputMaybe<LocationTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryLocationTags_ConnectionArgs = {
+  filters?: InputMaybe<LocationTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryOrientationTagArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryOrientationTagsArgs = {
   filters?: InputMaybe<OrientationTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryOrientationTags_ConnectionArgs = {
+  filters?: InputMaybe<OrientationTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryParameterizedPermissionArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryParameterizedPermissionsArgs = {
   filters?: InputMaybe<ParameterizedPermissionFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryParameterizedPermissions_ConnectionArgs = {
+  filters?: InputMaybe<ParameterizedPermissionFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryPersonTagArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryPersonTagsArgs = {
   filters?: InputMaybe<PersonTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryPersonTags_ConnectionArgs = {
+  filters?: InputMaybe<PersonTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryPictureArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryPictureGeoInfoArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryPictureGeoInfosArgs = {
   filters?: InputMaybe<PictureGeoInfoFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryPictureGeoInfos_ConnectionArgs = {
+  filters?: InputMaybe<PictureGeoInfoFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryPictureSequenceArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryPictureSequencesArgs = {
   filters?: InputMaybe<PictureSequenceFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryPictureSequences_ConnectionArgs = {
+  filters?: InputMaybe<PictureSequenceFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryPictures_ConnectionArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryReviewWorkflowsWorkflowArgs = {
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryReviewWorkflowsWorkflowStageArgs = {
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryReviewWorkflowsWorkflowStagesArgs = {
+  filters?: InputMaybe<ReviewWorkflowsWorkflowStageFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryReviewWorkflowsWorkflowStages_ConnectionArgs = {
+  filters?: InputMaybe<ReviewWorkflowsWorkflowStageFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryReviewWorkflowsWorkflowsArgs = {
+  filters?: InputMaybe<ReviewWorkflowsWorkflowFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryReviewWorkflowsWorkflows_ConnectionArgs = {
+  filters?: InputMaybe<ReviewWorkflowsWorkflowFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryTimeRangeTagArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryTimeRangeTagsArgs = {
   filters?: InputMaybe<TimeRangeTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryTimeRangeTags_ConnectionArgs = {
+  filters?: InputMaybe<TimeRangeTagFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryUploadFileArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryUploadFilesArgs = {
   filters?: InputMaybe<UploadFileFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
-export type QueryUploadFolderArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-export type QueryUploadFoldersArgs = {
-  filters?: InputMaybe<UploadFolderFiltersInput>;
+export type QueryUploadFiles_ConnectionArgs = {
+  filters?: InputMaybe<UploadFileFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryUsersPermissionsRoleArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryUsersPermissionsRolesArgs = {
   filters?: InputMaybe<UsersPermissionsRoleFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryUsersPermissionsRoles_ConnectionArgs = {
+  filters?: InputMaybe<UsersPermissionsRoleFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryUsersPermissionsUserArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  documentId: Scalars['ID'];
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type QueryUsersPermissionsUsersArgs = {
   filters?: InputMaybe<UsersPermissionsUserFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
   pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+export type QueryUsersPermissionsUsers_ConnectionArgs = {
+  filters?: InputMaybe<UsersPermissionsUserFiltersInput>;
+  hasPublishedVersion?: InputMaybe<Scalars['Boolean']>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationFilter?: InputMaybe<PublicationFilter>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 export type ResponseCollectionMeta = {
   pagination: Pagination;
+};
+
+export type ReviewWorkflowsWorkflow = {
+  /** @deprecated Use root level fields instead */
+  attributes: ReviewWorkflowsWorkflow;
+  contentTypes: Scalars['JSON'];
+  createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: ReviewWorkflowsWorkflow;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  stageRequiredToPublish?: Maybe<ReviewWorkflowsWorkflowStage>;
+  stages: Array<Maybe<ReviewWorkflowsWorkflowStage>>;
+  stages_connection?: Maybe<ReviewWorkflowsWorkflowStageRelationResponseCollection>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ReviewWorkflowsWorkflowStagesArgs = {
+  filters?: InputMaybe<ReviewWorkflowsWorkflowStageFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ReviewWorkflowsWorkflowStages_ConnectionArgs = {
+  filters?: InputMaybe<ReviewWorkflowsWorkflowStageFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ReviewWorkflowsWorkflowEntityResponseCollection = {
+  /** @deprecated Use `nodes` field instead */
+  data: Array<ReviewWorkflowsWorkflow>;
+  /** @deprecated Use the `pageInfo` field instead */
+  meta: ResponseCollectionMeta;
+  nodes: Array<ReviewWorkflowsWorkflow>;
+  pageInfo: Pagination;
+};
+
+export type ReviewWorkflowsWorkflowFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ReviewWorkflowsWorkflowFiltersInput>>>;
+  contentTypes?: InputMaybe<JsonFilterInput>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<ReviewWorkflowsWorkflowFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ReviewWorkflowsWorkflowFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  stageRequiredToPublish?: InputMaybe<ReviewWorkflowsWorkflowStageFiltersInput>;
+  stages?: InputMaybe<ReviewWorkflowsWorkflowStageFiltersInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type ReviewWorkflowsWorkflowInput = {
+  contentTypes?: InputMaybe<Scalars['JSON']>;
+  locale?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  stageRequiredToPublish?: InputMaybe<Scalars['ID']>;
+  stages?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+};
+
+export type ReviewWorkflowsWorkflowStage = {
+  /** @deprecated Use root level fields instead */
+  attributes: ReviewWorkflowsWorkflowStage;
+  color?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: ReviewWorkflowsWorkflowStage;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  workflow?: Maybe<ReviewWorkflowsWorkflow>;
+};
+
+export type ReviewWorkflowsWorkflowStageEntityResponseCollection = {
+  /** @deprecated Use `nodes` field instead */
+  data: Array<ReviewWorkflowsWorkflowStage>;
+  /** @deprecated Use the `pageInfo` field instead */
+  meta: ResponseCollectionMeta;
+  nodes: Array<ReviewWorkflowsWorkflowStage>;
+  pageInfo: Pagination;
+};
+
+export type ReviewWorkflowsWorkflowStageFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ReviewWorkflowsWorkflowStageFiltersInput>>>;
+  color?: InputMaybe<StringFilterInput>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<ReviewWorkflowsWorkflowStageFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ReviewWorkflowsWorkflowStageFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+  workflow?: InputMaybe<ReviewWorkflowsWorkflowFiltersInput>;
+};
+
+export type ReviewWorkflowsWorkflowStageInput = {
+  color?: InputMaybe<Scalars['String']>;
+  locale?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  workflow?: InputMaybe<Scalars['ID']>;
+};
+
+export type ReviewWorkflowsWorkflowStageRelationResponseCollection = {
+  /** @deprecated Use `nodes` field instead */
+  data: Array<ReviewWorkflowsWorkflowStage>;
+  nodes: Array<ReviewWorkflowsWorkflowStage>;
 };
 
 export type StringFilterInput = {
@@ -2305,16 +3326,32 @@ export type StringFilterInput = {
 };
 
 export type TimeRangeTag = {
+  /** @deprecated Use root level fields instead */
+  attributes: TimeRangeTag;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: TimeRangeTag;
+  documentId: Scalars['ID'];
   end: Scalars['DateTime'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   isEstimate?: Maybe<Scalars['Boolean']>;
-  pictures?: Maybe<PictureRelationResponseCollection>;
+  pictures: Array<Maybe<Picture>>;
+  pictures_connection?: Maybe<PictureRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
   updatedAt?: Maybe<Scalars['DateTime']>;
-  verified_pictures?: Maybe<PictureRelationResponseCollection>;
+  verified_pictures: Array<Maybe<Picture>>;
+  verified_pictures_connection?: Maybe<PictureRelationResponseCollection>;
 };
 
 export type TimeRangeTagPicturesArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type TimeRangeTagPictures_ConnectionArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -2326,29 +3363,32 @@ export type TimeRangeTagVerified_PicturesArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type TimeRangeTagEntity = {
-  attributes?: Maybe<TimeRangeTag>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type TimeRangeTagEntityResponse = {
-  data?: Maybe<TimeRangeTagEntity>;
+export type TimeRangeTagVerified_Pictures_ConnectionArgs = {
+  filters?: InputMaybe<PictureFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type TimeRangeTagEntityResponseCollection = {
-  data: Array<TimeRangeTagEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<TimeRangeTag>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<TimeRangeTag>;
+  pageInfo: Pagination;
 };
 
 export type TimeRangeTagFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<TimeRangeTagFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   end?: InputMaybe<DateTimeFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   isEstimate?: InputMaybe<BooleanFilterInput>;
   not?: InputMaybe<TimeRangeTagFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<TimeRangeTagFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   start?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_pictures?: InputMaybe<PictureFiltersInput>;
@@ -2357,24 +3397,35 @@ export type TimeRangeTagFiltersInput = {
 export type TimeRangeTagInput = {
   end?: InputMaybe<Scalars['DateTime']>;
   isEstimate?: InputMaybe<Scalars['Boolean']>;
+  locale?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   start?: InputMaybe<Scalars['DateTime']>;
   verified_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
 export type UploadFile = {
   alternativeText?: Maybe<Scalars['String']>;
+  /** @deprecated Use root level fields instead */
+  attributes: UploadFile;
   caption?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: UploadFile;
+  documentId: Scalars['ID'];
   ext?: Maybe<Scalars['String']>;
+  focalPoint?: Maybe<Scalars['JSON']>;
   formats?: Maybe<Scalars['JSON']>;
   hash: Scalars['String'];
   height?: Maybe<Scalars['Int']>;
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   mime: Scalars['String'];
   name: Scalars['String'];
   previewUrl?: Maybe<Scalars['String']>;
   provider: Scalars['String'];
   provider_metadata?: Maybe<Scalars['JSON']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   related?: Maybe<Array<Maybe<GenericMorph>>>;
   size: Scalars['Float'];
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -2382,18 +3433,13 @@ export type UploadFile = {
   width?: Maybe<Scalars['Int']>;
 };
 
-export type UploadFileEntity = {
-  attributes?: Maybe<UploadFile>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type UploadFileEntityResponse = {
-  data?: Maybe<UploadFileEntity>;
-};
-
 export type UploadFileEntityResponseCollection = {
-  data: Array<UploadFileEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<UploadFile>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<UploadFile>;
+  pageInfo: Pagination;
 };
 
 export type UploadFileFiltersInput = {
@@ -2401,13 +3447,12 @@ export type UploadFileFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<UploadFileFiltersInput>>>;
   caption?: InputMaybe<StringFilterInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   ext?: InputMaybe<StringFilterInput>;
-  folder?: InputMaybe<UploadFolderFiltersInput>;
-  folderPath?: InputMaybe<StringFilterInput>;
+  focalPoint?: InputMaybe<JsonFilterInput>;
   formats?: InputMaybe<JsonFilterInput>;
   hash?: InputMaybe<StringFilterInput>;
   height?: InputMaybe<IntFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
   mime?: InputMaybe<StringFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<UploadFileFiltersInput>;
@@ -2415,98 +3460,11 @@ export type UploadFileFiltersInput = {
   previewUrl?: InputMaybe<StringFilterInput>;
   provider?: InputMaybe<StringFilterInput>;
   provider_metadata?: InputMaybe<JsonFilterInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   size?: InputMaybe<FloatFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   url?: InputMaybe<StringFilterInput>;
   width?: InputMaybe<IntFilterInput>;
-};
-
-export type UploadFileInput = {
-  alternativeText?: InputMaybe<Scalars['String']>;
-  caption?: InputMaybe<Scalars['String']>;
-  ext?: InputMaybe<Scalars['String']>;
-  folder?: InputMaybe<Scalars['ID']>;
-  folderPath?: InputMaybe<Scalars['String']>;
-  formats?: InputMaybe<Scalars['JSON']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['Int']>;
-  mime?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  previewUrl?: InputMaybe<Scalars['String']>;
-  provider?: InputMaybe<Scalars['String']>;
-  provider_metadata?: InputMaybe<Scalars['JSON']>;
-  size?: InputMaybe<Scalars['Float']>;
-  url?: InputMaybe<Scalars['String']>;
-  width?: InputMaybe<Scalars['Int']>;
-};
-
-export type UploadFileRelationResponseCollection = {
-  data: Array<UploadFileEntity>;
-};
-
-export type UploadFolder = {
-  children?: Maybe<UploadFolderRelationResponseCollection>;
-  createdAt?: Maybe<Scalars['DateTime']>;
-  files?: Maybe<UploadFileRelationResponseCollection>;
-  name: Scalars['String'];
-  parent?: Maybe<UploadFolderEntityResponse>;
-  path: Scalars['String'];
-  pathId: Scalars['Int'];
-  updatedAt?: Maybe<Scalars['DateTime']>;
-};
-
-export type UploadFolderChildrenArgs = {
-  filters?: InputMaybe<UploadFolderFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type UploadFolderFilesArgs = {
-  filters?: InputMaybe<UploadFileFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type UploadFolderEntity = {
-  attributes?: Maybe<UploadFolder>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type UploadFolderEntityResponse = {
-  data?: Maybe<UploadFolderEntity>;
-};
-
-export type UploadFolderEntityResponseCollection = {
-  data: Array<UploadFolderEntity>;
-  meta: ResponseCollectionMeta;
-};
-
-export type UploadFolderFiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<UploadFolderFiltersInput>>>;
-  children?: InputMaybe<UploadFolderFiltersInput>;
-  createdAt?: InputMaybe<DateTimeFilterInput>;
-  files?: InputMaybe<UploadFileFiltersInput>;
-  id?: InputMaybe<IdFilterInput>;
-  name?: InputMaybe<StringFilterInput>;
-  not?: InputMaybe<UploadFolderFiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<UploadFolderFiltersInput>>>;
-  parent?: InputMaybe<UploadFolderFiltersInput>;
-  path?: InputMaybe<StringFilterInput>;
-  pathId?: InputMaybe<IntFilterInput>;
-  updatedAt?: InputMaybe<DateTimeFilterInput>;
-};
-
-export type UploadFolderInput = {
-  children?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  files?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  name?: InputMaybe<Scalars['String']>;
-  parent?: InputMaybe<Scalars['ID']>;
-  path?: InputMaybe<Scalars['String']>;
-  pathId?: InputMaybe<Scalars['Int']>;
-};
-
-export type UploadFolderRelationResponseCollection = {
-  data: Array<UploadFolderEntity>;
 };
 
 export type UsersPermissionsCreateRolePayload = {
@@ -2531,6 +3489,7 @@ export type UsersPermissionsLoginPayload = {
 export type UsersPermissionsMe = {
   blocked?: Maybe<Scalars['Boolean']>;
   confirmed?: Maybe<Scalars['Boolean']>;
+  documentId: Scalars['ID'];
   email?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   role?: Maybe<UsersPermissionsMeRole>;
@@ -2550,29 +3509,35 @@ export type UsersPermissionsPasswordPayload = {
 
 export type UsersPermissionsPermission = {
   action: Scalars['String'];
+  /** @deprecated Use root level fields instead */
+  attributes: UsersPermissionsPermission;
   createdAt?: Maybe<Scalars['DateTime']>;
-  role?: Maybe<UsersPermissionsRoleEntityResponse>;
+  /** @deprecated Use root level fields instead */
+  data: UsersPermissionsPermission;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  role?: Maybe<UsersPermissionsRole>;
   updatedAt?: Maybe<Scalars['DateTime']>;
-};
-
-export type UsersPermissionsPermissionEntity = {
-  attributes?: Maybe<UsersPermissionsPermission>;
-  id?: Maybe<Scalars['ID']>;
 };
 
 export type UsersPermissionsPermissionFiltersInput = {
   action?: InputMaybe<StringFilterInput>;
   and?: InputMaybe<Array<InputMaybe<UsersPermissionsPermissionFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<UsersPermissionsPermissionFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<UsersPermissionsPermissionFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   role?: InputMaybe<UsersPermissionsRoleFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
 
 export type UsersPermissionsPermissionRelationResponseCollection = {
-  data: Array<UsersPermissionsPermissionEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<UsersPermissionsPermission>;
+  nodes: Array<UsersPermissionsPermission>;
 };
 
 export type UsersPermissionsRegisterInput = {
@@ -2582,16 +3547,32 @@ export type UsersPermissionsRegisterInput = {
 };
 
 export type UsersPermissionsRole = {
+  /** @deprecated Use root level fields instead */
+  attributes: UsersPermissionsRole;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: UsersPermissionsRole;
   description?: Maybe<Scalars['String']>;
+  documentId: Scalars['ID'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   name: Scalars['String'];
-  permissions?: Maybe<UsersPermissionsPermissionRelationResponseCollection>;
+  permissions: Array<Maybe<UsersPermissionsPermission>>;
+  permissions_connection?: Maybe<UsersPermissionsPermissionRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   type?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
-  users?: Maybe<UsersPermissionsUserRelationResponseCollection>;
+  users: Array<Maybe<UsersPermissionsUser>>;
+  users_connection?: Maybe<UsersPermissionsUserRelationResponseCollection>;
 };
 
 export type UsersPermissionsRolePermissionsArgs = {
+  filters?: InputMaybe<UsersPermissionsPermissionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type UsersPermissionsRolePermissions_ConnectionArgs = {
   filters?: InputMaybe<UsersPermissionsPermissionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -2603,29 +3584,31 @@ export type UsersPermissionsRoleUsersArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-export type UsersPermissionsRoleEntity = {
-  attributes?: Maybe<UsersPermissionsRole>;
-  id?: Maybe<Scalars['ID']>;
-};
-
-export type UsersPermissionsRoleEntityResponse = {
-  data?: Maybe<UsersPermissionsRoleEntity>;
+export type UsersPermissionsRoleUsers_ConnectionArgs = {
+  filters?: InputMaybe<UsersPermissionsUserFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type UsersPermissionsRoleEntityResponseCollection = {
-  data: Array<UsersPermissionsRoleEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<UsersPermissionsRole>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<UsersPermissionsRole>;
+  pageInfo: Pagination;
 };
 
 export type UsersPermissionsRoleFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<UsersPermissionsRoleFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   description?: InputMaybe<StringFilterInput>;
-  id?: InputMaybe<IdFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<UsersPermissionsRoleFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<UsersPermissionsRoleFiltersInput>>>;
   permissions?: InputMaybe<UsersPermissionsPermissionFiltersInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   type?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   users?: InputMaybe<UsersPermissionsUserFiltersInput>;
@@ -2633,8 +3616,10 @@ export type UsersPermissionsRoleFiltersInput = {
 
 export type UsersPermissionsRoleInput = {
   description?: InputMaybe<Scalars['String']>;
+  locale?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   permissions?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   type?: InputMaybe<Scalars['String']>;
   users?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
@@ -2644,46 +3629,52 @@ export type UsersPermissionsUpdateRolePayload = {
 };
 
 export type UsersPermissionsUser = {
+  /** @deprecated Use root level fields instead */
+  attributes: UsersPermissionsUser;
   blocked?: Maybe<Scalars['Boolean']>;
   confirmed?: Maybe<Scalars['Boolean']>;
   createdAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Use root level fields instead */
+  data: UsersPermissionsUser;
+  documentId: Scalars['ID'];
   email: Scalars['String'];
+  /** @deprecated Use `documentId` instead */
+  id: Scalars['ID'];
   isSuperUser?: Maybe<Scalars['Boolean']>;
   provider?: Maybe<Scalars['String']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
   resetPasswordTokenCreatedAt?: Maybe<Scalars['DateTime']>;
-  role?: Maybe<UsersPermissionsRoleEntityResponse>;
+  role?: Maybe<UsersPermissionsRole>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   username: Scalars['String'];
 };
 
-export type UsersPermissionsUserEntity = {
-  attributes?: Maybe<UsersPermissionsUser>;
-  id?: Maybe<Scalars['ID']>;
-};
-
 export type UsersPermissionsUserEntityResponse = {
-  data?: Maybe<UsersPermissionsUserEntity>;
+  data?: Maybe<UsersPermissionsUser>;
 };
 
 export type UsersPermissionsUserEntityResponseCollection = {
-  data: Array<UsersPermissionsUserEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<UsersPermissionsUser>;
+  /** @deprecated Use the `pageInfo` field instead */
   meta: ResponseCollectionMeta;
+  nodes: Array<UsersPermissionsUser>;
+  pageInfo: Pagination;
 };
 
 export type UsersPermissionsUserFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<UsersPermissionsUserFiltersInput>>>;
   blocked?: InputMaybe<BooleanFilterInput>;
-  confirmationToken?: InputMaybe<StringFilterInput>;
   confirmed?: InputMaybe<BooleanFilterInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
   email?: InputMaybe<StringFilterInput>;
   id?: InputMaybe<IdFilterInput>;
   isSuperUser?: InputMaybe<BooleanFilterInput>;
   not?: InputMaybe<UsersPermissionsUserFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<UsersPermissionsUserFiltersInput>>>;
-  password?: InputMaybe<StringFilterInput>;
   provider?: InputMaybe<StringFilterInput>;
-  resetPasswordToken?: InputMaybe<StringFilterInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
   resetPasswordTokenCreatedAt?: InputMaybe<DateTimeFilterInput>;
   role?: InputMaybe<UsersPermissionsRoleFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -2696,8 +3687,10 @@ export type UsersPermissionsUserInput = {
   confirmed?: InputMaybe<Scalars['Boolean']>;
   email?: InputMaybe<Scalars['String']>;
   isSuperUser?: InputMaybe<Scalars['Boolean']>;
+  locale?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
   provider?: InputMaybe<Scalars['String']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
   resetPasswordToken?: InputMaybe<Scalars['String']>;
   resetPasswordTokenCreatedAt?: InputMaybe<Scalars['DateTime']>;
   role?: InputMaybe<Scalars['ID']>;
@@ -2705,7 +3698,9 @@ export type UsersPermissionsUserInput = {
 };
 
 export type UsersPermissionsUserRelationResponseCollection = {
-  data: Array<UsersPermissionsUserEntity>;
+  /** @deprecated Use `nodes` field instead */
+  data: Array<UsersPermissionsUser>;
+  nodes: Array<UsersPermissionsUser>;
 };
 
 export type CanRunOperationQueryVariables = Exact<{
@@ -2723,24 +3718,22 @@ export type GetAllArchiveTagsQueryVariables = Exact<{
 export type GetAllArchiveTagsQuery = {
   archiveTags?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         name: string;
         shortDescription?: string | null;
         hidden?: boolean | null;
         showcasePicture?: {
-          data?: {
-            id?: string | null;
-            attributes?: {
+          data: {
+            id: string;
+            attributes: {
               media: {
-                data?: {
-                  attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
-                } | null;
+                data: { attributes: { url: string; updatedAt?: any | null; provider: string } };
               };
-            } | null;
-          } | null;
+            };
+          };
         } | null;
-      } | null;
+      };
     }>;
   } | null;
 };
@@ -2750,13 +3743,11 @@ export type GetAllCollectionsQueryVariables = Exact<{ [key: string]: never }>;
 export type GetAllCollectionsQuery = {
   collections?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         name: string;
-        parent_collections?: {
-          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
-        } | null;
-      } | null;
+        parent_collections?: { data: Array<{ id: string; attributes: { name: string } }> } | null;
+      };
     }>;
   } | null;
 };
@@ -2775,7 +3766,7 @@ export type GetAllPersonTagsQuery = { getAllPersonTags?: any | null };
 
 export type GetAllPictureIdsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAllPictureIdsQuery = { pictures?: { data: Array<{ id?: string | null }> } | null };
+export type GetAllPictureIdsQuery = { pictures?: { data: Array<{ id: string }> } | null };
 
 export type GetArchiveQueryVariables = Exact<{
   archiveId: Scalars['ID'];
@@ -2783,9 +3774,9 @@ export type GetArchiveQueryVariables = Exact<{
 
 export type GetArchiveQuery = {
   archiveTag?: {
-    data?: {
-      id?: string | null;
-      attributes?: {
+    data: {
+      id: string;
+      attributes: {
         name: string;
         shortDescription?: string | null;
         longDescription?: string | null;
@@ -2796,45 +3787,42 @@ export type GetArchiveQuery = {
         hidden?: boolean | null;
         restrictImageDownloading?: boolean | null;
         logo?: {
-          data?: {
-            id?: string | null;
-            attributes?: {
+          data: {
+            id: string;
+            attributes: {
               width?: number | null;
               height?: number | null;
               formats?: any | null;
               updatedAt?: any | null;
               provider: string;
-            } | null;
-          } | null;
+            };
+          };
         } | null;
         showcasePicture?: {
-          data?: {
-            id?: string | null;
-            attributes?: {
+          data: {
+            id: string;
+            attributes: {
               media: {
-                data?: {
-                  id?: string | null;
-                  attributes?: {
+                data: {
+                  id: string;
+                  attributes: {
                     width?: number | null;
                     height?: number | null;
                     formats?: any | null;
                     url: string;
                     updatedAt?: any | null;
                     provider: string;
-                  } | null;
-                } | null;
+                  };
+                };
               };
-            } | null;
-          } | null;
+            };
+          };
         } | null;
         links?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { title?: string | null; url: string } | null;
-          }>;
+          data: Array<{ id: string; attributes: { title?: string | null; url: string } }>;
         } | null;
-      } | null;
-    } | null;
+      };
+    };
   } | null;
 };
 
@@ -2844,9 +3832,7 @@ export type GetArchiveNamesQueryVariables = Exact<{
 }>;
 
 export type GetArchiveNamesQuery = {
-  archiveTags?: {
-    data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
-  } | null;
+  archiveTags?: { data: Array<{ id: string; attributes: { name: string } }> } | null;
 };
 
 export type GetArchivePictureCountsQueryVariables = Exact<{ [key: string]: never }>;
@@ -2866,27 +3852,27 @@ export type GetCollectionInfoByIdQueryVariables = Exact<{
 
 export type GetCollectionInfoByIdQuery = {
   collection?: {
-    data?: {
-      id?: string | null;
-      attributes?: {
+    data: {
+      id: string;
+      attributes: {
         name: string;
         description?: string | null;
         child_collections?: {
           data: Array<{
-            id?: string | null;
-            attributes?: {
+            id: string;
+            attributes: {
               name: string;
               visible: boolean;
-              pictures?: { data: Array<{ id?: string | null }> } | null;
-              child_collections?: { data: Array<{ id?: string | null }> } | null;
+              pictures?: { data: Array<{ id: string }> } | null;
+              child_collections?: { data: Array<{ id: string }> } | null;
               parent_collections?: {
-                data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
+                data: Array<{ id: string; attributes: { name: string } }>;
               } | null;
-            } | null;
+            };
           }>;
         } | null;
-      } | null;
-    } | null;
+      };
+    };
   } | null;
 };
 
@@ -2897,17 +3883,17 @@ export type GetCollectionInfoByNameQueryVariables = Exact<{
 export type GetCollectionInfoByNameQuery = {
   collections?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         name: string;
         description?: string | null;
         child_collections?: {
           data: Array<{
-            id?: string | null;
-            attributes?: { name: string; thumbnail?: string | null; visible: boolean } | null;
+            id: string;
+            attributes: { name: string; thumbnail?: string | null; visible: boolean };
           }>;
         } | null;
-      } | null;
+      };
     }>;
   } | null;
 };
@@ -2918,40 +3904,32 @@ export type GetDailyPictureInfoQueryVariables = Exact<{
 
 export type GetDailyPictureInfoQuery = {
   picture?: {
-    data?: {
-      id?: string | null;
-      attributes?: {
+    data: {
+      id: string;
+      attributes: {
         likes?: number | null;
-        descriptions?: {
-          data: Array<{ id?: string | null; attributes?: { text: string } | null }>;
-        } | null;
+        descriptions?: { data: Array<{ id: string; attributes: { text: string } }> } | null;
         time_range_tag?: {
-          data?: {
-            id?: string | null;
-            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
-          } | null;
+          data: { id: string; attributes: { start: any; end: any; isEstimate?: boolean | null } };
         } | null;
         verified_time_range_tag?: {
-          data?: {
-            id?: string | null;
-            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
-          } | null;
+          data: { id: string; attributes: { start: any; end: any; isEstimate?: boolean | null } };
         } | null;
-        comments?: { data: Array<{ id?: string | null }> } | null;
+        comments?: { data: Array<{ id: string }> } | null;
         media: {
-          data?: {
-            id?: string | null;
-            attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
-          } | null;
+          data: {
+            id: string;
+            attributes: { url: string; updatedAt?: any | null; provider: string };
+          };
         };
         archive_tag?: {
-          data?: {
-            id?: string | null;
-            attributes?: { name: string; restrictImageDownloading?: boolean | null } | null;
-          } | null;
+          data: {
+            id: string;
+            attributes: { name: string; restrictImageDownloading?: boolean | null };
+          };
         } | null;
-      } | null;
-    } | null;
+      };
+    };
   } | null;
 };
 
@@ -2967,44 +3945,32 @@ export type GetDecadePreviewThumbnailsQueryVariables = Exact<{
 export type GetDecadePreviewThumbnailsQuery = {
   decade40s?: {
     data: Array<{
-      attributes?: {
-        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
-      } | null;
+      attributes: { media: { data: { attributes: { formats?: any | null; provider: string } } } };
     }>;
   } | null;
   decade50s?: {
     data: Array<{
-      attributes?: {
-        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
-      } | null;
+      attributes: { media: { data: { attributes: { formats?: any | null; provider: string } } } };
     }>;
   } | null;
   decade60s?: {
     data: Array<{
-      attributes?: {
-        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
-      } | null;
+      attributes: { media: { data: { attributes: { formats?: any | null; provider: string } } } };
     }>;
   } | null;
   decade70s?: {
     data: Array<{
-      attributes?: {
-        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
-      } | null;
+      attributes: { media: { data: { attributes: { formats?: any | null; provider: string } } } };
     }>;
   } | null;
   decade80s?: {
     data: Array<{
-      attributes?: {
-        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
-      } | null;
+      attributes: { media: { data: { attributes: { formats?: any | null; provider: string } } } };
     }>;
   } | null;
   decade90s?: {
     data: Array<{
-      attributes?: {
-        media: { data?: { attributes?: { formats?: any | null; provider: string } | null } | null };
-      } | null;
+      attributes: { media: { data: { attributes: { formats?: any | null; provider: string } } } };
     }>;
   } | null;
 };
@@ -3015,109 +3981,109 @@ export type GetExhibitionQueryVariables = Exact<{
 
 export type GetExhibitionQuery = {
   exhibition?: {
-    data?: {
-      id?: string | null;
-      attributes?: {
+    data: {
+      id: string;
+      attributes: {
         title?: string | null;
         introduction?: string | null;
         is_published?: boolean | null;
         title_picture?: {
-          data?: {
-            id?: string | null;
-            attributes?: {
+          data: {
+            id: string;
+            attributes: {
               subtitle?: string | null;
               picture?: {
-                data?: {
-                  id?: string | null;
-                  attributes?: {
+                data: {
+                  id: string;
+                  attributes: {
                     media: {
-                      data?: {
-                        id?: string | null;
-                        attributes?: {
+                      data: {
+                        id: string;
+                        attributes: {
                           width?: number | null;
                           height?: number | null;
                           formats?: any | null;
                           url: string;
                           updatedAt?: any | null;
                           provider: string;
-                        } | null;
-                      } | null;
+                        };
+                      };
                     };
-                  } | null;
-                } | null;
+                  };
+                };
               } | null;
-            } | null;
-          } | null;
+            };
+          };
         } | null;
         idealot_pictures?: {
           data: Array<{
-            id?: string | null;
-            attributes?: {
+            id: string;
+            attributes: {
               subtitle?: string | null;
               picture?: {
-                data?: {
-                  id?: string | null;
-                  attributes?: {
+                data: {
+                  id: string;
+                  attributes: {
                     media: {
-                      data?: {
-                        id?: string | null;
-                        attributes?: {
+                      data: {
+                        id: string;
+                        attributes: {
                           width?: number | null;
                           height?: number | null;
                           formats?: any | null;
                           url: string;
                           updatedAt?: any | null;
                           provider: string;
-                        } | null;
-                      } | null;
+                        };
+                      };
                     };
-                  } | null;
-                } | null;
+                  };
+                };
               } | null;
-            } | null;
+            };
           }>;
         } | null;
         exhibition_sections?: {
           data: Array<{
-            id?: string | null;
-            attributes?: {
+            id: string;
+            attributes: {
               title?: string | null;
               text?: string | null;
               order?: number | null;
               exhibition_pictures?: {
                 data: Array<{
-                  id?: string | null;
-                  attributes?: {
+                  id: string;
+                  attributes: {
                     order?: number | null;
                     subtitle?: string | null;
                     picture?: {
-                      data?: {
-                        id?: string | null;
-                        attributes?: {
+                      data: {
+                        id: string;
+                        attributes: {
                           media: {
-                            data?: {
-                              id?: string | null;
-                              attributes?: {
+                            data: {
+                              id: string;
+                              attributes: {
                                 width?: number | null;
                                 height?: number | null;
                                 formats?: any | null;
                                 url: string;
                                 updatedAt?: any | null;
                                 provider: string;
-                              } | null;
-                            } | null;
+                              };
+                            };
                           };
-                        } | null;
-                      } | null;
+                        };
+                      };
                     } | null;
-                  } | null;
+                  };
                 }>;
               } | null;
-            } | null;
+            };
           }>;
         } | null;
-      } | null;
-    } | null;
+      };
+    };
   } | null;
 };
 
@@ -3129,40 +4095,40 @@ export type GetExhibitionsQueryVariables = Exact<{
 export type GetExhibitionsQuery = {
   exhibitions?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         title?: string | null;
         introduction?: string | null;
         is_published?: boolean | null;
-        archive_tag?: { data?: { id?: string | null } | null } | null;
+        archive_tag?: { data: { id: string } } | null;
         title_picture?: {
-          data?: {
-            id?: string | null;
-            attributes?: {
+          data: {
+            id: string;
+            attributes: {
               picture?: {
-                data?: {
-                  id?: string | null;
-                  attributes?: {
+                data: {
+                  id: string;
+                  attributes: {
                     media: {
-                      data?: {
-                        id?: string | null;
-                        attributes?: {
+                      data: {
+                        id: string;
+                        attributes: {
                           width?: number | null;
                           height?: number | null;
                           formats?: any | null;
                           url: string;
                           updatedAt?: any | null;
                           provider: string;
-                        } | null;
-                      } | null;
+                        };
+                      };
                     };
-                  } | null;
-                } | null;
+                  };
+                };
               } | null;
-            } | null;
-          } | null;
+            };
+          };
         } | null;
-      } | null;
+      };
     }>;
   } | null;
 };
@@ -3174,15 +4140,13 @@ export type GetFaceTagsQueryVariables = Exact<{
 export type GetFaceTagsQuery = {
   faceTags?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         x?: number | null;
         y?: number | null;
         tag_direction?: number | null;
-        person_tag?: {
-          data?: { id?: string | null; attributes?: { name: string } | null } | null;
-        } | null;
-      } | null;
+        person_tag?: { data: { id: string; attributes: { name: string } } } | null;
+      };
     }>;
   } | null;
 };
@@ -3193,39 +4157,39 @@ export type GetIdeaLotContentQueryVariables = Exact<{
 
 export type GetIdeaLotContentQuery = {
   exhibition?: {
-    data?: {
-      id?: string | null;
-      attributes?: {
+    data: {
+      id: string;
+      attributes: {
         idealot_pictures?: {
           data: Array<{
-            id?: string | null;
-            attributes?: {
+            id: string;
+            attributes: {
               subtitle?: string | null;
               picture?: {
-                data?: {
-                  id?: string | null;
-                  attributes?: {
+                data: {
+                  id: string;
+                  attributes: {
                     media: {
-                      data?: {
-                        id?: string | null;
-                        attributes?: {
+                      data: {
+                        id: string;
+                        attributes: {
                           width?: number | null;
                           height?: number | null;
                           formats?: any | null;
                           url: string;
                           updatedAt?: any | null;
                           provider: string;
-                        } | null;
-                      } | null;
+                        };
+                      };
                     };
-                  } | null;
-                } | null;
+                  };
+                };
               } | null;
-            } | null;
+            };
           }>;
         } | null;
-      } | null;
-    } | null;
+      };
+    };
   } | null;
 };
 
@@ -3239,28 +4203,24 @@ export type GetKeywordTagsWithThumbnailQueryVariables = Exact<{
 export type GetKeywordTagsWithThumbnailQuery = {
   keywordTags?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         name: string;
         thumbnail?: {
           data: Array<{
-            attributes?: {
-              media: {
-                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
-              };
-            } | null;
+            attributes: {
+              media: { data: { attributes: { formats?: any | null; provider: string } } };
+            };
           }>;
         } | null;
         verified_thumbnail?: {
           data: Array<{
-            attributes?: {
-              media: {
-                data?: { attributes?: { formats?: any | null; provider: string } | null } | null;
-              };
-            } | null;
+            attributes: {
+              media: { data: { attributes: { formats?: any | null; provider: string } } };
+            };
           }>;
         } | null;
-      } | null;
+      };
     }>;
   } | null;
 };
@@ -3270,7 +4230,7 @@ export type GetLocationTagQueryVariables = Exact<{
 }>;
 
 export type GetLocationTagQuery = {
-  locationTag?: { data?: { attributes?: { name: string } | null } | null } | null;
+  locationTag?: { data: { attributes: { name: string } } } | null;
 };
 
 export type GetLocationTagsWithThumbnailQueryVariables = Exact<{
@@ -3290,31 +4250,28 @@ export type GetMostLikedPicturesQueryVariables = Exact<{
 export type GetMostLikedPicturesQuery = {
   pictures?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         is_text?: boolean | null;
         likes?: number | null;
-        comments?: { data: Array<{ id?: string | null }> } | null;
+        comments?: { data: Array<{ id: string }> } | null;
         media: {
-          data?: {
-            id?: string | null;
-            attributes?: {
+          data: {
+            id: string;
+            attributes: {
               width?: number | null;
               height?: number | null;
               formats?: any | null;
               url: string;
               updatedAt?: any | null;
               provider: string;
-            } | null;
-          } | null;
+            };
+          };
         };
         picture_sequence?: {
-          data?: {
-            id?: string | null;
-            attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
-          } | null;
+          data: { id: string; attributes: { pictures?: { data: Array<{ id: string }> } | null } };
         } | null;
-      } | null;
+      };
     }>;
   } | null;
 };
@@ -3326,87 +4283,57 @@ export type GetMultiplePictureInfoQueryVariables = Exact<{
 export type GetMultiplePictureInfoQuery = {
   pictures?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         is_text?: boolean | null;
-        descriptions?: {
-          data: Array<{ id?: string | null; attributes?: { text: string } | null }>;
-        } | null;
+        descriptions?: { data: Array<{ id: string; attributes: { text: string } }> } | null;
         time_range_tag?: {
-          data?: {
-            id?: string | null;
-            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
-          } | null;
+          data: { id: string; attributes: { start: any; end: any; isEstimate?: boolean | null } };
         } | null;
         verified_time_range_tag?: {
-          data?: {
-            id?: string | null;
-            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
-          } | null;
+          data: { id: string; attributes: { start: any; end: any; isEstimate?: boolean | null } };
         } | null;
         keyword_tags?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { name: string; updatedAt?: any | null } | null;
-          }>;
+          data: Array<{ id: string; attributes: { name: string; updatedAt?: any | null } }>;
         } | null;
         verified_keyword_tags?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { name: string; updatedAt?: any | null } | null;
-          }>;
+          data: Array<{ id: string; attributes: { name: string; updatedAt?: any | null } }>;
         } | null;
         location_tags?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { name: string; updatedAt?: any | null } | null;
-          }>;
+          data: Array<{ id: string; attributes: { name: string; updatedAt?: any | null } }>;
         } | null;
         verified_location_tags?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { name: string; updatedAt?: any | null } | null;
-          }>;
+          data: Array<{ id: string; attributes: { name: string; updatedAt?: any | null } }>;
         } | null;
         person_tags?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { name: string; updatedAt?: any | null } | null;
-          }>;
+          data: Array<{ id: string; attributes: { name: string; updatedAt?: any | null } }>;
         } | null;
         verified_person_tags?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { name: string; updatedAt?: any | null } | null;
-          }>;
+          data: Array<{ id: string; attributes: { name: string; updatedAt?: any | null } }>;
         } | null;
-        collections?: {
-          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
-        } | null;
+        collections?: { data: Array<{ id: string; attributes: { name: string } }> } | null;
         media: {
-          data?: {
-            id?: string | null;
-            attributes?: { url: string; updatedAt?: any | null; provider: string } | null;
-          } | null;
+          data: {
+            id: string;
+            attributes: { url: string; updatedAt?: any | null; provider: string };
+          };
         };
         comments?: {
           data: Array<{
-            id?: string | null;
-            attributes?: {
+            id: string;
+            attributes: {
               text: string;
               author?: string | null;
               date: any;
               accepted: boolean;
               pinned?: boolean | null;
-            } | null;
+            };
           }>;
         } | null;
-        linked_pictures?: { data: Array<{ id?: string | null }> } | null;
-        linked_texts?: { data: Array<{ id?: string | null }> } | null;
-        archive_tag?: {
-          data?: { id?: string | null; attributes?: { name: string } | null } | null;
-        } | null;
-      } | null;
+        linked_pictures?: { data: Array<{ id: string }> } | null;
+        linked_texts?: { data: Array<{ id: string }> } | null;
+        archive_tag?: { data: { id: string; attributes: { name: string } } } | null;
+      };
     }>;
   } | null;
 };
@@ -3418,15 +4345,13 @@ export type GetOrientationTagsQueryVariables = Exact<{
 export type GetOrientationTagsQuery = {
   orientationTags?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         x?: number | null;
         y?: number | null;
         tag_direction?: number | null;
-        location_tag?: {
-          data?: { id?: string | null; attributes?: { name: string } | null } | null;
-        } | null;
-      } | null;
+        location_tag?: { data: { id: string; attributes: { name: string } } } | null;
+      };
     }>;
   } | null;
 };
@@ -3438,12 +4363,12 @@ export type GetParameterizedPermissionsQueryVariables = Exact<{
 export type GetParameterizedPermissionsQuery = {
   parameterizedPermissions?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         operation_name?: string | null;
         on_other_users?: boolean | null;
-        archive_tag?: { data?: { id?: string | null } | null } | null;
-      } | null;
+        archive_tag?: { data: { id: string } } | null;
+      };
     }>;
   } | null;
 };
@@ -3452,9 +4377,7 @@ export type GetPersonTagQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type GetPersonTagQuery = {
-  personTag?: { data?: { attributes?: { name: string } | null } | null } | null;
-};
+export type GetPersonTagQuery = { personTag?: { data: { attributes: { name: string } } } | null };
 
 export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
   filters?: InputMaybe<PersonTagFiltersInput>;
@@ -3466,32 +4389,28 @@ export type GetPersonTagsWithThumbnailQueryVariables = Exact<{
 export type GetPersonTagsWithThumbnailQuery = {
   personTags?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         name: string;
         thumbnail?: {
           data: Array<{
-            attributes?: {
+            attributes: {
               media: {
-                data?: {
-                  attributes?: { formats?: any | null; url: string; provider: string } | null;
-                } | null;
+                data: { attributes: { formats?: any | null; url: string; provider: string } };
               };
-            } | null;
+            };
           }>;
         } | null;
         verified_thumbnail?: {
           data: Array<{
-            attributes?: {
+            attributes: {
               media: {
-                data?: {
-                  attributes?: { formats?: any | null; url: string; provider: string } | null;
-                } | null;
+                data: { attributes: { formats?: any | null; url: string; provider: string } };
               };
-            } | null;
+            };
           }>;
         } | null;
-      } | null;
+      };
     }>;
   } | null;
 };
@@ -3503,12 +4422,8 @@ export type GetPictureGeoInfoQueryVariables = Exact<{
 export type GetPictureGeoInfoQuery = {
   pictureGeoInfos?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
-        latitude?: number | null;
-        longitude?: number | null;
-        radius?: number | null;
-      } | null;
+      id: string;
+      attributes: { latitude?: number | null; longitude?: number | null; radius?: number | null };
     }>;
   } | null;
 };
@@ -3519,109 +4434,78 @@ export type GetPictureInfoQueryVariables = Exact<{
 
 export type GetPictureInfoQuery = {
   picture?: {
-    data?: {
-      id?: string | null;
-      attributes?: {
+    data: {
+      id: string;
+      attributes: {
         is_text?: boolean | null;
         likes?: number | null;
-        descriptions?: {
-          data: Array<{ id?: string | null; attributes?: { text: string } | null }>;
-        } | null;
+        descriptions?: { data: Array<{ id: string; attributes: { text: string } }> } | null;
         time_range_tag?: {
-          data?: {
-            id?: string | null;
-            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
-          } | null;
+          data: { id: string; attributes: { start: any; end: any; isEstimate?: boolean | null } };
         } | null;
         verified_time_range_tag?: {
-          data?: {
-            id?: string | null;
-            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
-          } | null;
+          data: { id: string; attributes: { start: any; end: any; isEstimate?: boolean | null } };
         } | null;
         keyword_tags?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { name: string; updatedAt?: any | null } | null;
-          }>;
+          data: Array<{ id: string; attributes: { name: string; updatedAt?: any | null } }>;
         } | null;
         verified_keyword_tags?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { name: string; updatedAt?: any | null } | null;
-          }>;
+          data: Array<{ id: string; attributes: { name: string; updatedAt?: any | null } }>;
         } | null;
         location_tags?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { name: string; updatedAt?: any | null } | null;
-          }>;
+          data: Array<{ id: string; attributes: { name: string; updatedAt?: any | null } }>;
         } | null;
         verified_location_tags?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { name: string; updatedAt?: any | null } | null;
-          }>;
+          data: Array<{ id: string; attributes: { name: string; updatedAt?: any | null } }>;
         } | null;
         person_tags?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { name: string; updatedAt?: any | null } | null;
-          }>;
+          data: Array<{ id: string; attributes: { name: string; updatedAt?: any | null } }>;
         } | null;
         verified_person_tags?: {
-          data: Array<{
-            id?: string | null;
-            attributes?: { name: string; updatedAt?: any | null } | null;
-          }>;
+          data: Array<{ id: string; attributes: { name: string; updatedAt?: any | null } }>;
         } | null;
-        collections?: {
-          data: Array<{ id?: string | null; attributes?: { name: string } | null }>;
-        } | null;
+        collections?: { data: Array<{ id: string; attributes: { name: string } }> } | null;
         comments?: {
           data: Array<{
-            id?: string | null;
-            attributes?: {
+            id: string;
+            attributes: {
               text: string;
               author?: string | null;
               date: any;
               accepted: boolean;
               pinned?: boolean | null;
-              picture?: { data?: { id?: string | null } | null } | null;
-              parentComment?: { data?: { id?: string | null } | null } | null;
-              childComments?: { data: Array<{ id?: string | null }> } | null;
-            } | null;
+              picture?: { data: { id: string } } | null;
+              parentComment?: { data: { id: string } } | null;
+              childComments?: { data: Array<{ id: string }> } | null;
+            };
           }>;
         } | null;
         media: {
-          data?: {
-            id?: string | null;
-            attributes?: {
+          data: {
+            id: string;
+            attributes: {
               width?: number | null;
               height?: number | null;
               formats?: any | null;
               url: string;
               updatedAt?: any | null;
               provider: string;
-            } | null;
-          } | null;
+            };
+          };
         };
-        linked_pictures?: { data: Array<{ id?: string | null }> } | null;
-        linked_texts?: { data: Array<{ id?: string | null }> } | null;
+        linked_pictures?: { data: Array<{ id: string }> } | null;
+        linked_texts?: { data: Array<{ id: string }> } | null;
         picture_sequence?: {
-          data?: {
-            id?: string | null;
-            attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
-          } | null;
+          data: { id: string; attributes: { pictures?: { data: Array<{ id: string }> } | null } };
         } | null;
         archive_tag?: {
-          data?: {
-            id?: string | null;
-            attributes?: { name: string; restrictImageDownloading?: boolean | null } | null;
-          } | null;
+          data: {
+            id: string;
+            attributes: { name: string; restrictImageDownloading?: boolean | null };
+          };
         } | null;
-      } | null;
-    } | null;
+      };
+    };
   } | null;
 };
 
@@ -3634,43 +4518,34 @@ export type GetPicturesQueryVariables = Exact<{
 export type GetPicturesQuery = {
   pictures?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         is_text?: boolean | null;
         likes?: number | null;
-        comments?: { data: Array<{ id?: string | null }> } | null;
+        comments?: { data: Array<{ id: string }> } | null;
         verified_time_range_tag?: {
-          data?: {
-            id?: string | null;
-            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
-          } | null;
+          data: { id: string; attributes: { start: any; end: any; isEstimate?: boolean | null } };
         } | null;
         time_range_tag?: {
-          data?: {
-            id?: string | null;
-            attributes?: { start: any; end: any; isEstimate?: boolean | null } | null;
-          } | null;
+          data: { id: string; attributes: { start: any; end: any; isEstimate?: boolean | null } };
         } | null;
         media: {
-          data?: {
-            id?: string | null;
-            attributes?: {
+          data: {
+            id: string;
+            attributes: {
               width?: number | null;
               height?: number | null;
               formats?: any | null;
               url: string;
               updatedAt?: any | null;
               provider: string;
-            } | null;
-          } | null;
+            };
+          };
         };
         picture_sequence?: {
-          data?: {
-            id?: string | null;
-            attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
-          } | null;
+          data: { id: string; attributes: { pictures?: { data: Array<{ id: string }> } | null } };
         } | null;
-      } | null;
+      };
     }>;
   } | null;
 };
@@ -3686,31 +4561,28 @@ export type GetPicturesByAllSearchQueryVariables = Exact<{
 
 export type GetPicturesByAllSearchQuery = {
   findPicturesByAllSearch?: Array<{
-    id?: string | null;
-    attributes?: {
+    id: string;
+    attributes: {
       is_text?: boolean | null;
       likes?: number | null;
-      comments?: { data: Array<{ id?: string | null }> } | null;
+      comments?: { data: Array<{ id: string }> } | null;
       media: {
-        data?: {
-          id?: string | null;
-          attributes?: {
+        data: {
+          id: string;
+          attributes: {
             width?: number | null;
             height?: number | null;
             formats?: any | null;
             url: string;
             updatedAt?: any | null;
             provider: string;
-          } | null;
-        } | null;
+          };
+        };
       };
       picture_sequence?: {
-        data?: {
-          id?: string | null;
-          attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
-        } | null;
+        data: { id: string; attributes: { pictures?: { data: Array<{ id: string }> } | null } };
       } | null;
-    } | null;
+    };
   } | null> | null;
 };
 
@@ -3720,10 +4592,7 @@ export type GetPicturesForCollectionQueryVariables = Exact<{
 
 export type GetPicturesForCollectionQuery = {
   collection?: {
-    data?: {
-      id?: string | null;
-      attributes?: { pictures?: { data: Array<{ id?: string | null }> } | null } | null;
-    } | null;
+    data: { id: string; attributes: { pictures?: { data: Array<{ id: string }> } | null } };
   } | null;
 };
 
@@ -3734,11 +4603,11 @@ export type GetPicturesForLocationQueryVariables = Exact<{
 export type GetPicturesForLocationQuery = {
   locationTags?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
-        pictures?: { data: Array<{ id?: string | null }> } | null;
-        verified_pictures?: { data: Array<{ id?: string | null }> } | null;
-      } | null;
+      id: string;
+      attributes: {
+        pictures?: { data: Array<{ id: string }> } | null;
+        verified_pictures?: { data: Array<{ id: string }> } | null;
+      };
     }>;
   } | null;
 };
@@ -3750,17 +4619,17 @@ export type GetPublishedCollectionInfoByNameQueryVariables = Exact<{
 export type GetPublishedCollectionInfoByNameQuery = {
   collections?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         name: string;
         description?: string | null;
         child_collections?: {
           data: Array<{
-            id?: string | null;
-            attributes?: { name: string; thumbnail?: string | null; visible: boolean } | null;
+            id: string;
+            attributes: { name: string; thumbnail?: string | null; visible: boolean };
           }>;
         } | null;
-      } | null;
+      };
     }>;
   } | null;
 };
@@ -3769,13 +4638,9 @@ export type GetRootCollectionQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetRootCollectionQuery = {
   browseRootCollection?: {
-    data?: {
-      attributes?: {
-        current?: {
-          data?: { id?: string | null; attributes?: { name: string } | null } | null;
-        } | null;
-      } | null;
-    } | null;
+    data: {
+      attributes: { current?: { data: { id: string; attributes: { name: string } } } | null };
+    };
   } | null;
 };
 
@@ -3784,30 +4649,30 @@ export type GetUnverifiedCommentsQueryVariables = Exact<{ [key: string]: never }
 export type GetUnverifiedCommentsQuery = {
   comments?: {
     data: Array<{
-      id?: string | null;
-      attributes?: {
+      id: string;
+      attributes: {
         text: string;
         author?: string | null;
         picture?: {
-          data?: {
-            id?: string | null;
-            attributes?: {
+          data: {
+            id: string;
+            attributes: {
               media: {
-                data?: {
-                  id?: string | null;
-                  attributes?: {
+                data: {
+                  id: string;
+                  attributes: {
                     width?: number | null;
                     height?: number | null;
                     formats?: any | null;
                     updatedAt?: any | null;
                     provider: string;
-                  } | null;
-                } | null;
+                  };
+                };
               };
-            } | null;
-          } | null;
+            };
+          };
         } | null;
-      } | null;
+      };
     }>;
   } | null;
 };
@@ -3818,16 +4683,14 @@ export type GetUserQueryVariables = Exact<{
 
 export type GetUserQuery = {
   usersPermissionsUser?: {
-    data?: { id?: string | null; attributes?: { username: string; email: string } | null } | null;
+    data: { id: string; attributes: { username: string; email: string } };
   } | null;
 };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUsersQuery = {
-  usersPermissionsUsers?: {
-    data: Array<{ id?: string | null; attributes?: { username: string } | null }>;
-  } | null;
+  usersPermissionsUsers?: { data: Array<{ id: string; attributes: { username: string } }> } | null;
 };
 
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
@@ -3838,9 +4701,7 @@ export type AcceptCommentMutationVariables = Exact<{
   commentId: Scalars['ID'];
 }>;
 
-export type AcceptCommentMutation = {
-  updateComment?: { data?: { id?: string | null } | null } | null;
-};
+export type AcceptCommentMutation = { updateComment?: { data: { id: string } } | null };
 
 export type AddArchiveTagMutationVariables = Exact<{
   name: Scalars['String'];
@@ -3895,9 +4756,7 @@ export type CreateExhibitionMutationVariables = Exact<{
   archiveId: Scalars['ID'];
 }>;
 
-export type CreateExhibitionMutation = {
-  createExhibition?: { data?: { id?: string | null } | null } | null;
-};
+export type CreateExhibitionMutation = { createExhibition?: { data: { id: string } } | null };
 
 export type CreateExhibitionPictureMutationVariables = Exact<{
   exhibitionIdealotId: Scalars['ID'];
@@ -3905,7 +4764,7 @@ export type CreateExhibitionPictureMutationVariables = Exact<{
 }>;
 
 export type CreateExhibitionPictureMutation = {
-  createExhibitionPicture?: { data?: { id?: string | null } | null } | null;
+  createExhibitionPicture?: { data: { id: string } } | null;
 };
 
 export type CreateExhibitionSectionMutationVariables = Exact<{
@@ -3914,7 +4773,7 @@ export type CreateExhibitionSectionMutationVariables = Exact<{
 }>;
 
 export type CreateExhibitionSectionMutation = {
-  createExhibitionSection?: { data?: { id?: string | null } | null } | null;
+  createExhibitionSection?: { data: { id: string } } | null;
 };
 
 export type CreateFaceTagMutationVariables = Exact<{
@@ -3925,17 +4784,13 @@ export type CreateFaceTagMutationVariables = Exact<{
   tag_direction?: InputMaybe<Scalars['Int']>;
 }>;
 
-export type CreateFaceTagMutation = {
-  createFaceTag?: { data?: { id?: string | null } | null } | null;
-};
+export type CreateFaceTagMutation = { createFaceTag?: { data: { id: string } } | null };
 
 export type CreateKeywordTagMutationVariables = Exact<{
   name: Scalars['String'];
 }>;
 
-export type CreateKeywordTagMutation = {
-  createKeywordTag?: { data?: { id?: string | null } | null } | null;
-};
+export type CreateKeywordTagMutation = { createKeywordTag?: { data: { id: string } } | null };
 
 export type CreateLinkMutationVariables = Exact<{
   title: Scalars['String'];
@@ -3943,7 +4798,7 @@ export type CreateLinkMutationVariables = Exact<{
   archive_tag: Scalars['ID'];
 }>;
 
-export type CreateLinkMutation = { createLink?: { data?: { id?: string | null } | null } | null };
+export type CreateLinkMutation = { createLink?: { data: { id: string } } | null };
 
 export type CreateLocationTagMutationVariables = Exact<{
   name: Scalars['String'];
@@ -3953,9 +4808,7 @@ export type CreateLocationTagMutationVariables = Exact<{
   root?: InputMaybe<Scalars['Boolean']>;
 }>;
 
-export type CreateLocationTagMutation = {
-  createLocationTag?: { data?: { id?: string | null } | null } | null;
-};
+export type CreateLocationTagMutation = { createLocationTag?: { data: { id: string } } | null };
 
 export type CreateOrientationTagMutationVariables = Exact<{
   pictureId: Scalars['ID'];
@@ -3966,31 +4819,27 @@ export type CreateOrientationTagMutationVariables = Exact<{
 }>;
 
 export type CreateOrientationTagMutation = {
-  createOrientationTag?: { data?: { id?: string | null } | null } | null;
+  createOrientationTag?: { data: { id: string } } | null;
 };
 
 export type CreatePersonTagMutationVariables = Exact<{
   name: Scalars['String'];
 }>;
 
-export type CreatePersonTagMutation = {
-  createPersonTag?: { data?: { id?: string | null } | null } | null;
-};
+export type CreatePersonTagMutation = { createPersonTag?: { data: { id: string } } | null };
 
 export type CreatePictureMutationVariables = Exact<{
   data: PictureInput;
 }>;
 
-export type CreatePictureMutation = {
-  createPicture?: { data?: { id?: string | null } | null } | null;
-};
+export type CreatePictureMutation = { createPicture?: { data: { id: string } } | null };
 
 export type CreatePictureGeoInfoMutationVariables = Exact<{
   data: PictureGeoInfoInput;
 }>;
 
 export type CreatePictureGeoInfoMutation = {
-  createPictureGeoInfo?: { data?: { id?: string | null } | null } | null;
+  createPictureGeoInfo?: { data: { id: string } } | null;
 };
 
 export type CreatePictureSequenceMutationVariables = Exact<{
@@ -3998,7 +4847,7 @@ export type CreatePictureSequenceMutationVariables = Exact<{
 }>;
 
 export type CreatePictureSequenceMutation = {
-  createPictureSequence?: { data?: { id?: string | null } | null } | null;
+  createPictureSequence?: { data: { id: string } } | null;
 };
 
 export type CreateSubCollectionMutationVariables = Exact<{
@@ -4006,40 +4855,32 @@ export type CreateSubCollectionMutationVariables = Exact<{
   parentId: Scalars['ID'];
 }>;
 
-export type CreateSubCollectionMutation = {
-  createCollection?: { data?: { id?: string | null } | null } | null;
-};
+export type CreateSubCollectionMutation = { createCollection?: { data: { id: string } } | null };
 
 export type DeclineCommentMutationVariables = Exact<{
   commentId: Scalars['ID'];
 }>;
 
-export type DeclineCommentMutation = {
-  deleteComment?: { data?: { id?: string | null } | null } | null;
-};
+export type DeclineCommentMutation = { deleteComment?: { documentId: string } | null };
 
 export type DeleteCollectionMutationVariables = Exact<{
   collectionId: Scalars['ID'];
 }>;
 
-export type DeleteCollectionMutation = {
-  deleteCollection?: { data?: { id?: string | null } | null } | null;
-};
+export type DeleteCollectionMutation = { deleteCollection?: { documentId: string } | null };
 
 export type DeleteExhibitionMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type DeleteExhibitionMutation = {
-  deleteExhibition?: { data?: { id?: string | null } | null } | null;
-};
+export type DeleteExhibitionMutation = { deleteExhibition?: { documentId: string } | null };
 
 export type DeleteExhibitionPictureMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 export type DeleteExhibitionPictureMutation = {
-  deleteExhibitionPicture?: { data?: { id?: string | null } | null } | null;
+  deleteExhibitionPicture?: { documentId: string } | null;
 };
 
 export type DeleteExhibitionSectionMutationVariables = Exact<{
@@ -4047,71 +4888,59 @@ export type DeleteExhibitionSectionMutationVariables = Exact<{
 }>;
 
 export type DeleteExhibitionSectionMutation = {
-  deleteExhibitionSection?: { data?: { id?: string | null } | null } | null;
+  deleteExhibitionSection?: { documentId: string } | null;
 };
 
 export type DeleteFaceTagMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type DeleteFaceTagMutation = {
-  deleteFaceTag?: { data?: { id?: string | null } | null } | null;
-};
+export type DeleteFaceTagMutation = { deleteFaceTag?: { documentId: string } | null };
 
 export type DeleteKeywordTagMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type DeleteKeywordTagMutation = {
-  deleteKeywordTag?: { data?: { id?: string | null } | null } | null;
-};
+export type DeleteKeywordTagMutation = { deleteKeywordTag?: { documentId: string } | null };
 
 export type DeleteLinkMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type DeleteLinkMutation = { deleteLink?: { data?: { id?: string | null } | null } | null };
+export type DeleteLinkMutation = { deleteLink?: { documentId: string } | null };
 
 export type DeleteLocationTagMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type DeleteLocationTagMutation = {
-  deleteLocationTag?: { data?: { id?: string | null } | null } | null;
-};
+export type DeleteLocationTagMutation = { deleteLocationTag?: { documentId: string } | null };
 
 export type DeleteOrientationTagMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type DeleteOrientationTagMutation = {
-  deleteOrientationTag?: { data?: { id?: string | null } | null } | null;
-};
+export type DeleteOrientationTagMutation = { deleteOrientationTag?: { documentId: string } | null };
 
 export type DeleteParameterizedPermissionMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 export type DeleteParameterizedPermissionMutation = {
-  deleteParameterizedPermission?: { data?: { id?: string | null } | null } | null;
+  deleteParameterizedPermission?: { documentId: string } | null;
 };
 
 export type DeletePersonTagMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type DeletePersonTagMutation = {
-  deletePersonTag?: { data?: { id?: string | null } | null } | null;
-};
+export type DeletePersonTagMutation = { deletePersonTag?: { documentId: string } | null };
 
 export type FixCommentTextMutationVariables = Exact<{
   commentId: Scalars['ID'];
   text: Scalars['String'];
 }>;
 
-export type FixCommentTextMutation = {
-  updateComment?: { data?: { id?: string | null } | null } | null;
-};
+export type FixCommentTextMutation = { updateComment?: { data: { id: string } } | null };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -4171,17 +5000,13 @@ export type MultipleUploadMutationVariables = Exact<{
   files: Array<Scalars['Upload']> | Scalars['Upload'];
 }>;
 
-export type MultipleUploadMutation = {
-  multipleUpload: Array<{ data?: { id?: string | null } | null } | null>;
-};
+export type MultipleUploadMutation = { multipleUpload: Array<{ data: { id: string } } | null> };
 
 export type PinCommentMutationVariables = Exact<{
   commentId: Scalars['ID'];
 }>;
 
-export type PinCommentMutation = {
-  updateComment?: { data?: { id?: string | null } | null } | null;
-};
+export type PinCommentMutation = { updateComment?: { data: { id: string } } | null };
 
 export type PostCommentMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -4192,7 +5017,7 @@ export type PostCommentMutationVariables = Exact<{
 }>;
 
 export type PostCommentMutation = {
-  createComment?: { data?: { attributes?: { text: string } | null } | null } | null;
+  createComment?: { data: { attributes: { text: string } } } | null;
 };
 
 export type RemoveArchiveTagMutationVariables = Exact<{
@@ -4205,7 +5030,7 @@ export type RemoveUploadMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type RemoveUploadMutation = { removeFile?: { data?: { id?: string | null } | null } | null };
+export type RemoveUploadMutation = { removeFile?: { data: { id: string } } | null };
 
 export type RemoveUserMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -4227,42 +5052,34 @@ export type SetPicturesForCollectionMutationVariables = Exact<{
 }>;
 
 export type SetPicturesForCollectionMutation = {
-  updateCollection?: { data?: { id?: string | null } | null } | null;
+  updateCollection?: { data: { id: string } } | null;
 };
 
 export type UnpinCommentMutationVariables = Exact<{
   commentId: Scalars['ID'];
 }>;
 
-export type UnpinCommentMutation = {
-  updateComment?: { data?: { id?: string | null } | null } | null;
-};
+export type UnpinCommentMutation = { updateComment?: { data: { id: string } } | null };
 
 export type UnpublishPictureMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type UnpublishPictureMutation = {
-  updatePicture?: { data?: { id?: string | null } | null } | null;
-};
+export type UnpublishPictureMutation = { updatePicture?: { data: { id: string } } | null };
 
 export type UpdateArchiveMutationVariables = Exact<{
   archiveId: Scalars['ID'];
   data: ArchiveTagInput;
 }>;
 
-export type UpdateArchiveMutation = {
-  updateArchiveTag?: { data?: { id?: string | null } | null } | null;
-};
+export type UpdateArchiveMutation = { updateArchiveTag?: { data: { id: string } } | null };
 
 export type UpdateCollectionMutationVariables = Exact<{
   collectionId: Scalars['ID'];
   data: CollectionInput;
 }>;
 
-export type UpdateCollectionMutation = {
-  updateCollection?: { data?: { id?: string | null } | null } | null;
-};
+export type UpdateCollectionMutation = { updateCollection?: { data: { id: string } } | null };
 
 export type UpdateCollectionParentsMutationVariables = Exact<{
   collectionId: Scalars['ID'];
@@ -4270,7 +5087,7 @@ export type UpdateCollectionParentsMutationVariables = Exact<{
 }>;
 
 export type UpdateCollectionParentsMutation = {
-  updateCollection?: { data?: { id?: string | null } | null } | null;
+  updateCollection?: { data: { id: string } } | null;
 };
 
 export type UpdateExhibitionMutationVariables = Exact<{
@@ -4278,9 +5095,7 @@ export type UpdateExhibitionMutationVariables = Exact<{
   data: ExhibitionInput;
 }>;
 
-export type UpdateExhibitionMutation = {
-  updateExhibition?: { data?: { id?: string | null } | null } | null;
-};
+export type UpdateExhibitionMutation = { updateExhibition?: { data: { id: string } } | null };
 
 export type UpdateExhibitionPictureMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -4288,7 +5103,7 @@ export type UpdateExhibitionPictureMutationVariables = Exact<{
 }>;
 
 export type UpdateExhibitionPictureMutation = {
-  updateExhibitionPicture?: { data?: { id?: string | null } | null } | null;
+  updateExhibitionPicture?: { data: { id: string } } | null;
 };
 
 export type UpdateExhibitionSectionMutationVariables = Exact<{
@@ -4300,7 +5115,7 @@ export type UpdateExhibitionSectionMutationVariables = Exact<{
 }>;
 
 export type UpdateExhibitionSectionMutation = {
-  updateExhibitionSection?: { data?: { id?: string | null } | null } | null;
+  updateExhibitionSection?: { data: { id: string } } | null;
 };
 
 export type UpdateFaceTagDirectionMutationVariables = Exact<{
@@ -4308,9 +5123,7 @@ export type UpdateFaceTagDirectionMutationVariables = Exact<{
   tag_direction?: InputMaybe<Scalars['Int']>;
 }>;
 
-export type UpdateFaceTagDirectionMutation = {
-  updateFaceTag?: { data?: { id?: string | null } | null } | null;
-};
+export type UpdateFaceTagDirectionMutation = { updateFaceTag?: { data: { id: string } } | null };
 
 export type UpdateKeywordNameMutationVariables = Exact<{
   tagId: Scalars['ID'];
@@ -4318,9 +5131,7 @@ export type UpdateKeywordNameMutationVariables = Exact<{
 }>;
 
 export type UpdateKeywordNameMutation = {
-  updateKeywordTag?: {
-    data?: { id?: string | null; attributes?: { name: string } | null } | null;
-  } | null;
+  updateKeywordTag?: { data: { id: string; attributes: { name: string } } } | null;
 };
 
 export type UpdateKeywordSynonymsMutationVariables = Exact<{
@@ -4332,10 +5143,7 @@ export type UpdateKeywordSynonymsMutationVariables = Exact<{
 
 export type UpdateKeywordSynonymsMutation = {
   updateKeywordTag?: {
-    data?: {
-      id?: string | null;
-      attributes?: { synonyms?: Array<{ name: string } | null> | null } | null;
-    } | null;
+    data: { id: string; attributes: { synonyms?: Array<{ name: string } | null> | null } };
   } | null;
 };
 
@@ -4345,9 +5153,7 @@ export type UpdateKeywordVisibilityMutationVariables = Exact<{
 }>;
 
 export type UpdateKeywordVisibilityMutation = {
-  updateKeywordTag?: {
-    data?: { id?: string | null; attributes?: { visible?: boolean | null } | null } | null;
-  } | null;
+  updateKeywordTag?: { data: { id: string; attributes: { visible?: boolean | null } } } | null;
 };
 
 export type UpdateLinkMutationVariables = Exact<{
@@ -4355,7 +5161,7 @@ export type UpdateLinkMutationVariables = Exact<{
   data: LinkInput;
 }>;
 
-export type UpdateLinkMutation = { updateLink?: { data?: { id?: string | null } | null } | null };
+export type UpdateLinkMutation = { updateLink?: { data: { id: string } } | null };
 
 export type UpdateLocationAcceptanceMutationVariables = Exact<{
   tagId: Scalars['ID'];
@@ -4363,7 +5169,7 @@ export type UpdateLocationAcceptanceMutationVariables = Exact<{
 }>;
 
 export type UpdateLocationAcceptanceMutation = {
-  updateLocationTag?: { data?: { id?: string | null } | null } | null;
+  updateLocationTag?: { data: { id: string } } | null;
 };
 
 export type UpdateLocationChildMutationVariables = Exact<{
@@ -4371,9 +5177,7 @@ export type UpdateLocationChildMutationVariables = Exact<{
   childIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
 
-export type UpdateLocationChildMutation = {
-  updateLocationTag?: { data?: { id?: string | null } | null } | null;
-};
+export type UpdateLocationChildMutation = { updateLocationTag?: { data: { id: string } } | null };
 
 export type UpdateLocationCoordinatesMutationVariables = Exact<{
   tagId: Scalars['ID'];
@@ -4381,7 +5185,7 @@ export type UpdateLocationCoordinatesMutationVariables = Exact<{
 }>;
 
 export type UpdateLocationCoordinatesMutation = {
-  updateLocationTag?: { data?: { id?: string | null } | null } | null;
+  updateLocationTag?: { data: { id: string } } | null;
 };
 
 export type UpdateLocationNameMutationVariables = Exact<{
@@ -4389,27 +5193,21 @@ export type UpdateLocationNameMutationVariables = Exact<{
   name: Scalars['String'];
 }>;
 
-export type UpdateLocationNameMutation = {
-  updateLocationTag?: { data?: { id?: string | null } | null } | null;
-};
+export type UpdateLocationNameMutation = { updateLocationTag?: { data: { id: string } } | null };
 
 export type UpdateLocationParentMutationVariables = Exact<{
   tagID: Scalars['ID'];
   parentIDs?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
 
-export type UpdateLocationParentMutation = {
-  updateLocationTag?: { data?: { id?: string | null } | null } | null;
-};
+export type UpdateLocationParentMutation = { updateLocationTag?: { data: { id: string } } | null };
 
 export type UpdateLocationRootMutationVariables = Exact<{
   tagId: Scalars['ID'];
   root: Scalars['Boolean'];
 }>;
 
-export type UpdateLocationRootMutation = {
-  updateLocationTag?: { data?: { id?: string | null } | null } | null;
-};
+export type UpdateLocationRootMutation = { updateLocationTag?: { data: { id: string } } | null };
 
 export type UpdateLocationSynonymsMutationVariables = Exact<{
   tagId: Scalars['ID'];
@@ -4419,7 +5217,7 @@ export type UpdateLocationSynonymsMutationVariables = Exact<{
 }>;
 
 export type UpdateLocationSynonymsMutation = {
-  updateLocationTag?: { data?: { id?: string | null } | null } | null;
+  updateLocationTag?: { data: { id: string } } | null;
 };
 
 export type UpdateLocationVisibilityMutationVariables = Exact<{
@@ -4428,7 +5226,7 @@ export type UpdateLocationVisibilityMutationVariables = Exact<{
 }>;
 
 export type UpdateLocationVisibilityMutation = {
-  updateLocationTag?: { data?: { id?: string | null } | null } | null;
+  updateLocationTag?: { data: { id: string } } | null;
 };
 
 export type UpdateMeMutationVariables = Exact<{
@@ -4444,7 +5242,7 @@ export type UpdateOrientationTagDirectionMutationVariables = Exact<{
 }>;
 
 export type UpdateOrientationTagDirectionMutation = {
-  updateOrientationTag?: { data?: { id?: string | null } | null } | null;
+  updateOrientationTag?: { data: { id: string } } | null;
 };
 
 export type UpdatePersonNameMutationVariables = Exact<{
@@ -4453,9 +5251,7 @@ export type UpdatePersonNameMutationVariables = Exact<{
 }>;
 
 export type UpdatePersonNameMutation = {
-  updatePersonTag?: {
-    data?: { id?: string | null; attributes?: { name: string } | null } | null;
-  } | null;
+  updatePersonTag?: { data: { id: string; attributes: { name: string } } } | null;
 };
 
 export type UpdatePersonSynonymsMutationVariables = Exact<{
@@ -4467,10 +5263,7 @@ export type UpdatePersonSynonymsMutationVariables = Exact<{
 
 export type UpdatePersonSynonymsMutation = {
   updatePersonTag?: {
-    data?: {
-      id?: string | null;
-      attributes?: { synonyms?: Array<{ name: string } | null> | null } | null;
-    } | null;
+    data: { id: string; attributes: { synonyms?: Array<{ name: string } | null> | null } };
   } | null;
 };
 
@@ -4495,9 +5288,7 @@ export type UpdateUserMutationVariables = Exact<{
   email?: InputMaybe<Scalars['String']>;
 }>;
 
-export type UpdateUserMutation = {
-  updateUsersPermissionsUser: { data?: { id?: string | null } | null };
-};
+export type UpdateUserMutation = { updateUsersPermissionsUser: { data?: { id: string } | null } };
 
 export const CanRunOperationDocument = gql`
   query canRunOperation($operation: String!, $variableSets: [JSON!], $withSomeVariables: Boolean) {
@@ -4558,7 +5349,7 @@ export type CanRunOperationQueryResult = Apollo.QueryResult<
 
 export const GetAllArchiveTagsDocument = gql`
   query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
-    archiveTags(sort: $sortBy) {
+    archiveTags: archiveTags_connection(sort: $sortBy) {
       data {
         id
         attributes {
@@ -4634,12 +5425,12 @@ export type GetAllArchiveTagsQueryResult = Apollo.QueryResult<
 
 export const GetAllCollectionsDocument = gql`
   query getAllCollections {
-    collections {
+    collections: collections_connection {
       data {
         id
         attributes {
           name
-          parent_collections {
+          parent_collections: parent_collections_connection {
             data {
               id
               attributes {
@@ -4854,7 +5645,7 @@ export type GetAllPersonTagsQueryResult = Apollo.QueryResult<
 
 export const GetAllPictureIdsDocument = gql`
   query getAllPictureIds {
-    pictures {
+    pictures: pictures_connection {
       data {
         id
       }
@@ -4908,7 +5699,7 @@ export type GetAllPictureIdsQueryResult = Apollo.QueryResult<
 
 export const GetArchiveDocument = gql`
   query getArchive($archiveId: ID!) {
-    archiveTag(id: $archiveId) {
+    archiveTag(documentId: $archiveId) {
       data {
         id
         attributes {
@@ -4953,7 +5744,7 @@ export const GetArchiveDocument = gql`
               }
             }
           }
-          links {
+          links: links_connection {
             data {
               id
               attributes {
@@ -5012,7 +5803,7 @@ export const GetArchiveNamesDocument = gql`
     $filters: ArchiveTagFiltersInput = {}
     $sortBy: [String] = ["createdAt:asc"]
   ) {
-    archiveTags(filters: $filters, sort: $sortBy) {
+    archiveTags: archiveTags_connection(filters: $filters, sort: $sortBy) {
       data {
         id
         attributes {
@@ -5138,29 +5929,29 @@ export type GetArchivePictureCountsQueryResult = Apollo.QueryResult<
 
 export const GetCollectionInfoByIdDocument = gql`
   query getCollectionInfoById($collectionId: ID!) {
-    collection(id: $collectionId) {
+    collection(documentId: $collectionId) {
       data {
         id
         attributes {
           name
           description
-          child_collections(sort: "name:asc") {
+          child_collections: child_collections_connection(sort: "name:asc") {
             data {
               id
               attributes {
                 name
                 visible
-                pictures(pagination: { limit: 1 }) {
+                pictures: pictures_connection(pagination: { limit: 1 }) {
                   data {
                     id
                   }
                 }
-                child_collections(pagination: { limit: 1 }) {
+                child_collections: child_collections_connection(pagination: { limit: 1 }) {
                   data {
                     id
                   }
                 }
-                parent_collections {
+                parent_collections: parent_collections_connection {
                   data {
                     id
                     attributes {
@@ -5232,13 +6023,13 @@ export type GetCollectionInfoByIdQueryResult = Apollo.QueryResult<
 
 export const GetCollectionInfoByNameDocument = gql`
   query getCollectionInfoByName($collectionName: String) {
-    collections(filters: { name: { eq: $collectionName } }) {
+    collections: collections_connection(filters: { name: { eq: $collectionName } }) {
       data {
         id
         attributes {
           name
           description
-          child_collections(sort: "name:asc") {
+          child_collections: child_collections_connection(sort: "name:asc") {
             data {
               id
               attributes {
@@ -5311,11 +6102,11 @@ export type GetCollectionInfoByNameQueryResult = Apollo.QueryResult<
 
 export const GetDailyPictureInfoDocument = gql`
   query getDailyPictureInfo($pictureId: ID!) {
-    picture(id: $pictureId) {
+    picture(documentId: $pictureId) {
       data {
         id
         attributes {
-          descriptions(sort: "createdAt:asc") {
+          descriptions: descriptions_connection(sort: "createdAt:asc") {
             data {
               id
               attributes {
@@ -5343,7 +6134,7 @@ export const GetDailyPictureInfoDocument = gql`
               }
             }
           }
-          comments(filters: { accepted: { eq: true } }) {
+          comments: comments_connection(filters: { accepted: { eq: true } }) {
             data {
               id
             }
@@ -5433,7 +6224,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
     $filter80s: PictureFiltersInput!
     $filter90s: PictureFiltersInput!
   ) {
-    decade40s: pictures(
+    decade40s: pictures_connection(
       filters: {
         and: [$filter40s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
       }
@@ -5452,7 +6243,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade50s: pictures(
+    decade50s: pictures_connection(
       filters: {
         and: [$filter50s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
       }
@@ -5471,7 +6262,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade60s: pictures(
+    decade60s: pictures_connection(
       filters: {
         and: [$filter60s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
       }
@@ -5490,7 +6281,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade70s: pictures(
+    decade70s: pictures_connection(
       filters: {
         and: [$filter70s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
       }
@@ -5509,7 +6300,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade80s: pictures(
+    decade80s: pictures_connection(
       filters: {
         and: [$filter80s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
       }
@@ -5528,7 +6319,7 @@ export const GetDecadePreviewThumbnailsDocument = gql`
         }
       }
     }
-    decade90s: pictures(
+    decade90s: pictures_connection(
       filters: {
         and: [$filter90s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
       }
@@ -5612,7 +6403,7 @@ export type GetDecadePreviewThumbnailsQueryResult = Apollo.QueryResult<
 
 export const GetExhibitionDocument = gql`
   query getExhibition($exhibitionId: ID!) {
-    exhibition(id: $exhibitionId) {
+    exhibition(documentId: $exhibitionId) {
       data {
         id
         attributes {
@@ -5647,7 +6438,7 @@ export const GetExhibitionDocument = gql`
               }
             }
           }
-          idealot_pictures {
+          idealot_pictures: idealot_pictures_connection {
             data {
               id
               attributes {
@@ -5675,14 +6466,14 @@ export const GetExhibitionDocument = gql`
               }
             }
           }
-          exhibition_sections(sort: "order:asc") {
+          exhibition_sections: exhibition_sections_connection(sort: "order:asc") {
             data {
               id
               attributes {
                 title
                 text
                 order
-                exhibition_pictures(sort: "order:asc") {
+                exhibition_pictures: exhibition_pictures_connection(sort: "order:asc") {
                   data {
                     id
                     attributes {
@@ -5767,7 +6558,10 @@ export type GetExhibitionQueryResult = Apollo.QueryResult<
 
 export const GetExhibitionsDocument = gql`
   query getExhibitions($archiveId: ID, $sortBy: [String] = ["updatedAt:desc"]) {
-    exhibitions(filters: { archive_tag: { id: { eq: $archiveId } } }, sort: $sortBy) {
+    exhibitions: exhibitions_connection(
+      filters: { archive_tag: { id: { eq: $archiveId } } }
+      sort: $sortBy
+    ) {
       data {
         id
         attributes {
@@ -5860,7 +6654,7 @@ export type GetExhibitionsQueryResult = Apollo.QueryResult<
 
 export const GetFaceTagsDocument = gql`
   query getFaceTags($pictureId: ID!) {
-    faceTags(filters: { picture: { id: { eq: $pictureId } } }) {
+    faceTags: faceTags_connection(filters: { picture: { id: { eq: $pictureId } } }) {
       data {
         id
         attributes {
@@ -5925,11 +6719,11 @@ export type GetFaceTagsQueryResult = Apollo.QueryResult<
 
 export const GetIdeaLotContentDocument = gql`
   query getIdeaLotContent($exhibitionId: ID!) {
-    exhibition(id: $exhibitionId) {
+    exhibition(documentId: $exhibitionId) {
       data {
         id
         attributes {
-          idealot_pictures {
+          idealot_pictures: idealot_pictures_connection {
             data {
               id
               attributes {
@@ -6015,12 +6809,12 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
     $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    keywordTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
+    keywordTags: keywordTags_connection(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
           name
-          thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
+          thumbnail: pictures_connection(filters: $thumbnailFilters, pagination: { limit: 1 }) {
             data {
               attributes {
                 media {
@@ -6034,7 +6828,7 @@ export const GetKeywordTagsWithThumbnailDocument = gql`
               }
             }
           }
-          verified_thumbnail: verified_pictures(
+          verified_thumbnail: verified_pictures_connection(
             filters: $thumbnailFilters
             pagination: { limit: 1 }
           ) {
@@ -6117,7 +6911,7 @@ export type GetKeywordTagsWithThumbnailQueryResult = Apollo.QueryResult<
 
 export const GetLocationTagDocument = gql`
   query getLocationTag($id: ID!) {
-    locationTag(id: $id) {
+    locationTag(documentId: $id) {
       data {
         attributes {
           name
@@ -6248,7 +7042,7 @@ export type GetLocationTagsWithThumbnailQueryResult = Apollo.QueryResult<
 
 export const GetMostLikedPicturesDocument = gql`
   query getMostLikedPictures($filters: PictureFiltersInput!, $pagination: PaginationArg!) {
-    pictures(
+    pictures: pictures_connection(
       filters: { and: [{ likes: { gt: 0 } }, $filters] }
       pagination: $pagination
       sort: ["likes:desc"]
@@ -6257,7 +7051,7 @@ export const GetMostLikedPicturesDocument = gql`
         id
         attributes {
           is_text
-          comments(filters: { accepted: { eq: true } }) {
+          comments: comments_connection(filters: { accepted: { eq: true } }) {
             data {
               id
             }
@@ -6280,7 +7074,7 @@ export const GetMostLikedPicturesDocument = gql`
             data {
               id
               attributes {
-                pictures(sort: "picture_sequence_order:asc") {
+                pictures: pictures_connection(sort: "picture_sequence_order:asc") {
                   data {
                     id
                   }
@@ -6350,11 +7144,11 @@ export type GetMostLikedPicturesQueryResult = Apollo.QueryResult<
 
 export const GetMultiplePictureInfoDocument = gql`
   query getMultiplePictureInfo($pictureIds: [ID!]) {
-    pictures(filters: { id: { in: $pictureIds } }) {
+    pictures: pictures_connection(filters: { id: { in: $pictureIds } }) {
       data {
         id
         attributes {
-          descriptions(sort: "createdAt:asc") {
+          descriptions: descriptions_connection(sort: "createdAt:asc") {
             data {
               id
               attributes {
@@ -6382,7 +7176,7 @@ export const GetMultiplePictureInfoDocument = gql`
               }
             }
           }
-          keyword_tags(sort: "updatedAt:asc") {
+          keyword_tags: keyword_tags_connection(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -6391,7 +7185,7 @@ export const GetMultiplePictureInfoDocument = gql`
               }
             }
           }
-          verified_keyword_tags(sort: "updatedAt:asc") {
+          verified_keyword_tags: verified_keyword_tags_connection(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -6400,7 +7194,7 @@ export const GetMultiplePictureInfoDocument = gql`
               }
             }
           }
-          location_tags(sort: "updatedAt:asc") {
+          location_tags: location_tags_connection(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -6409,7 +7203,7 @@ export const GetMultiplePictureInfoDocument = gql`
               }
             }
           }
-          verified_location_tags(sort: "updatedAt:asc") {
+          verified_location_tags: verified_location_tags_connection(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -6418,7 +7212,7 @@ export const GetMultiplePictureInfoDocument = gql`
               }
             }
           }
-          person_tags(sort: "updatedAt:asc") {
+          person_tags: person_tags_connection(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -6427,7 +7221,7 @@ export const GetMultiplePictureInfoDocument = gql`
               }
             }
           }
-          verified_person_tags(sort: "updatedAt:asc") {
+          verified_person_tags: verified_person_tags_connection(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -6436,7 +7230,7 @@ export const GetMultiplePictureInfoDocument = gql`
               }
             }
           }
-          collections {
+          collections: collections_connection {
             data {
               id
               attributes {
@@ -6454,7 +7248,7 @@ export const GetMultiplePictureInfoDocument = gql`
               }
             }
           }
-          comments(sort: "date:asc") {
+          comments: comments_connection(sort: "date:asc") {
             data {
               id
               attributes {
@@ -6467,12 +7261,12 @@ export const GetMultiplePictureInfoDocument = gql`
             }
           }
           is_text
-          linked_pictures {
+          linked_pictures: linked_pictures_connection {
             data {
               id
             }
           }
-          linked_texts {
+          linked_texts: linked_texts_connection {
             data {
               id
             }
@@ -6548,7 +7342,7 @@ export type GetMultiplePictureInfoQueryResult = Apollo.QueryResult<
 
 export const GetOrientationTagsDocument = gql`
   query getOrientationTags($pictureId: ID!) {
-    orientationTags(filters: { picture: { id: { eq: $pictureId } } }) {
+    orientationTags: orientationTags_connection(filters: { picture: { id: { eq: $pictureId } } }) {
       data {
         id
         attributes {
@@ -6621,7 +7415,9 @@ export type GetOrientationTagsQueryResult = Apollo.QueryResult<
 
 export const GetParameterizedPermissionsDocument = gql`
   query getParameterizedPermissions($userId: ID) {
-    parameterizedPermissions(filters: { users_permissions_user: { id: { eq: $userId } } }) {
+    parameterizedPermissions: parameterizedPermissions_connection(
+      filters: { users_permissions_user: { id: { eq: $userId } } }
+    ) {
       data {
         id
         attributes {
@@ -6695,7 +7491,7 @@ export type GetParameterizedPermissionsQueryResult = Apollo.QueryResult<
 
 export const GetPersonTagDocument = gql`
   query getPersonTag($id: ID!) {
-    personTag(id: $id) {
+    personTag(documentId: $id) {
       data {
         attributes {
           name
@@ -6757,12 +7553,12 @@ export const GetPersonTagsWithThumbnailDocument = gql`
     $pagination: PaginationArg!
     $sortBy: [String]
   ) {
-    personTags(filters: $filters, pagination: $pagination, sort: $sortBy) {
+    personTags: personTags_connection(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
           name
-          thumbnail: pictures(filters: $thumbnailFilters, pagination: { limit: 1 }) {
+          thumbnail: pictures_connection(filters: $thumbnailFilters, pagination: { limit: 1 }) {
             data {
               attributes {
                 media {
@@ -6777,7 +7573,7 @@ export const GetPersonTagsWithThumbnailDocument = gql`
               }
             }
           }
-          verified_thumbnail: verified_pictures(
+          verified_thumbnail: verified_pictures_connection(
             filters: $thumbnailFilters
             pagination: { limit: 1 }
           ) {
@@ -6861,7 +7657,7 @@ export type GetPersonTagsWithThumbnailQueryResult = Apollo.QueryResult<
 
 export const GetPictureGeoInfoDocument = gql`
   query getPictureGeoInfo($pictureId: ID!) {
-    pictureGeoInfos(filters: { picture: { id: { eq: $pictureId } } }) {
+    pictureGeoInfos: pictureGeoInfos_connection(filters: { picture: { id: { eq: $pictureId } } }) {
       data {
         id
         attributes {
@@ -6921,11 +7717,11 @@ export type GetPictureGeoInfoQueryResult = Apollo.QueryResult<
 
 export const GetPictureInfoDocument = gql`
   query getPictureInfo($pictureId: ID!) {
-    picture(id: $pictureId) {
+    picture(documentId: $pictureId) {
       data {
         id
         attributes {
-          descriptions(sort: "createdAt:asc") {
+          descriptions: descriptions_connection(sort: "createdAt:asc") {
             data {
               id
               attributes {
@@ -6953,7 +7749,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          keyword_tags(sort: "updatedAt:asc") {
+          keyword_tags: keyword_tags_connection(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -6962,7 +7758,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          verified_keyword_tags(sort: "updatedAt:asc") {
+          verified_keyword_tags: verified_keyword_tags_connection(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -6971,7 +7767,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          location_tags(sort: "updatedAt:asc") {
+          location_tags: location_tags_connection(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -6980,7 +7776,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          verified_location_tags(sort: "updatedAt:asc") {
+          verified_location_tags: verified_location_tags_connection(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -6989,7 +7785,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          person_tags(sort: "updatedAt:asc") {
+          person_tags: person_tags_connection(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -6998,7 +7794,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          verified_person_tags(sort: "updatedAt:asc") {
+          verified_person_tags: verified_person_tags_connection(sort: "updatedAt:asc") {
             data {
               id
               attributes {
@@ -7007,7 +7803,7 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          collections {
+          collections: collections_connection {
             data {
               id
               attributes {
@@ -7015,7 +7811,10 @@ export const GetPictureInfoDocument = gql`
               }
             }
           }
-          comments(sort: "date:desc", filters: { picture: { id: { eq: $pictureId } } }) {
+          comments: comments_connection(
+            sort: "date:desc"
+            filters: { picture: { id: { eq: $pictureId } } }
+          ) {
             data {
               id
               attributes {
@@ -7032,7 +7831,7 @@ export const GetPictureInfoDocument = gql`
                     id
                   }
                 }
-                childComments(sort: "date:asc") {
+                childComments: childComments_connection(sort: "date:asc") {
                   data {
                     id
                   }
@@ -7056,12 +7855,12 @@ export const GetPictureInfoDocument = gql`
             }
           }
           is_text
-          linked_pictures {
+          linked_pictures: linked_pictures_connection {
             data {
               id
             }
           }
-          linked_texts {
+          linked_texts: linked_texts_connection {
             data {
               id
             }
@@ -7070,7 +7869,7 @@ export const GetPictureInfoDocument = gql`
             data {
               id
               attributes {
-                pictures(sort: "picture_sequence_order:asc") {
+                pictures: pictures_connection(sort: "picture_sequence_order:asc") {
                   data {
                     id
                   }
@@ -7145,12 +7944,12 @@ export const GetPicturesDocument = gql`
     $pagination: PaginationArg!
     $sortBy: [String] = ["createdAt:desc"]
   ) {
-    pictures(filters: $filters, pagination: $pagination, sort: $sortBy) {
+    pictures: pictures_connection(filters: $filters, pagination: $pagination, sort: $sortBy) {
       data {
         id
         attributes {
           is_text
-          comments(filters: { accepted: { eq: true } }) {
+          comments: comments_connection(filters: { accepted: { eq: true } }) {
             data {
               id
             }
@@ -7193,7 +7992,7 @@ export const GetPicturesDocument = gql`
             data {
               id
               attributes {
-                pictures(sort: "picture_sequence_order:asc") {
+                pictures: pictures_connection(sort: "picture_sequence_order:asc") {
                   data {
                     id
                   }
@@ -7267,7 +8066,7 @@ export const GetPicturesByAllSearchDocument = gql`
       id
       attributes {
         is_text
-        comments(filters: { accepted: { eq: true } }) {
+        comments: comments_connection(filters: { accepted: { eq: true } }) {
           data {
             id
           }
@@ -7290,7 +8089,7 @@ export const GetPicturesByAllSearchDocument = gql`
           data {
             id
             attributes {
-              pictures(sort: "picture_sequence_order:asc") {
+              pictures: pictures_connection(sort: "picture_sequence_order:asc") {
                 data {
                   id
                 }
@@ -7363,11 +8162,11 @@ export type GetPicturesByAllSearchQueryResult = Apollo.QueryResult<
 
 export const GetPicturesForCollectionDocument = gql`
   query getPicturesForCollection($collectionId: ID!) {
-    collection(id: $collectionId) {
+    collection(documentId: $collectionId) {
       data {
         id
         attributes {
-          pictures {
+          pictures: pictures_connection {
             data {
               id
             }
@@ -7435,16 +8234,16 @@ export type GetPicturesForCollectionQueryResult = Apollo.QueryResult<
 
 export const GetPicturesForLocationDocument = gql`
   query getPicturesForLocation($tagIDs: [ID!]) {
-    locationTags(filters: { id: { in: $tagIDs } }) {
+    locationTags: locationTags_connection(filters: { id: { in: $tagIDs } }) {
       data {
         id
         attributes {
-          pictures {
+          pictures: pictures_connection {
             data {
               id
             }
           }
-          verified_pictures {
+          verified_pictures: verified_pictures_connection {
             data {
               id
             }
@@ -7512,13 +8311,18 @@ export type GetPicturesForLocationQueryResult = Apollo.QueryResult<
 
 export const GetPublishedCollectionInfoByNameDocument = gql`
   query getPublishedCollectionInfoByName($collectionName: String) {
-    collections(filters: { name: { eq: $collectionName }, visible: { eq: true } }) {
+    collections: collections_connection(
+      filters: { name: { eq: $collectionName }, visible: { eq: true } }
+    ) {
       data {
         id
         attributes {
           name
           description
-          child_collections(sort: "name:asc", filters: { visible: { eq: true } }) {
+          child_collections: child_collections_connection(
+            sort: "name:asc"
+            filters: { visible: { eq: true } }
+          ) {
             data {
               id
               attributes {
@@ -7654,7 +8458,7 @@ export type GetRootCollectionQueryResult = Apollo.QueryResult<
 
 export const GetUnverifiedCommentsDocument = gql`
   query getUnverifiedComments {
-    comments(filters: { accepted: { eq: false } }) {
+    comments: comments_connection(filters: { accepted: { eq: false } }) {
       data {
         id
         attributes {
@@ -7739,7 +8543,7 @@ export type GetUnverifiedCommentsQueryResult = Apollo.QueryResult<
 
 export const GetUserDocument = gql`
   query getUser($id: ID!) {
-    usersPermissionsUser(id: $id) {
+    usersPermissionsUser(documentId: $id) {
       data {
         id
         attributes {
@@ -7789,7 +8593,7 @@ export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVa
 
 export const GetUsersDocument = gql`
   query getUsers {
-    usersPermissionsUsers {
+    usersPermissionsUsers: usersPermissionsUsers_connection {
       data {
         id
         attributes {
@@ -7880,7 +8684,7 @@ export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 
 export const AcceptCommentDocument = gql`
   mutation acceptComment($commentId: ID!) {
-    updateComment(id: $commentId, data: { accepted: true }) {
+    updateComment(documentId: $commentId, data: { accepted: true }) {
       data {
         id
       }
@@ -9020,10 +9824,8 @@ export type CreateSubCollectionMutationOptions = Apollo.BaseMutationOptions<
 
 export const DeclineCommentDocument = gql`
   mutation declineComment($commentId: ID!) {
-    deleteComment(id: $commentId) {
-      data {
-        id
-      }
+    deleteComment(documentId: $commentId) {
+      documentId
     }
   }
 `;
@@ -9071,10 +9873,8 @@ export type DeclineCommentMutationOptions = Apollo.BaseMutationOptions<
 
 export const DeleteCollectionDocument = gql`
   mutation deleteCollection($collectionId: ID!) {
-    deleteCollection(id: $collectionId) {
-      data {
-        id
-      }
+    deleteCollection(documentId: $collectionId) {
+      documentId
     }
   }
 `;
@@ -9125,10 +9925,8 @@ export type DeleteCollectionMutationOptions = Apollo.BaseMutationOptions<
 
 export const DeleteExhibitionDocument = gql`
   mutation deleteExhibition($id: ID!) {
-    deleteExhibition(id: $id) {
-      data {
-        id
-      }
+    deleteExhibition(documentId: $id) {
+      documentId
     }
   }
 `;
@@ -9179,10 +9977,8 @@ export type DeleteExhibitionMutationOptions = Apollo.BaseMutationOptions<
 
 export const DeleteExhibitionPictureDocument = gql`
   mutation deleteExhibitionPicture($id: ID!) {
-    deleteExhibitionPicture(id: $id) {
-      data {
-        id
-      }
+    deleteExhibitionPicture(documentId: $id) {
+      documentId
     }
   }
 `;
@@ -9236,10 +10032,8 @@ export type DeleteExhibitionPictureMutationOptions = Apollo.BaseMutationOptions<
 
 export const DeleteExhibitionSectionDocument = gql`
   mutation deleteExhibitionSection($id: ID!) {
-    deleteExhibitionSection(id: $id) {
-      data {
-        id
-      }
+    deleteExhibitionSection(documentId: $id) {
+      documentId
     }
   }
 `;
@@ -9293,10 +10087,8 @@ export type DeleteExhibitionSectionMutationOptions = Apollo.BaseMutationOptions<
 
 export const DeleteFaceTagDocument = gql`
   mutation deleteFaceTag($id: ID!) {
-    deleteFaceTag(id: $id) {
-      data {
-        id
-      }
+    deleteFaceTag(documentId: $id) {
+      documentId
     }
   }
 `;
@@ -9344,10 +10136,8 @@ export type DeleteFaceTagMutationOptions = Apollo.BaseMutationOptions<
 
 export const DeleteKeywordTagDocument = gql`
   mutation deleteKeywordTag($id: ID!) {
-    deleteKeywordTag(id: $id) {
-      data {
-        id
-      }
+    deleteKeywordTag(documentId: $id) {
+      documentId
     }
   }
 `;
@@ -9398,10 +10188,8 @@ export type DeleteKeywordTagMutationOptions = Apollo.BaseMutationOptions<
 
 export const DeleteLinkDocument = gql`
   mutation deleteLink($id: ID!) {
-    deleteLink(id: $id) {
-      data {
-        id
-      }
+    deleteLink(documentId: $id) {
+      documentId
     }
   }
 `;
@@ -9449,10 +10237,8 @@ export type DeleteLinkMutationOptions = Apollo.BaseMutationOptions<
 
 export const DeleteLocationTagDocument = gql`
   mutation deleteLocationTag($id: ID!) {
-    deleteLocationTag(id: $id) {
-      data {
-        id
-      }
+    deleteLocationTag(documentId: $id) {
+      documentId
     }
   }
 `;
@@ -9503,10 +10289,8 @@ export type DeleteLocationTagMutationOptions = Apollo.BaseMutationOptions<
 
 export const DeleteOrientationTagDocument = gql`
   mutation deleteOrientationTag($id: ID!) {
-    deleteOrientationTag(id: $id) {
-      data {
-        id
-      }
+    deleteOrientationTag(documentId: $id) {
+      documentId
     }
   }
 `;
@@ -9560,10 +10344,8 @@ export type DeleteOrientationTagMutationOptions = Apollo.BaseMutationOptions<
 
 export const DeleteParameterizedPermissionDocument = gql`
   mutation deleteParameterizedPermission($id: ID!) {
-    deleteParameterizedPermission(id: $id) {
-      data {
-        id
-      }
+    deleteParameterizedPermission(documentId: $id) {
+      documentId
     }
   }
 `;
@@ -9617,10 +10399,8 @@ export type DeleteParameterizedPermissionMutationOptions = Apollo.BaseMutationOp
 
 export const DeletePersonTagDocument = gql`
   mutation deletePersonTag($id: ID!) {
-    deletePersonTag(id: $id) {
-      data {
-        id
-      }
+    deletePersonTag(documentId: $id) {
+      documentId
     }
   }
 `;
@@ -9671,7 +10451,7 @@ export type DeletePersonTagMutationOptions = Apollo.BaseMutationOptions<
 
 export const FixCommentTextDocument = gql`
   mutation fixCommentText($commentId: ID!, $text: String!) {
-    updateComment(id: $commentId, data: { text: $text }) {
+    updateComment(documentId: $commentId, data: { text: $text }) {
       data {
         id
       }
@@ -10163,7 +10943,7 @@ export type MultipleUploadMutationOptions = Apollo.BaseMutationOptions<
 
 export const PinCommentDocument = gql`
   mutation pinComment($commentId: ID!) {
-    updateComment(id: $commentId, data: { pinned: true }) {
+    updateComment(documentId: $commentId, data: { pinned: true }) {
       data {
         id
       }
@@ -10487,7 +11267,7 @@ export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<
 
 export const SetPicturesForCollectionDocument = gql`
   mutation setPicturesForCollection($pictureIds: [ID]!, $collectionId: ID!) {
-    updateCollection(id: $collectionId, data: { pictures: $pictureIds }) {
+    updateCollection(documentId: $collectionId, data: { pictures: $pictureIds }) {
       data {
         id
       }
@@ -10545,7 +11325,7 @@ export type SetPicturesForCollectionMutationOptions = Apollo.BaseMutationOptions
 
 export const UnpinCommentDocument = gql`
   mutation unpinComment($commentId: ID!) {
-    updateComment(id: $commentId, data: { pinned: false }) {
+    updateComment(documentId: $commentId, data: { pinned: false }) {
       data {
         id
       }
@@ -10596,7 +11376,7 @@ export type UnpinCommentMutationOptions = Apollo.BaseMutationOptions<
 
 export const UnpublishPictureDocument = gql`
   mutation unpublishPicture($id: ID!) {
-    updatePicture(id: $id, data: { deleted: true }) {
+    updatePicture(documentId: $id, data: { deleted: true }) {
       data {
         id
       }
@@ -10650,7 +11430,7 @@ export type UnpublishPictureMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateArchiveDocument = gql`
   mutation updateArchive($archiveId: ID!, $data: ArchiveTagInput!) {
-    updateArchiveTag(id: $archiveId, data: $data) {
+    updateArchiveTag(documentId: $archiveId, data: $data) {
       data {
         id
       }
@@ -10702,7 +11482,7 @@ export type UpdateArchiveMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateCollectionDocument = gql`
   mutation updateCollection($collectionId: ID!, $data: CollectionInput!) {
-    updateCollection(id: $collectionId, data: $data) {
+    updateCollection(documentId: $collectionId, data: $data) {
       data {
         id
       }
@@ -10757,7 +11537,10 @@ export type UpdateCollectionMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateCollectionParentsDocument = gql`
   mutation updateCollectionParents($collectionId: ID!, $parentCollectionIds: [ID]!) {
-    updateCollection(id: $collectionId, data: { parent_collections: $parentCollectionIds }) {
+    updateCollection(
+      documentId: $collectionId
+      data: { parent_collections: $parentCollectionIds }
+    ) {
       data {
         id
       }
@@ -10815,7 +11598,7 @@ export type UpdateCollectionParentsMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateExhibitionDocument = gql`
   mutation updateExhibition($id: ID!, $data: ExhibitionInput!) {
-    updateExhibition(id: $id, data: $data) {
+    updateExhibition(documentId: $id, data: $data) {
       data {
         id
       }
@@ -10870,7 +11653,7 @@ export type UpdateExhibitionMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateExhibitionPictureDocument = gql`
   mutation updateExhibitionPicture($id: ID!, $data: ExhibitionPictureInput!) {
-    updateExhibitionPicture(id: $id, data: $data) {
+    updateExhibitionPicture(documentId: $id, data: $data) {
       data {
         id
       }
@@ -10935,7 +11718,7 @@ export const UpdateExhibitionSectionDocument = gql`
     $exhibitionPictureIds: [ID]
   ) {
     updateExhibitionSection(
-      id: $id
+      documentId: $id
       data: {
         title: $title
         text: $text
@@ -11003,7 +11786,7 @@ export type UpdateExhibitionSectionMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateFaceTagDirectionDocument = gql`
   mutation updateFaceTagDirection($id: ID!, $tag_direction: Int) {
-    updateFaceTag(id: $id, data: { tag_direction: $tag_direction }) {
+    updateFaceTag(documentId: $id, data: { tag_direction: $tag_direction }) {
       data {
         id
       }
@@ -11061,7 +11844,7 @@ export type UpdateFaceTagDirectionMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateKeywordNameDocument = gql`
   mutation updateKeywordName($tagId: ID!, $name: String!) {
-    updateKeywordTag(id: $tagId, data: { name: $name }) {
+    updateKeywordTag(documentId: $tagId, data: { name: $name }) {
       data {
         id
         attributes {
@@ -11119,7 +11902,7 @@ export type UpdateKeywordNameMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateKeywordSynonymsDocument = gql`
   mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
-    updateKeywordTag(id: $tagId, data: { synonyms: $synonyms }) {
+    updateKeywordTag(documentId: $tagId, data: { synonyms: $synonyms }) {
       data {
         id
         attributes {
@@ -11182,7 +11965,7 @@ export type UpdateKeywordSynonymsMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateKeywordVisibilityDocument = gql`
   mutation updateKeywordVisibility($tagId: ID!, $visible: Boolean!) {
-    updateKeywordTag(id: $tagId, data: { visible: $visible }) {
+    updateKeywordTag(documentId: $tagId, data: { visible: $visible }) {
       data {
         id
         attributes {
@@ -11243,7 +12026,7 @@ export type UpdateKeywordVisibilityMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateLinkDocument = gql`
   mutation updateLink($id: ID!, $data: LinkInput!) {
-    updateLink(id: $id, data: $data) {
+    updateLink(documentId: $id, data: $data) {
       data {
         id
       }
@@ -11295,7 +12078,7 @@ export type UpdateLinkMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateLocationAcceptanceDocument = gql`
   mutation updateLocationAcceptance($tagId: ID!, $accepted: Boolean) {
-    updateLocationTag(id: $tagId, data: { accepted: $accepted }) {
+    updateLocationTag(documentId: $tagId, data: { accepted: $accepted }) {
       data {
         id
       }
@@ -11353,7 +12136,7 @@ export type UpdateLocationAcceptanceMutationOptions = Apollo.BaseMutationOptions
 
 export const UpdateLocationChildDocument = gql`
   mutation updateLocationChild($tagID: ID!, $childIDs: [ID!]) {
-    updateLocationTag(id: $tagID, data: { child_tags: $childIDs }) {
+    updateLocationTag(documentId: $tagID, data: { child_tags: $childIDs }) {
       data {
         id
       }
@@ -11410,7 +12193,7 @@ export type UpdateLocationChildMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateLocationCoordinatesDocument = gql`
   mutation updateLocationCoordinates($tagId: ID!, $coordinate: ComponentLocationCoordinatesInput) {
-    updateLocationTag(id: $tagId, data: { coordinates: $coordinate }) {
+    updateLocationTag(documentId: $tagId, data: { coordinates: $coordinate }) {
       data {
         id
       }
@@ -11468,7 +12251,7 @@ export type UpdateLocationCoordinatesMutationOptions = Apollo.BaseMutationOption
 
 export const UpdateLocationNameDocument = gql`
   mutation updateLocationName($tagId: ID!, $name: String!) {
-    updateLocationTag(id: $tagId, data: { name: $name }) {
+    updateLocationTag(documentId: $tagId, data: { name: $name }) {
       data {
         id
       }
@@ -11523,7 +12306,7 @@ export type UpdateLocationNameMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateLocationParentDocument = gql`
   mutation updateLocationParent($tagID: ID!, $parentIDs: [ID!]) {
-    updateLocationTag(id: $tagID, data: { parent_tags: $parentIDs }) {
+    updateLocationTag(documentId: $tagID, data: { parent_tags: $parentIDs }) {
       data {
         id
       }
@@ -11581,7 +12364,7 @@ export type UpdateLocationParentMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateLocationRootDocument = gql`
   mutation updateLocationRoot($tagId: ID!, $root: Boolean!) {
-    updateLocationTag(id: $tagId, data: { root: $root }) {
+    updateLocationTag(documentId: $tagId, data: { root: $root }) {
       data {
         id
       }
@@ -11636,7 +12419,7 @@ export type UpdateLocationRootMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateLocationSynonymsDocument = gql`
   mutation updateLocationSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
-    updateLocationTag(id: $tagId, data: { synonyms: $synonyms }) {
+    updateLocationTag(documentId: $tagId, data: { synonyms: $synonyms }) {
       data {
         id
       }
@@ -11694,7 +12477,7 @@ export type UpdateLocationSynonymsMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateLocationVisibilityDocument = gql`
   mutation updateLocationVisibility($tagId: ID!, $visible: Boolean!) {
-    updateLocationTag(id: $tagId, data: { visible: $visible }) {
+    updateLocationTag(documentId: $tagId, data: { visible: $visible }) {
       data {
         id
       }
@@ -11797,7 +12580,7 @@ export type UpdateMeMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdateOrientationTagDirectionDocument = gql`
   mutation updateOrientationTagDirection($id: ID!, $tag_direction: Int) {
-    updateOrientationTag(id: $id, data: { tag_direction: $tag_direction }) {
+    updateOrientationTag(documentId: $id, data: { tag_direction: $tag_direction }) {
       data {
         id
       }
@@ -11855,7 +12638,7 @@ export type UpdateOrientationTagDirectionMutationOptions = Apollo.BaseMutationOp
 
 export const UpdatePersonNameDocument = gql`
   mutation updatePersonName($tagId: ID!, $name: String!) {
-    updatePersonTag(id: $tagId, data: { name: $name }) {
+    updatePersonTag(documentId: $tagId, data: { name: $name }) {
       data {
         id
         attributes {
@@ -11913,7 +12696,7 @@ export type UpdatePersonNameMutationOptions = Apollo.BaseMutationOptions<
 
 export const UpdatePersonSynonymsDocument = gql`
   mutation updatePersonSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
-    updatePersonTag(id: $tagId, data: { synonyms: $synonyms }) {
+    updatePersonTag(documentId: $tagId, data: { synonyms: $synonyms }) {
       data {
         id
         attributes {

@@ -8,12 +8,12 @@ export default {
       $pagination: PaginationArg!
       $sortBy: [String] = ["createdAt:desc"]
     ) {
-      pictures(filters: $filters, pagination: $pagination, sort: $sortBy) {
+      pictures: pictures_connection(filters: $filters, pagination: $pagination, sort: $sortBy) {
         data {
           id
           attributes {
             is_text
-            comments(filters: { accepted: { eq: true } }) {
+            comments: comments_connection(filters: { accepted: { eq: true } }) {
               data {
                 id
               }
@@ -56,7 +56,7 @@ export default {
               data {
                 id
                 attributes {
-                  pictures(sort: "picture_sequence_order:asc") {
+                  pictures: pictures_connection(sort: "picture_sequence_order:asc") {
                     data {
                       id
                     }
