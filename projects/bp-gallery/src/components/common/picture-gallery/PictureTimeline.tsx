@@ -1,7 +1,8 @@
 import { ArrowDropDown } from '@mui/icons-material';
 import { debounce } from 'lodash';
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAnimate } from '../../../hooks/animate.hook';
+import ScrollNavigationArrows from '../ScrollNavigationArrows';
 
 // for future work
 export const enum TimeStepType {
@@ -34,6 +35,10 @@ const PictureTimeline = ({
     0.06
   );
 
+  const [drag, setDrag] = useState<boolean>(false);
+  const [dragged, setDragged] = useState<boolean>(false);
+  const lastPos = useRef<number | undefined>();
+
   useEffect(() => {
     if (scrollBarRef.current) {
       scrollBarRef.current.scrollLeft = scrollLeft;
@@ -62,7 +67,11 @@ const PictureTimeline = ({
         key={year}
         className='inline cursor-pointer'
         onClick={() => {
-          setDate(year);
+          if (dragged) {
+            setDragged(false);
+          } else {
+            setDate(year);
+          }
         }}
         style={{
           padding: `40px ${
@@ -89,16 +98,58 @@ const PictureTimeline = ({
   const updateOnScrollX = useMemo(() => debounce(updateDate, 500), [updateDate]);
 
   return (
-    <div>
+    <div
+      onMouseDown={e => {
+        setDrag(true);
+        lastPos.current = e.nativeEvent.offsetX;
+      }}
+      onMouseUp={e => {
+        setDrag(false);
+        lastPos.current = undefined;
+      }}
+      onMouseMove={e => {
+        if (
+          scrollBarRef.current &&
+          drag &&
+          lastPos.current &&
+          e.nativeEvent.offsetY > 0 &&
+          e.nativeEvent.offsetY <= 80
+        ) {
+          setDragged(true);
+          scrollBarRef.current.scrollLeft -= e.nativeEvent.offsetX - lastPos.current;
+          lastPos.current = e.nativeEvent.offsetX;
+        } else {
+          setDrag(false);
+          lastPos.current = undefined;
+        }
+      }}
+    >
       <div className='flex'>
         <ArrowDropDown className='mx-auto scale-[1.75]' />
       </div>
-      <div className='relative'>
-        <div className='overflow-x-scroll' ref={scrollBarRef} onScroll={updateOnScrollX}>
-          <div className='flex'>
-            <ul className='py-[16px] px-[50%] mt-0 whitespace-nowrap'>{listItems}</ul>
+      <div className='relative mb-2'>
+        <div className='overflow-x-scroll z-0' ref={scrollBarRef} onScroll={updateOnScrollX}>
+          <div className='flex pb-2'>
+            <ul className='py-[16px] px-[50%] my-0 whitespace-nowrap'>{listItems}</ul>
           </div>
         </div>
+        <ScrollNavigationArrows
+          onClickLeft={() => {
+            if (scrollBarRef.current) {
+              scrollBarRef.current.scrollLeft -= singleElementWidth;
+            }
+          }}
+          onClickRight={() => {
+            if (scrollBarRef.current) {
+              scrollBarRef.current.scrollLeft += singleElementWidth;
+            }
+          }}
+          longPressTimeoutLeft={250}
+          longPressTimeoutRight={250}
+          isVisibleLeft={date > start}
+          isVisibleRight={date < end}
+          showOnMobile={false}
+        />
       </div>
     </div>
   );
