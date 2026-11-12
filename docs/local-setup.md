@@ -45,5 +45,6 @@ The pictures from the test data were uploaded before, so they still come from `p
 - Run a command in a project: `docker compose exec gallery pnpm lint`, `docker compose exec strapi pnpm strapi …`.
 - Type-check and lint the gallery and its e2e tests, also without the stack running: `docker compose run --rm --no-deps install sh -c 'cd /repo/projects/bp-gallery && pnpm check'`. CI runs the same checks.
 - Format the code before committing: `docker compose exec gallery pnpm format` formats the gallery, Strapi and `bp-graphql`. The pre-commit hook (Husky, in `projects/bp-gallery/.husky`) normally does this, but this setup doesn't install it because it needs pnpm on the host. CI checks the formatting of Strapi and `bp-graphql`.
+- Wait for Strapi after `docker compose up -d` or `docker compose restart strapi`: `compose/wait-strapi.sh` returns once Strapi is ready, and fails with the end of its log when Strapi stops or isn't ready within 10 minutes.
 
 The services listen on 127.0.0.1 only.
