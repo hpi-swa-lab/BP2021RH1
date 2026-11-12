@@ -7,7 +7,7 @@ compose/e2e.sh                                       # all tests, about 2 minute
 compose/e2e.sh e2e/contact.spec.ts                   # one file on a single stack (arguments go to `playwright test`)
 ```
 
-CI runs the same script (`.github/workflows/e2e.yml`).
+CI runs the same script (`.github/workflows/e2e.yml`). After a change that can break every test (Strapi's code or settings, the test data, `e2e/test.ts`), run one spec first, for example `compose/e2e.sh e2e/start.spec.ts`, and the full suite once it passes.
 
 ## What the script does
 
