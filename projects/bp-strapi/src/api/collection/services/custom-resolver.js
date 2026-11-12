@@ -50,7 +50,7 @@ const resolveCollectionThumbnail = async (strapi, collectionId, alreadySeenIds) 
 const mergeSourceCollectionIntoTargetCollection = async (strapi, sourceId, targetId) => {
   const collectionQuery = strapi.db.query('api::collection.collection');
 
-  const getCollection = async (id) => {
+  const getCollection = async id => {
     return collectionQuery.findOne({
       where: { id },
       populate: {
@@ -61,8 +61,8 @@ const mergeSourceCollectionIntoTargetCollection = async (strapi, sourceId, targe
           select: ['id'],
         },
         parent_collections: {
-          select: ['id']
-        }
+          select: ['id'],
+        },
       },
     });
   };
@@ -71,10 +71,7 @@ const mergeSourceCollectionIntoTargetCollection = async (strapi, sourceId, targe
   const target = await getCollection(targetId);
 
   const newPicturesForTarget = [
-    ...new Set([
-      ...target.pictures.map(pic => pic.id),
-      ...source.pictures.map(pic => pic.id),
-    ]),
+    ...new Set([...target.pictures.map(pic => pic.id), ...source.pictures.map(pic => pic.id)]),
   ];
 
   const newChildCollectionsForTarget = [
@@ -86,13 +83,10 @@ const mergeSourceCollectionIntoTargetCollection = async (strapi, sourceId, targe
 
   let newDescriptionForTarget = null;
   if (target.description && source.description) {
-    newDescriptionForTarget =
-      `${target.description}<br/><br/>${source.description}`;
+    newDescriptionForTarget = `${target.description}<br/><br/>${source.description}`;
   } else if (target.description || source.description) {
-    newDescriptionForTarget =
-      `${target.description || source.description}`;
+    newDescriptionForTarget = `${target.description || source.description}`;
   }
-
 
   const data = {
     pictures: newPicturesForTarget,

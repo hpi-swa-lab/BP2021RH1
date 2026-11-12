@@ -1,23 +1,23 @@
-import type * as Nexus from "nexus";
+import type * as Nexus from 'nexus';
 
 export const archivePictureCountsType = (nexus: typeof Nexus) => {
   const { objectType } = nexus;
 
   return objectType({
-    name: "ArchivePictureCountEntityResponseCollection",
+    name: 'ArchivePictureCountEntityResponseCollection',
     definition(t) {
-      t.list.field("data", {
+      t.list.field('data', {
         type: objectType({
-          name: "ArchivePictureCountEntity",
+          name: 'ArchivePictureCountEntity',
           definition(t) {
-            t.field("id", {
-              type: "ID",
+            t.field('id', {
+              type: 'ID',
             });
-            t.field("attributes", {
+            t.field('attributes', {
               type: objectType({
-                name: "ArchivePictureCount",
+                name: 'ArchivePictureCount',
                 definition(t) {
-                  t.field("count", { type: "Int" });
+                  t.field('count', { type: 'Int' });
                 },
               }),
             });

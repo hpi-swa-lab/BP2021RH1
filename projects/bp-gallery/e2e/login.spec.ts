@@ -16,10 +16,14 @@ test.describe('Login', () => {
     await expect(page.getByRole('dialog')).toBeVisible();
   });
 
-  test('should show an error when entering invalid login data', async ({ page }) => {
-    await openLogin(page);
-    await submitLogin(page, 'Wrong data', 'Wrong data');
-    await expect(page.getByRole('dialog').getByRole('alert')).toBeVisible();
+  test.describe(() => {
+    // Strapi refuses the login of an unknown user as a missing permission
+    test.use({ expectedErrors: [/^login: Unauthorized$/] });
+    test('should show an error when entering invalid login data', async ({ page }) => {
+      await openLogin(page);
+      await submitLogin(page, 'Wrong data', 'Wrong data');
+      await expect(page.getByRole('dialog').getByRole('alert')).toBeVisible();
+    });
   });
 
   test('should close the dialog on successful login', async ({ page }) => {

@@ -47,7 +47,7 @@ export const sections = [
   'user',
 ] as const;
 
-type Section = (typeof sections)[number];
+type Section = typeof sections[number];
 
 export type GroupSettings = {
   section: Section;

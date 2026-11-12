@@ -4,4 +4,6 @@
 cd projects/bp-gallery
 pnpm pretty-quick --staged --verbose \
     --ignore-path .husky/pretty-quick-ignore \
-    --pattern "projects/bp-gallery/src/**/*"
+    --pattern "projects/bp-gallery/src/**/*" \
+    --pattern "projects/bp-strapi/{src,config}/**/*.{ts,js}" \
+    --pattern "projects/bp-graphql/src/**/*.ts"

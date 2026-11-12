@@ -42,6 +42,8 @@ const expectRejected = async (page: Page, mails: () => Promise<Mail[]>) => {
 };
 
 test.describe('Contact form', () => {
+  // The server rejects a message with an error
+  test.use({ expectedErrors: [/^contact: /] });
   let now = 0;
   // The server rejects messages sent within 3 seconds of opening the form as automated
   const waitThreeSeconds = (page: Page) => page.clock.setFixedTime(now + 3000);
