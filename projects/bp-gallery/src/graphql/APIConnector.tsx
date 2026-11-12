@@ -52,7 +52,6 @@ export type ArchiveTag = {
   paypalDonationText?: Maybe<Scalars['String']>;
   paypalPurpose?: Maybe<Scalars['String']>;
   pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   restrictImageDownloading?: Maybe<Scalars['Boolean']>;
   shortDescription?: Maybe<Scalars['String']>;
   showcasePicture?: Maybe<PictureEntityResponse>;
@@ -62,7 +61,6 @@ export type ArchiveTag = {
 export type ArchiveTagExhibitionsArgs = {
   filters?: InputMaybe<ExhibitionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -75,7 +73,6 @@ export type ArchiveTagLinksArgs = {
 export type ArchiveTagPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -110,7 +107,6 @@ export type ArchiveTagFiltersInput = {
   paypalDonationText?: InputMaybe<StringFilterInput>;
   paypalPurpose?: InputMaybe<StringFilterInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   restrictImageDownloading?: InputMaybe<BooleanFilterInput>;
   shortDescription?: InputMaybe<StringFilterInput>;
   showcasePicture?: InputMaybe<PictureFiltersInput>;
@@ -130,7 +126,6 @@ export type ArchiveTagInput = {
   paypalDonationText?: InputMaybe<Scalars['String']>;
   paypalPurpose?: InputMaybe<Scalars['String']>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   restrictImageDownloading?: InputMaybe<Scalars['Boolean']>;
   shortDescription?: InputMaybe<Scalars['String']>;
   showcasePicture?: InputMaybe<Scalars['ID']>;
@@ -164,7 +159,6 @@ export type BooleanFilterInput = {
 export type BrowseRootCollection = {
   createdAt?: Maybe<Scalars['DateTime']>;
   current?: Maybe<CollectionEntityResponse>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
@@ -179,7 +173,6 @@ export type BrowseRootCollectionEntityResponse = {
 
 export type BrowseRootCollectionInput = {
   current?: InputMaybe<Scalars['ID']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
 export type Collection = {
@@ -189,7 +182,6 @@ export type Collection = {
   name: Scalars['String'];
   parent_collections?: Maybe<CollectionRelationResponseCollection>;
   pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   thumbnail?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   visible: Scalars['Boolean'];
@@ -198,21 +190,18 @@ export type Collection = {
 export type CollectionChild_CollectionsArgs = {
   filters?: InputMaybe<CollectionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CollectionParent_CollectionsArgs = {
   filters?: InputMaybe<CollectionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CollectionPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -241,7 +230,6 @@ export type CollectionFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<CollectionFiltersInput>>>;
   parent_collections?: InputMaybe<CollectionFiltersInput>;
   pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   thumbnail?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   visible?: InputMaybe<BooleanFilterInput>;
@@ -253,7 +241,6 @@ export type CollectionInput = {
   name?: InputMaybe<Scalars['String']>;
   parent_collections?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   thumbnail?: InputMaybe<Scalars['String']>;
   visible?: InputMaybe<Scalars['Boolean']>;
 };
@@ -271,7 +258,6 @@ export type Comment = {
   parentComment?: Maybe<CommentEntityResponse>;
   picture?: Maybe<PictureEntityResponse>;
   pinned?: Maybe<Scalars['Boolean']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   text: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
@@ -279,7 +265,6 @@ export type Comment = {
 export type CommentChildCommentsArgs = {
   filters?: InputMaybe<CommentFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -310,7 +295,6 @@ export type CommentFiltersInput = {
   parentComment?: InputMaybe<CommentFiltersInput>;
   picture?: InputMaybe<PictureFiltersInput>;
   pinned?: InputMaybe<BooleanFilterInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   text?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
@@ -323,7 +307,6 @@ export type CommentInput = {
   parentComment?: InputMaybe<Scalars['ID']>;
   picture?: InputMaybe<Scalars['ID']>;
   pinned?: InputMaybe<Scalars['Boolean']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   text?: InputMaybe<Scalars['String']>;
 };
 
@@ -396,7 +379,6 @@ export type DateTimeFilterInput = {
 export type Description = {
   createdAt?: Maybe<Scalars['DateTime']>;
   pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   text: Scalars['String'];
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
@@ -404,7 +386,6 @@ export type Description = {
 export type DescriptionPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -429,14 +410,12 @@ export type DescriptionFiltersInput = {
   not?: InputMaybe<DescriptionFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<DescriptionFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   text?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
 
 export type DescriptionInput = {
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   text?: InputMaybe<Scalars['String']>;
 };
 
@@ -451,7 +430,6 @@ export type Exhibition = {
   idealot_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
   introduction?: Maybe<Scalars['String']>;
   is_published?: Maybe<Scalars['Boolean']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   title?: Maybe<Scalars['String']>;
   title_picture?: Maybe<ExhibitionPictureEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -460,14 +438,12 @@ export type Exhibition = {
 export type ExhibitionExhibition_SectionsArgs = {
   filters?: InputMaybe<ExhibitionSectionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type ExhibitionIdealot_PicturesArgs = {
   filters?: InputMaybe<ExhibitionPictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -496,7 +472,6 @@ export type ExhibitionFiltersInput = {
   is_published?: InputMaybe<BooleanFilterInput>;
   not?: InputMaybe<ExhibitionFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ExhibitionFiltersInput>>>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   title?: InputMaybe<StringFilterInput>;
   title_picture?: InputMaybe<ExhibitionPictureFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -508,7 +483,6 @@ export type ExhibitionInput = {
   idealot_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   introduction?: InputMaybe<Scalars['String']>;
   is_published?: InputMaybe<Scalars['Boolean']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   title?: InputMaybe<Scalars['String']>;
   title_picture?: InputMaybe<Scalars['ID']>;
 };
@@ -519,7 +493,6 @@ export type ExhibitionPicture = {
   exhibition_section?: Maybe<ExhibitionSectionEntityResponse>;
   order?: Maybe<Scalars['Int']>;
   picture?: Maybe<PictureEntityResponse>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   subtitle?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
@@ -548,7 +521,6 @@ export type ExhibitionPictureFiltersInput = {
   or?: InputMaybe<Array<InputMaybe<ExhibitionPictureFiltersInput>>>;
   order?: InputMaybe<IntFilterInput>;
   picture?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   subtitle?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
@@ -558,7 +530,6 @@ export type ExhibitionPictureInput = {
   exhibition_section?: InputMaybe<Scalars['ID']>;
   order?: InputMaybe<Scalars['Int']>;
   picture?: InputMaybe<Scalars['ID']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   subtitle?: InputMaybe<Scalars['String']>;
 };
 
@@ -575,7 +546,6 @@ export type ExhibitionSection = {
   exhibition?: Maybe<ExhibitionEntityResponse>;
   exhibition_pictures?: Maybe<ExhibitionPictureRelationResponseCollection>;
   order?: Maybe<Scalars['Int']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   text?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -584,7 +554,6 @@ export type ExhibitionSection = {
 export type ExhibitionSectionExhibition_PicturesArgs = {
   filters?: InputMaybe<ExhibitionPictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -611,7 +580,6 @@ export type ExhibitionSectionFiltersInput = {
   not?: InputMaybe<ExhibitionSectionFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ExhibitionSectionFiltersInput>>>;
   order?: InputMaybe<IntFilterInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   text?: InputMaybe<StringFilterInput>;
   title?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
@@ -621,7 +589,6 @@ export type ExhibitionSectionInput = {
   exhibition?: InputMaybe<Scalars['ID']>;
   exhibition_pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   order?: InputMaybe<Scalars['Int']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   text?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
 };
@@ -827,7 +794,6 @@ export type KeywordTag = {
 export type KeywordTagPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -840,7 +806,6 @@ export type KeywordTagSynonymsArgs = {
 export type KeywordTagVerified_PicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -958,7 +923,6 @@ export type LocationTagParent_TagsArgs = {
 export type LocationTagPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -971,7 +935,6 @@ export type LocationTagSynonymsArgs = {
 export type LocationTagVerified_PicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1671,7 +1634,6 @@ export type PersonTag = {
 export type PersonTagPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1684,7 +1646,6 @@ export type PersonTagSynonymsArgs = {
 export type PersonTagVerified_PicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1749,7 +1710,6 @@ export type Picture = {
   picture_geo_infos?: Maybe<PictureGeoInfoRelationResponseCollection>;
   picture_sequence?: Maybe<PictureSequenceEntityResponse>;
   picture_sequence_order?: Maybe<Scalars['Int']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   time_range_tag?: Maybe<TimeRangeTagEntityResponse>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   verified_keyword_tags?: Maybe<KeywordTagRelationResponseCollection>;
@@ -1762,28 +1722,24 @@ export type Picture = {
 export type PictureCollectionsArgs = {
   filters?: InputMaybe<CollectionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureCommentsArgs = {
   filters?: InputMaybe<CommentFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureDescriptionsArgs = {
   filters?: InputMaybe<DescriptionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureExhibition_PicturesArgs = {
   filters?: InputMaybe<ExhibitionPictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1802,14 +1758,12 @@ export type PictureKeyword_TagsArgs = {
 export type PictureLinked_PicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PictureLinked_TextsArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -1895,7 +1849,6 @@ export type PictureFiltersInput = {
   picture_geo_infos?: InputMaybe<PictureGeoInfoFiltersInput>;
   picture_sequence?: InputMaybe<PictureSequenceFiltersInput>;
   picture_sequence_order?: InputMaybe<IntFilterInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   time_range_tag?: InputMaybe<TimeRangeTagFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   verified_keyword_tags?: InputMaybe<KeywordTagFiltersInput>;
@@ -1974,7 +1927,6 @@ export type PictureInput = {
   picture_geo_infos?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   picture_sequence?: InputMaybe<Scalars['ID']>;
   picture_sequence_order?: InputMaybe<Scalars['Int']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
   time_range_tag?: InputMaybe<Scalars['ID']>;
   verified_keyword_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   verified_location_tags?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -1990,14 +1942,12 @@ export type PictureRelationResponseCollection = {
 export type PictureSequence = {
   createdAt?: Maybe<Scalars['DateTime']>;
   pictures?: Maybe<PictureRelationResponseCollection>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type PictureSequencePicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -2022,19 +1972,12 @@ export type PictureSequenceFiltersInput = {
   not?: InputMaybe<PictureSequenceFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PictureSequenceFiltersInput>>>;
   pictures?: InputMaybe<PictureFiltersInput>;
-  publishedAt?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
 
 export type PictureSequenceInput = {
   pictures?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
 };
-
-export enum PublicationState {
-  Live = 'LIVE',
-  Preview = 'PREVIEW',
-}
 
 export type Query = {
   archivePictureCounts?: Maybe<ArchivePictureCountEntityResponseCollection>;
@@ -2099,12 +2042,7 @@ export type QueryArchiveTagArgs = {
 export type QueryArchiveTagsArgs = {
   filters?: InputMaybe<ArchiveTagFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type QueryBrowseRootCollectionArgs = {
-  publicationState?: InputMaybe<PublicationState>;
 };
 
 export type QueryCanRunOperationArgs = {
@@ -2120,7 +2058,6 @@ export type QueryCollectionArgs = {
 export type QueryCollectionsArgs = {
   filters?: InputMaybe<CollectionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -2131,7 +2068,6 @@ export type QueryCommentArgs = {
 export type QueryCommentsArgs = {
   filters?: InputMaybe<CommentFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -2142,7 +2078,6 @@ export type QueryDescriptionArgs = {
 export type QueryDescriptionsArgs = {
   filters?: InputMaybe<DescriptionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -2157,7 +2092,6 @@ export type QueryExhibitionPictureArgs = {
 export type QueryExhibitionPicturesArgs = {
   filters?: InputMaybe<ExhibitionPictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -2168,14 +2102,12 @@ export type QueryExhibitionSectionArgs = {
 export type QueryExhibitionSectionsArgs = {
   filters?: InputMaybe<ExhibitionSectionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type QueryExhibitionsArgs = {
   filters?: InputMaybe<ExhibitionFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -2284,14 +2216,12 @@ export type QueryPictureSequenceArgs = {
 export type QueryPictureSequencesArgs = {
   filters?: InputMaybe<PictureSequenceFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type QueryPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -2387,14 +2317,12 @@ export type TimeRangeTag = {
 export type TimeRangeTagPicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type TimeRangeTagVerified_PicturesArgs = {
   filters?: InputMaybe<PictureFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
-  publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -3965,7 +3893,6 @@ export type ContactMutation = { contact?: number | null };
 
 export type CreateExhibitionMutationVariables = Exact<{
   archiveId: Scalars['ID'];
-  publishedAt: Scalars['DateTime'];
 }>;
 
 export type CreateExhibitionMutation = {
@@ -3975,7 +3902,6 @@ export type CreateExhibitionMutation = {
 export type CreateExhibitionPictureMutationVariables = Exact<{
   exhibitionIdealotId: Scalars['ID'];
   pictureId: Scalars['ID'];
-  publishedAt: Scalars['DateTime'];
 }>;
 
 export type CreateExhibitionPictureMutation = {
@@ -3985,7 +3911,6 @@ export type CreateExhibitionPictureMutation = {
 export type CreateExhibitionSectionMutationVariables = Exact<{
   exhibitionId: Scalars['ID'];
   order?: InputMaybe<Scalars['Int']>;
-  publishedAt: Scalars['DateTime'];
 }>;
 
 export type CreateExhibitionSectionMutation = {
@@ -4070,7 +3995,6 @@ export type CreatePictureGeoInfoMutation = {
 
 export type CreatePictureSequenceMutationVariables = Exact<{
   pictures: Array<Scalars['ID']> | Scalars['ID'];
-  publishedAt: Scalars['DateTime'];
 }>;
 
 export type CreatePictureSequenceMutation = {
@@ -4080,7 +4004,6 @@ export type CreatePictureSequenceMutation = {
 export type CreateSubCollectionMutationVariables = Exact<{
   name: Scalars['String'];
   parentId: Scalars['ID'];
-  publishedAt: Scalars['DateTime'];
 }>;
 
 export type CreateSubCollectionMutation = {
@@ -8325,8 +8248,8 @@ export type ContactMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateExhibitionDocument = gql`
-  mutation createExhibition($archiveId: ID!, $publishedAt: DateTime!) {
-    createExhibition(data: { archive_tag: $archiveId, publishedAt: $publishedAt }) {
+  mutation createExhibition($archiveId: ID!) {
+    createExhibition(data: { archive_tag: $archiveId }) {
       data {
         id
       }
@@ -8353,7 +8276,6 @@ export type CreateExhibitionMutationFn = Apollo.MutationFunction<
  * const [createExhibitionMutation, { data, loading, error }] = useCreateExhibitionMutation({
  *   variables: {
  *      archiveId: // value for 'archiveId'
- *      publishedAt: // value for 'publishedAt'
  *   },
  * });
  */
@@ -8380,17 +8302,9 @@ export type CreateExhibitionMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateExhibitionPictureDocument = gql`
-  mutation createExhibitionPicture(
-    $exhibitionIdealotId: ID!
-    $pictureId: ID!
-    $publishedAt: DateTime!
-  ) {
+  mutation createExhibitionPicture($exhibitionIdealotId: ID!, $pictureId: ID!) {
     createExhibitionPicture(
-      data: {
-        exhibition_idealot: $exhibitionIdealotId
-        picture: $pictureId
-        publishedAt: $publishedAt
-      }
+      data: { exhibition_idealot: $exhibitionIdealotId, picture: $pictureId }
     ) {
       data {
         id
@@ -8419,7 +8333,6 @@ export type CreateExhibitionPictureMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      exhibitionIdealotId: // value for 'exhibitionIdealotId'
  *      pictureId: // value for 'pictureId'
- *      publishedAt: // value for 'publishedAt'
  *   },
  * });
  */
@@ -8449,10 +8362,8 @@ export type CreateExhibitionPictureMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateExhibitionSectionDocument = gql`
-  mutation createExhibitionSection($exhibitionId: ID!, $order: Int, $publishedAt: DateTime!) {
-    createExhibitionSection(
-      data: { exhibition: $exhibitionId, order: $order, publishedAt: $publishedAt }
-    ) {
+  mutation createExhibitionSection($exhibitionId: ID!, $order: Int) {
+    createExhibitionSection(data: { exhibition: $exhibitionId, order: $order }) {
       data {
         id
       }
@@ -8480,7 +8391,6 @@ export type CreateExhibitionSectionMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      exhibitionId: // value for 'exhibitionId'
  *      order: // value for 'order'
- *      publishedAt: // value for 'publishedAt'
  *   },
  * });
  */
@@ -8995,8 +8905,8 @@ export type CreatePictureGeoInfoMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreatePictureSequenceDocument = gql`
-  mutation createPictureSequence($pictures: [ID!]!, $publishedAt: DateTime!) {
-    createPictureSequence(data: { pictures: $pictures, publishedAt: $publishedAt }) {
+  mutation createPictureSequence($pictures: [ID!]!) {
+    createPictureSequence(data: { pictures: $pictures }) {
       data {
         id
       }
@@ -9023,7 +8933,6 @@ export type CreatePictureSequenceMutationFn = Apollo.MutationFunction<
  * const [createPictureSequenceMutation, { data, loading, error }] = useCreatePictureSequenceMutation({
  *   variables: {
  *      pictures: // value for 'pictures'
- *      publishedAt: // value for 'publishedAt'
  *   },
  * });
  */
@@ -9053,10 +8962,8 @@ export type CreatePictureSequenceMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const CreateSubCollectionDocument = gql`
-  mutation createSubCollection($name: String!, $parentId: ID!, $publishedAt: DateTime!) {
-    createCollection(
-      data: { name: $name, parent_collections: [$parentId], publishedAt: $publishedAt }
-    ) {
+  mutation createSubCollection($name: String!, $parentId: ID!) {
+    createCollection(data: { name: $name, parent_collections: [$parentId] }) {
       data {
         id
       }
@@ -9084,7 +8991,6 @@ export type CreateSubCollectionMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      name: // value for 'name'
  *      parentId: // value for 'parentId'
- *      publishedAt: // value for 'publishedAt'
  *   },
  * });
  */
@@ -10320,7 +10226,6 @@ export const PostCommentDocument = gql`
         text: $text
         date: $date
         picture: $id
-        publishedAt: $date
         accepted: false
         parentComment: $parentCommentId
       }

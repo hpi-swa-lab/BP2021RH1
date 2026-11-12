@@ -102,8 +102,6 @@ type PopulateParameter<T extends Common.UID.ContentType> =
       };
     };
 
-type PublicationStateParameter = 'live' | 'preview';
-
 type Params<T extends Common.UID.ContentType> = Partial<{
   fields: (keyof Attribute.GetAll<T>)[];
   populate: PopulateParameter<T>;
@@ -115,7 +113,6 @@ type FindManyParams<T extends Common.UID.ContentType> = Partial<
     start: Number;
     limit: Number;
     sort: OrderByParameter;
-    publicationState: PublicationStateParameter;
   }
 >;
 
