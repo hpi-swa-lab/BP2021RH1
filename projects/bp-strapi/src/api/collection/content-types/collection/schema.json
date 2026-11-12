@@ -24,7 +24,7 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::collection.collection",
-      "inversedBy": "parent_collections"
+      "mappedBy": "parent_collections"
     },
     "parent_collections": {
       "type": "relation",
