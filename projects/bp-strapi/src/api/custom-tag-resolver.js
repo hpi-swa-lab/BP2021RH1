@@ -3,7 +3,7 @@
 const mergeSourceTagIntoTargetTag = async (strapi, tagKey, sourceId, targetId) => {
   const tagQuery = strapi.db.query(`api::${tagKey}.${tagKey}`);
 
-  const getTag = async (id) => {
+  const getTag = async id => {
     return tagQuery.findOne({
       where: { id },
       populate: {
@@ -31,10 +31,7 @@ const mergeSourceTagIntoTargetTag = async (strapi, tagKey, sourceId, targetId) =
   ];
 
   const newUnverifiedPicturesForTarget = [
-    ...new Set([
-      ...target.pictures.map(pic => pic.id),
-      ...source.pictures.map(pic => pic.id),
-    ]),
+    ...new Set([...target.pictures.map(pic => pic.id), ...source.pictures.map(pic => pic.id)]),
   ].filter(picId => !newVerifiedPicturesForTarget.includes(picId)); // prioritize the verified relation
 
   const newSynonymsForTarget = [

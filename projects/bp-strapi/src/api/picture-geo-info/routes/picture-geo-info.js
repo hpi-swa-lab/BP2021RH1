@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
 /**
  * picture-geo-info router
  */
 
-const { createCoreRouter } = require("@strapi/strapi").factories;
+const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter("api::picture-geo-info.picture-geo-info");
+module.exports = createCoreRouter('api::picture-geo-info.picture-geo-info');

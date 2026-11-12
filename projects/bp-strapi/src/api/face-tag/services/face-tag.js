@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
 /**
  * face-tag service
  */
 
-const { createCoreService } = require("@strapi/strapi").factories;
+const { createCoreService } = require('@strapi/strapi').factories;
 
-module.exports = createCoreService("api::face-tag.face-tag");
+module.exports = createCoreService('api::face-tag.face-tag');
