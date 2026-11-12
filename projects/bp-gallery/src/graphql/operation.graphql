@@ -45,9 +45,9 @@ mutation addUser($username: String! $email: String!) { addUser(username: $userna
 mutation bulkEdit($pictureIds: [ID!]! $data: JSON!) { doBulkEdit(ids: $pictureIds data: $data) }
 mutation changePassword( $currentPassword: String! $password: String! $passwordConfirmation: String! ) { changePassword( currentPassword: $currentPassword password: $password passwordConfirmation: $passwordConfirmation ) { user { id } } }
 mutation contact( $recipient: String! $sender_name: String! $reply_email: String! $subject: String! $message: String! $honeypot: String! $fill_time: Int! ) { contact( recipient: $recipient sender_name: $sender_name reply_email: $reply_email subject: $subject message: $message honeypot: $honeypot fill_time: $fill_time ) }
-mutation createExhibition($archiveId: ID! $publishedAt: DateTime!) { createExhibition(data: { archive_tag: $archiveId publishedAt: $publishedAt }) { data { id } } }
-mutation createExhibitionPicture( $exhibitionIdealotId: ID! $pictureId: ID! $publishedAt: DateTime! ) { createExhibitionPicture( data: { exhibition_idealot: $exhibitionIdealotId picture: $pictureId publishedAt: $publishedAt } ) { data { id } } }
-mutation createExhibitionSection($exhibitionId: ID! $order: Int $publishedAt: DateTime!) { createExhibitionSection( data: { exhibition: $exhibitionId order: $order publishedAt: $publishedAt } ) { data { id } } }
+mutation createExhibition($archiveId: ID!) { createExhibition(data: { archive_tag: $archiveId }) { data { id } } }
+mutation createExhibitionPicture($exhibitionIdealotId: ID! $pictureId: ID!) { createExhibitionPicture( data: { exhibition_idealot: $exhibitionIdealotId picture: $pictureId } ) { data { id } } }
+mutation createExhibitionSection($exhibitionId: ID! $order: Int) { createExhibitionSection(data: { exhibition: $exhibitionId order: $order }) { data { id } } }
 mutation createFaceTag( $pictureId: ID! $personTagId: ID! $x: Float $y: Float $tag_direction: Int ) { createFaceTag( data: { picture: $pictureId person_tag: $personTagId x: $x y: $y tag_direction: $tag_direction } ) { data { id } } }
 mutation createKeywordTag($name: String!) { createKeywordTag(data: { name: $name }) { data { id } } }
 mutation createLink($title: String! $url: String! $archive_tag: ID!) { createLink(data: { title: $title url: $url archive_tag: $archive_tag }) { data { id } } }
@@ -56,8 +56,8 @@ mutation createOrientationTag( $pictureId: ID! $locationTagId: ID! $x: Float $y:
 mutation createPersonTag($name: String!) { createPersonTag(data: { name: $name }) { data { id } } }
 mutation createPicture($data: PictureInput!) { createPicture(data: $data) { data { id } } }
 mutation createPictureGeoInfo($data: PictureGeoInfoInput!) { createPictureGeoInfo(data: $data) { data { id } } }
-mutation createPictureSequence($pictures: [ID!]! $publishedAt: DateTime!) { createPictureSequence(data: { pictures: $pictures publishedAt: $publishedAt }) { data { id } } }
-mutation createSubCollection($name: String! $parentId: ID! $publishedAt: DateTime!) { createCollection( data: { name: $name parent_collections: [$parentId] publishedAt: $publishedAt } ) { data { id } } }
+mutation createPictureSequence($pictures: [ID!]!) { createPictureSequence(data: { pictures: $pictures }) { data { id } } }
+mutation createSubCollection($name: String! $parentId: ID!) { createCollection(data: { name: $name parent_collections: [$parentId] }) { data { id } } }
 mutation declineComment($commentId: ID!) { deleteComment(id: $commentId) { data { id } } }
 mutation deleteCollection($collectionId: ID!) { deleteCollection(id: $collectionId) { data { id } } }
 mutation deleteExhibition($id: ID!) { deleteExhibition(id: $id) { data { id } } }
@@ -81,7 +81,7 @@ mutation mergeLocationTags($targetId: ID! $sourceId: ID!) { mergeLocationTags(ta
 mutation mergePersonTags($targetId: ID! $sourceId: ID!) { mergePersonTags(targetId: $targetId sourceId: $sourceId) }
 mutation multipleUpload($files: [Upload!]!) { multipleUpload(files: $files) { data { id } } }
 mutation pinComment($commentId: ID!) { updateComment(id: $commentId data: { pinned: true }) { data { id } } }
-mutation postComment( $id: ID! $author: String! $text: String! $date: DateTime! $parentCommentId: ID ) { createComment( data: { author: $author text: $text date: $date picture: $id publishedAt: $date accepted: false parentComment: $parentCommentId } ) { data { attributes { text } } } }
+mutation postComment( $id: ID! $author: String! $text: String! $date: DateTime! $parentCommentId: ID ) { createComment( data: { author: $author text: $text date: $date picture: $id accepted: false parentComment: $parentCommentId } ) { data { attributes { text } } } }
 mutation removeArchiveTag($id: ID!) { removeArchiveTag(id: $id) }
 mutation removeUpload($id: ID!) { removeFile(id: $id) { data { id } } }
 mutation removeUser($id: ID!) { removeUser(id: $id) }

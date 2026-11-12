@@ -16,7 +16,6 @@ export default {
           text: $text
           date: $date
           picture: $id
-          publishedAt: $date
           accepted: false
           parentComment: $parentCommentId
         }

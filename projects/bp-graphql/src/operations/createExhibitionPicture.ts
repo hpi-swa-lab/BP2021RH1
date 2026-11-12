@@ -5,17 +5,9 @@ export default {
   group: 'exhibition',
   isAllowed: checkExhibition('exhibitionIdealotId'),
   document: graphql`
-    mutation createExhibitionPicture(
-      $exhibitionIdealotId: ID!
-      $pictureId: ID!
-      $publishedAt: DateTime!
-    ) {
+    mutation createExhibitionPicture($exhibitionIdealotId: ID!, $pictureId: ID!) {
       createExhibitionPicture(
-        data: {
-          exhibition_idealot: $exhibitionIdealotId
-          picture: $pictureId
-          publishedAt: $publishedAt
-        }
+        data: { exhibition_idealot: $exhibitionIdealotId, picture: $pictureId }
       ) {
         data {
           id

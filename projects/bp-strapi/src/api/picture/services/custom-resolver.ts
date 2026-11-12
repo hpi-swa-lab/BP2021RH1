@@ -207,7 +207,7 @@ const buildQueryForAllSearch = (
 
   const withWhere = buildWhere(withJoins, searchTerms, searchTimes, textFilter, knexEngine);
 
-  const withOrder = withWhere.orderBy('pictures.published_at', 'asc');
+  const withOrder = withWhere.orderBy('pictures.created_at', 'asc').orderBy('pictures.id', 'asc');
 
   return withOrder.limit(pagination.limit).offset(pagination.start);
 };

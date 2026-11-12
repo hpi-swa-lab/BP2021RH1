@@ -86,7 +86,6 @@ const PictureUploadArea = ({
     const initializePictureFromFile = (fileId: string | null | undefined) =>
       ({
         media: fileId,
-        publishedAt: new Date().toISOString(),
         archive_tag: targetArchiveTag.id,
       } as unknown as FlatPicture);
 

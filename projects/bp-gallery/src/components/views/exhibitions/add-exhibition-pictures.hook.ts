@@ -12,7 +12,6 @@ export const useAddExhibitionPictures = () => {
         variables: {
           exhibitionIdealotId: exhibitionId,
           pictureId: pictureId,
-          publishedAt: new Date().toISOString(),
         },
       });
       return result;

@@ -7,7 +7,6 @@ export const addArchiveTag = async (owningUser: UsersPermissionsUser, name: stri
   const newArchive = await archiveQuery.create({
     data: {
       name,
-      publishedAt: new Date(),
     },
   });
 

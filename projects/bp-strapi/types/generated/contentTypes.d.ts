@@ -312,7 +312,7 @@ export interface ApiArchiveTagArchiveTag extends Schema.CollectionType {
     singularName: 'archive-tag';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Attribute.DateTime;
@@ -338,7 +338,6 @@ export interface ApiArchiveTagArchiveTag extends Schema.CollectionType {
       'oneToMany',
       'api::picture.picture'
     >;
-    publishedAt: Attribute.DateTime;
     restrictImageDownloading: Attribute.Boolean;
     shortDescription: Attribute.Text;
     showcasePicture: Attribute.Relation<
@@ -360,7 +359,7 @@ export interface ApiBrowseRootCollectionBrowseRootCollection extends Schema.Sing
     singularName: 'browse-root-collection';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Attribute.DateTime;
@@ -375,7 +374,6 @@ export interface ApiBrowseRootCollectionBrowseRootCollection extends Schema.Sing
       'oneToOne',
       'api::collection.collection'
     >;
-    publishedAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
       'api::browse-root-collection.browse-root-collection',
@@ -395,7 +393,7 @@ export interface ApiCollectionCollection extends Schema.CollectionType {
     singularName: 'collection';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     child_collections: Attribute.Relation<
@@ -418,7 +416,6 @@ export interface ApiCollectionCollection extends Schema.CollectionType {
       'manyToMany',
       'api::picture.picture'
     >;
-    publishedAt: Attribute.DateTime;
     thumbnail: Attribute.String;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<'api::collection.collection', 'oneToOne', 'admin::user'> &
@@ -436,7 +433,7 @@ export interface ApiCommentComment extends Schema.CollectionType {
     singularName: 'comment';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     accepted: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
@@ -449,7 +446,6 @@ export interface ApiCommentComment extends Schema.CollectionType {
     parentComment: Attribute.Relation<'api::comment.comment', 'manyToOne', 'api::comment.comment'>;
     picture: Attribute.Relation<'api::comment.comment', 'manyToOne', 'api::picture.picture'>;
     pinned: Attribute.Boolean & Attribute.DefaultTo<false>;
-    publishedAt: Attribute.DateTime;
     text: Attribute.RichText & Attribute.Required;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<'api::comment.comment', 'oneToOne', 'admin::user'> &
@@ -465,7 +461,7 @@ export interface ApiDescriptionDescription extends Schema.CollectionType {
     singularName: 'description';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Attribute.DateTime;
@@ -476,7 +472,6 @@ export interface ApiDescriptionDescription extends Schema.CollectionType {
       'manyToMany',
       'api::picture.picture'
     >;
-    publishedAt: Attribute.DateTime;
     text: Attribute.RichText & Attribute.Required;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<'api::description.description', 'oneToOne', 'admin::user'> &
@@ -493,7 +488,7 @@ export interface ApiExhibitionPictureExhibitionPicture extends Schema.Collection
     singularName: 'exhibition-picture';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Attribute.DateTime;
@@ -519,7 +514,6 @@ export interface ApiExhibitionPictureExhibitionPicture extends Schema.Collection
       'manyToOne',
       'api::picture.picture'
     >;
-    publishedAt: Attribute.DateTime;
     subtitle: Attribute.String;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
@@ -540,7 +534,7 @@ export interface ApiExhibitionSectionExhibitionSection extends Schema.Collection
     singularName: 'exhibition-section';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Attribute.DateTime;
@@ -561,7 +555,6 @@ export interface ApiExhibitionSectionExhibitionSection extends Schema.Collection
       'api::exhibition-picture.exhibition-picture'
     >;
     order: Attribute.Integer;
-    publishedAt: Attribute.DateTime;
     text: Attribute.RichText;
     title: Attribute.String;
     updatedAt: Attribute.DateTime;
@@ -583,7 +576,7 @@ export interface ApiExhibitionExhibition extends Schema.CollectionType {
     singularName: 'exhibition';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     archive_tag: Attribute.Relation<
@@ -606,7 +599,6 @@ export interface ApiExhibitionExhibition extends Schema.CollectionType {
     >;
     introduction: Attribute.RichText;
     is_published: Attribute.Boolean;
-    publishedAt: Attribute.DateTime;
     title: Attribute.String;
     title_picture: Attribute.Relation<
       'api::exhibition.exhibition',
@@ -914,7 +906,7 @@ export interface ApiPictureSequencePictureSequence extends Schema.CollectionType
     singularName: 'picture-sequence';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Attribute.DateTime;
@@ -929,7 +921,6 @@ export interface ApiPictureSequencePictureSequence extends Schema.CollectionType
       'oneToMany',
       'api::picture.picture'
     >;
-    publishedAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
       'api::picture-sequence.picture-sequence',
@@ -949,7 +940,7 @@ export interface ApiPicturePicture extends Schema.CollectionType {
     singularName: 'picture';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     archive_identifier: Attribute.String;
@@ -1020,7 +1011,6 @@ export interface ApiPicturePicture extends Schema.CollectionType {
       'api::picture-sequence.picture-sequence'
     >;
     picture_sequence_order: Attribute.Integer;
-    publishedAt: Attribute.DateTime;
     time_range_tag: Attribute.Relation<
       'api::picture.picture',
       'manyToOne',
