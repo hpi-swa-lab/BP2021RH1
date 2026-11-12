@@ -6,7 +6,7 @@ export default {
   isAllowed: checkExhibitionPicture('id'),
   document: graphql`
     mutation updateExhibitionPicture($id: ID!, $data: ExhibitionPictureInput!) {
-      updateExhibitionPicture(id: $id, data: $data) {
+      updateExhibitionPicture(documentId: $id, data: $data) {
         data {
           id
         }

@@ -6,7 +6,7 @@ export default {
   isAllowed: always,
   document: graphql`
     mutation updateKeywordSynonyms($tagId: ID!, $synonyms: [ComponentCommonSynonymsInput]!) {
-      updateKeywordTag(id: $tagId, data: { synonyms: $synonyms }) {
+      updateKeywordTag(documentId: $tagId, data: { synonyms: $synonyms }) {
         data {
           id
           attributes {

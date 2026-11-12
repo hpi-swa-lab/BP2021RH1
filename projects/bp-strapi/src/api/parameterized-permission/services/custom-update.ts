@@ -125,7 +125,7 @@ export const addUser = async (
   // to prevent the unlikely event of anyone trying to log in between register
   // and the update-password-to-null below
   const temporaryPassword =
-    minimalPasswordSatisfyingRequirements + crypto.randomBytes(64).toString('hex');
+    minimalPasswordSatisfyingRequirements + crypto.randomBytes(24).toString('hex');
 
   await usersPermissionsAuthController.register(
     fakeKoaContextWithParameters({
@@ -169,7 +169,7 @@ export const addUser = async (
     publicPermissions.map(permission =>
       permissionQuery.create({
         data: {
-          ...omit(permission, ['id']),
+          ...omit(permission, ['id', 'documentId']),
           users_permissions_user: user.id,
         },
       })

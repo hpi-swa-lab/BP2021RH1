@@ -170,7 +170,7 @@ const ArchiveEditView = ({ archiveId }: ArchiveEditViewProps) => {
           files: [form.logo],
         },
       }).then(response => {
-        const logo = response.data?.multipleUpload[0]?.data?.id ?? undefined;
+        const logo = response.data?.multipleUpload[0]?.data.id ?? undefined;
         updateArchive({
           variables: {
             archiveId,

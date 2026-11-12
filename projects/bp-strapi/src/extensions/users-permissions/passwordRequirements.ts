@@ -1,11 +1,3 @@
-import {
-  validateChangePasswordBody,
-  validateRegisterBody,
-  validateResetPasswordBody,
-} from './authValidation';
-import { StrapiContext } from '../../types';
-import { getAuthController, wrap } from './helper';
-
 const minimumPasswordLength = 12;
 const minimumCharacterClasses = [/[a-z]/, /[A-Z]/, /[0-9]/, /[^a-zA-Z0-9]/];
 export const minimalPasswordSatisfyingRequirements = 'aA0!'.padEnd(minimumPasswordLength, '-');
@@ -27,26 +19,4 @@ export const enforcePasswordRequirements = (password: string) => {
         'and must contain at least a small letter, a capital letter, a number and a special character'
     );
   }
-};
-
-export const enablePasswordRequirements = () => {
-  const authController = getAuthController();
-
-  wrap<[StrapiContext], 'register'>(authController, 'register', async (inner, ctx) => {
-    const { password } = await validateRegisterBody(ctx.request.body);
-    enforcePasswordRequirements(password);
-    await inner(ctx);
-  });
-
-  wrap<[StrapiContext], 'changePassword'>(authController, 'changePassword', async (inner, ctx) => {
-    const { password } = await validateChangePasswordBody(ctx.request.body);
-    enforcePasswordRequirements(password);
-    await inner(ctx);
-  });
-
-  wrap<[StrapiContext], 'resetPassword'>(authController, 'resetPassword', async (inner, ctx) => {
-    const { password } = await validateResetPasswordBody(ctx.request.body);
-    enforcePasswordRequirements(password);
-    await inner(ctx);
-  });
 };

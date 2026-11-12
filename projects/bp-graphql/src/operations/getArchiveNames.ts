@@ -7,7 +7,7 @@ export default {
       $filters: ArchiveTagFiltersInput = {}
       $sortBy: [String] = ["createdAt:asc"]
     ) {
-      archiveTags(filters: $filters, sort: $sortBy) {
+      archiveTags: archiveTags_connection(filters: $filters, sort: $sortBy) {
         data {
           id
           attributes {

@@ -106,7 +106,6 @@ const BrowseView = ({ path, startpage }: { path?: string[]; startpage?: boolean 
         variables: {
           name: collectionName,
           parentId: collections[0].id,
-          publishedAt: new Date().toISOString(),
         },
         refetchQueries: ['getCollectionInfoByName'],
       });

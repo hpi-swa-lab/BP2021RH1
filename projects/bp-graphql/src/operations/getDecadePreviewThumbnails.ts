@@ -11,7 +11,7 @@ export default {
       $filter80s: PictureFiltersInput!
       $filter90s: PictureFiltersInput!
     ) {
-      decade40s: pictures(
+      decade40s: pictures_connection(
         filters: {
           and: [$filter40s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
         }
@@ -30,7 +30,7 @@ export default {
           }
         }
       }
-      decade50s: pictures(
+      decade50s: pictures_connection(
         filters: {
           and: [$filter50s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
         }
@@ -49,7 +49,7 @@ export default {
           }
         }
       }
-      decade60s: pictures(
+      decade60s: pictures_connection(
         filters: {
           and: [$filter60s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
         }
@@ -68,7 +68,7 @@ export default {
           }
         }
       }
-      decade70s: pictures(
+      decade70s: pictures_connection(
         filters: {
           and: [$filter70s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
         }
@@ -87,7 +87,7 @@ export default {
           }
         }
       }
-      decade80s: pictures(
+      decade80s: pictures_connection(
         filters: {
           and: [$filter80s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
         }
@@ -106,7 +106,7 @@ export default {
           }
         }
       }
-      decade90s: pictures(
+      decade90s: pictures_connection(
         filters: {
           and: [$filter90s, { or: [{ is_text: { eq: false } }, { is_text: { null: true } }] }]
         }

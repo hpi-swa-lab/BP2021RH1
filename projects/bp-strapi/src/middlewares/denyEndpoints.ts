@@ -60,10 +60,11 @@ const isAdminUser = async (context: StrapiContext) => {
   if (scheme.toLowerCase() !== 'bearer' || !token || rest.length > 0) {
     return false;
   }
-  const { payload, isValid } = strapi.service('admin::token').decodeJwtToken(token);
-  if (!isValid) {
+  const sessions = strapi.sessionManager('admin');
+  const { payload, isValid } = sessions.validateAccessToken(token);
+  if (!isValid || !(await sessions.isSessionActive(payload.sessionId))) {
     return false;
   }
-  const user = await strapi.query('admin::user').findOne({ where: { id: payload.id } });
+  const user = await strapi.query('admin::user').findOne({ where: { id: Number(payload.userId) } });
   return user?.isActive === true;
 };

@@ -71,8 +71,8 @@ const buildJoinsForTableWithoutVerifiedHandling = (
 
 const buildJoins = (knexEngine: QueryBuilder) => {
   for (const singularTableName of manyToManyWithVerified) {
-    const verifiedLinkTable = table(`pictures_verified_${plural(singularTableName)}_links`);
-    const unverifiedLinkTable = table(`pictures_${plural(singularTableName)}_links`);
+    const verifiedLinkTable = table(`pictures_verified_${plural(singularTableName)}_lnk`);
+    const unverifiedLinkTable = table(`pictures_${plural(singularTableName)}_lnk`);
     knexEngine = buildJoinsForTableWithVerifiedHandling(
       knexEngine,
       singularTableName,
@@ -82,8 +82,8 @@ const buildJoins = (knexEngine: QueryBuilder) => {
   }
 
   // Special handling for time-range-tags as these are in 1:n relation to the picture type
-  const verifiedTimeRangeLinkTable = table('pictures_verified_time_range_tag_links');
-  const unverifiedTimeRangeLinkTable = table('pictures_time_range_tag_links');
+  const verifiedTimeRangeLinkTable = table('pictures_verified_time_range_tag_lnk');
+  const unverifiedTimeRangeLinkTable = table('pictures_time_range_tag_lnk');
   knexEngine = buildJoinsForTableWithVerifiedHandling(
     knexEngine,
     'time_range_tag',
@@ -92,7 +92,7 @@ const buildJoins = (knexEngine: QueryBuilder) => {
   );
 
   for (const singularTableName of manyToManyWithoutVerified) {
-    const linkTable = table(`pictures_${plural(singularTableName)}_links`);
+    const linkTable = table(`pictures_${plural(singularTableName)}_lnk`);
     knexEngine = buildJoinsForTableWithoutVerifiedHandling(
       knexEngine,
       singularTableName,
@@ -102,7 +102,7 @@ const buildJoins = (knexEngine: QueryBuilder) => {
 
   // Special handling for our archive-tags as these are in 1:n relation to the picture type
   // and don't have a special verified relation.
-  const archiveTagLinkTable = table('pictures_archive_tag_links');
+  const archiveTagLinkTable = table('pictures_archive_tag_lnk');
   knexEngine = buildJoinsForTableWithoutVerifiedHandling(
     knexEngine,
     'archive_tag',
@@ -207,7 +207,7 @@ const buildQueryForAllSearch = (
 
   const withWhere = buildWhere(withJoins, searchTerms, searchTimes, textFilter, knexEngine);
 
-  const withOrder = withWhere.orderBy('pictures.published_at', 'asc');
+  const withOrder = withWhere.orderBy('pictures.created_at', 'asc').orderBy('pictures.id', 'asc');
 
   return withOrder.limit(pagination.limit).offset(pagination.start);
 };
@@ -240,7 +240,7 @@ const findPicturesByAllSearch = async (
 };
 
 const archivePictureCounts = async (knexEngine: KnexEngine) => {
-  const archivePictures = table('pictures_archive_tag_links');
+  const archivePictures = table('pictures_archive_tag_lnk');
   const archivePictureCounts = await knexEngine(archivePictures)
     .join(table('pictures'), `${archivePictures}.picture_id`, `${table('pictures')}.id`)
     .select('archive_tag_id as id')

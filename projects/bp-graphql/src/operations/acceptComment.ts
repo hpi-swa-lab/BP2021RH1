@@ -7,7 +7,7 @@ export default {
   isAllowed: checkComment('commentId'),
   document: graphql`
     mutation acceptComment($commentId: ID!) {
-      updateComment(id: $commentId, data: { accepted: true }) {
+      updateComment(documentId: $commentId, data: { accepted: true }) {
         data {
           id
         }

@@ -6,10 +6,8 @@ export default {
   isAllowed: checkLink('id'),
   document: graphql`
     mutation deleteLink($id: ID!) {
-      deleteLink(id: $id) {
-        data {
-          id
-        }
+      deleteLink(documentId: $id) {
+        documentId
       }
     }
   `,

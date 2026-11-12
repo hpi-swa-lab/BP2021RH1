@@ -4,7 +4,9 @@ export default {
   isEssential: true,
   document: graphql`
     query getPictureGeoInfo($pictureId: ID!) {
-      pictureGeoInfos(filters: { picture: { id: { eq: $pictureId } } }) {
+      pictureGeoInfos: pictureGeoInfos_connection(
+        filters: { picture: { id: { eq: $pictureId } } }
+      ) {
         data {
           id
           attributes {

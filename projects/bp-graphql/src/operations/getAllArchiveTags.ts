@@ -4,7 +4,7 @@ export default {
   isEssential: true,
   document: graphql`
     query getAllArchiveTags($sortBy: [String] = ["createdAt:asc"]) {
-      archiveTags(sort: $sortBy) {
+      archiveTags: archiveTags_connection(sort: $sortBy) {
         data {
           id
           attributes {

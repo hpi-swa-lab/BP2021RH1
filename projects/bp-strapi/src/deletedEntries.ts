@@ -18,16 +18,19 @@ const filterCollection =
     resolve(parent, withoutDeleted(uid, args), ...rest);
 
 const hideSingle = async (resolve: Resolve, ...args: Parameters<Resolve>) => {
-  const response = await resolve(...args);
-  const value = await response?.value;
-  return { ...response, value: value?.deleted ? null : value };
+  const entry = await resolve(...args);
+  return entry?.deleted ? null : entry;
 };
 
 // Flat keys, since plugin-graphql registers its auth config for these queries under flat keys,
 // which lodash's get prefers over a nested `Query: { pictures }`
 export const deletedEntriesResolversConfig = {
   'Query.pictures': { middlewares: [filterCollection('api::picture.picture')] },
+  'Query.pictures_connection': { middlewares: [filterCollection('api::picture.picture')] },
   'Query.archiveTags': { middlewares: [filterCollection('api::archive-tag.archive-tag')] },
+  'Query.archiveTags_connection': {
+    middlewares: [filterCollection('api::archive-tag.archive-tag')],
+  },
   'Query.picture': { middlewares: [hideSingle] },
   'Query.archiveTag': { middlewares: [hideSingle] },
 };

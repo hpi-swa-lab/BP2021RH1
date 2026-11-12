@@ -4,7 +4,7 @@ export default {
   isEssential: true,
   document: graphql`
     query getExhibition($exhibitionId: ID!) {
-      exhibition(id: $exhibitionId) {
+      exhibition(documentId: $exhibitionId) {
         data {
           id
           attributes {
@@ -39,7 +39,7 @@ export default {
                 }
               }
             }
-            idealot_pictures {
+            idealot_pictures: idealot_pictures_connection {
               data {
                 id
                 attributes {
@@ -67,14 +67,14 @@ export default {
                 }
               }
             }
-            exhibition_sections(sort: "order:asc") {
+            exhibition_sections: exhibition_sections_connection(sort: "order:asc") {
               data {
                 id
                 attributes {
                   title
                   text
                   order
-                  exhibition_pictures(sort: "order:asc") {
+                  exhibition_pictures: exhibition_pictures_connection(sort: "order:asc") {
                     data {
                       id
                       attributes {

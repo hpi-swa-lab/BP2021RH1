@@ -6,11 +6,11 @@ export default {
   isAllowed: checkExhibition('exhibitionId'),
   document: graphql`
     query getIdeaLotContent($exhibitionId: ID!) {
-      exhibition(id: $exhibitionId) {
+      exhibition(documentId: $exhibitionId) {
         data {
           id
           attributes {
-            idealot_pictures {
+            idealot_pictures: idealot_pictures_connection {
               data {
                 id
                 attributes {

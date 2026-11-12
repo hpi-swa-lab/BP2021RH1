@@ -6,10 +6,8 @@ export default {
   isAllowed: checkFaceTag('id'),
   document: graphql`
     mutation deleteFaceTag($id: ID!) {
-      deleteFaceTag(id: $id) {
-        data {
-          id
-        }
+      deleteFaceTag(documentId: $id) {
+        documentId
       }
     }
   `,

@@ -4,11 +4,11 @@ export default {
   isEssential: true,
   document: graphql`
     query getPictureInfo($pictureId: ID!) {
-      picture(id: $pictureId) {
+      picture(documentId: $pictureId) {
         data {
           id
           attributes {
-            descriptions(sort: "createdAt:asc") {
+            descriptions: descriptions_connection(sort: "createdAt:asc") {
               data {
                 id
                 attributes {
@@ -36,7 +36,7 @@ export default {
                 }
               }
             }
-            keyword_tags(sort: "updatedAt:asc") {
+            keyword_tags: keyword_tags_connection(sort: "updatedAt:asc") {
               data {
                 id
                 attributes {
@@ -45,7 +45,7 @@ export default {
                 }
               }
             }
-            verified_keyword_tags(sort: "updatedAt:asc") {
+            verified_keyword_tags: verified_keyword_tags_connection(sort: "updatedAt:asc") {
               data {
                 id
                 attributes {
@@ -54,7 +54,7 @@ export default {
                 }
               }
             }
-            location_tags(sort: "updatedAt:asc") {
+            location_tags: location_tags_connection(sort: "updatedAt:asc") {
               data {
                 id
                 attributes {
@@ -63,7 +63,7 @@ export default {
                 }
               }
             }
-            verified_location_tags(sort: "updatedAt:asc") {
+            verified_location_tags: verified_location_tags_connection(sort: "updatedAt:asc") {
               data {
                 id
                 attributes {
@@ -72,7 +72,7 @@ export default {
                 }
               }
             }
-            person_tags(sort: "updatedAt:asc") {
+            person_tags: person_tags_connection(sort: "updatedAt:asc") {
               data {
                 id
                 attributes {
@@ -81,7 +81,7 @@ export default {
                 }
               }
             }
-            verified_person_tags(sort: "updatedAt:asc") {
+            verified_person_tags: verified_person_tags_connection(sort: "updatedAt:asc") {
               data {
                 id
                 attributes {
@@ -90,7 +90,7 @@ export default {
                 }
               }
             }
-            collections {
+            collections: collections_connection {
               data {
                 id
                 attributes {
@@ -98,7 +98,10 @@ export default {
                 }
               }
             }
-            comments(sort: "date:desc", filters: { picture: { id: { eq: $pictureId } } }) {
+            comments: comments_connection(
+              sort: "date:desc"
+              filters: { picture: { id: { eq: $pictureId } } }
+            ) {
               data {
                 id
                 attributes {
@@ -115,7 +118,7 @@ export default {
                       id
                     }
                   }
-                  childComments(sort: "date:asc") {
+                  childComments: childComments_connection(sort: "date:asc") {
                     data {
                       id
                     }
@@ -139,12 +142,12 @@ export default {
               }
             }
             is_text
-            linked_pictures {
+            linked_pictures: linked_pictures_connection {
               data {
                 id
               }
             }
-            linked_texts {
+            linked_texts: linked_texts_connection {
               data {
                 id
               }
@@ -153,7 +156,7 @@ export default {
               data {
                 id
                 attributes {
-                  pictures(sort: "picture_sequence_order:asc") {
+                  pictures: pictures_connection(sort: "picture_sequence_order:asc") {
                     data {
                       id
                     }

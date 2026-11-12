@@ -7,7 +7,7 @@ export default {
   isAllowed: always,
   document: graphql`
     query getUser($id: ID!) {
-      usersPermissionsUser(id: $id) {
+      usersPermissionsUser(documentId: $id) {
         data {
           id
           attributes {

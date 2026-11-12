@@ -6,7 +6,7 @@ export default {
   isAllowed: always,
   document: graphql`
     mutation updatePersonName($tagId: ID!, $name: String!) {
-      updatePersonTag(id: $tagId, data: { name: $name }) {
+      updatePersonTag(documentId: $tagId, data: { name: $name }) {
         data {
           id
           attributes {

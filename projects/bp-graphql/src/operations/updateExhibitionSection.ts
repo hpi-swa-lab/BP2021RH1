@@ -13,7 +13,7 @@ export default {
       $exhibitionPictureIds: [ID]
     ) {
       updateExhibitionSection(
-        id: $id
+        documentId: $id
         data: {
           title: $title
           text: $text

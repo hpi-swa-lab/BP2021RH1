@@ -7,13 +7,13 @@ export default {
   isAllowed: always,
   document: graphql`
     query getCollectionInfoByName($collectionName: String) {
-      collections(filters: { name: { eq: $collectionName } }) {
+      collections: collections_connection(filters: { name: { eq: $collectionName } }) {
         data {
           id
           attributes {
             name
             description
-            child_collections(sort: "name:asc") {
+            child_collections: child_collections_connection(sort: "name:asc") {
               data {
                 id
                 attributes {

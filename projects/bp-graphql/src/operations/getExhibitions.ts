@@ -4,7 +4,10 @@ export default {
   isEssential: true,
   document: graphql`
     query getExhibitions($archiveId: ID, $sortBy: [String] = ["updatedAt:desc"]) {
-      exhibitions(filters: { archive_tag: { id: { eq: $archiveId } } }, sort: $sortBy) {
+      exhibitions: exhibitions_connection(
+        filters: { archive_tag: { id: { eq: $archiveId } } }
+        sort: $sortBy
+      ) {
         data {
           id
           attributes {

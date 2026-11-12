@@ -6,7 +6,7 @@ export default {
   isAllowed: checkArchive('archiveId'),
   document: graphql`
     mutation updateArchive($archiveId: ID!, $data: ArchiveTagInput!) {
-      updateArchiveTag(id: $archiveId, data: $data) {
+      updateArchiveTag(documentId: $archiveId, data: $data) {
         data {
           id
         }

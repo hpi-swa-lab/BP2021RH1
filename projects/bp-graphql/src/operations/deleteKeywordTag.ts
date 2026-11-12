@@ -6,10 +6,8 @@ export default {
   isAllowed: always,
   document: graphql`
     mutation deleteKeywordTag($id: ID!) {
-      deleteKeywordTag(id: $id) {
-        data {
-          id
-        }
+      deleteKeywordTag(documentId: $id) {
+        documentId
       }
     }
   `,

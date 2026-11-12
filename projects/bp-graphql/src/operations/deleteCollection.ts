@@ -7,10 +7,8 @@ export default {
   isAllowed: always,
   document: graphql`
     mutation deleteCollection($collectionId: ID!) {
-      deleteCollection(id: $collectionId) {
-        data {
-          id
-        }
+      deleteCollection(documentId: $collectionId) {
+        documentId
       }
     }
   `,

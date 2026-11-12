@@ -5,8 +5,8 @@ export default {
   group: 'exhibition',
   isAllowed: checkArchive('archiveId'),
   document: graphql`
-    mutation createExhibition($archiveId: ID!, $publishedAt: DateTime!) {
-      createExhibition(data: { archive_tag: $archiveId, publishedAt: $publishedAt }) {
+    mutation createExhibition($archiveId: ID!) {
+      createExhibition(data: { archive_tag: $archiveId }) {
         data {
           id
         }

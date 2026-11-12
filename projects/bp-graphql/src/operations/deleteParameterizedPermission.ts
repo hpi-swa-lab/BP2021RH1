@@ -20,10 +20,8 @@ export default {
   },
   document: graphql`
     mutation deleteParameterizedPermission($id: ID!) {
-      deleteParameterizedPermission(id: $id) {
-        data {
-          id
-        }
+      deleteParameterizedPermission(documentId: $id) {
+        documentId
       }
     }
   `,

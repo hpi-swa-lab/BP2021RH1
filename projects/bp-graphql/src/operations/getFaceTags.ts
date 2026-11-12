@@ -4,7 +4,7 @@ export default {
   isEssential: true,
   document: graphql`
     query getFaceTags($pictureId: ID!) {
-      faceTags(filters: { picture: { id: { eq: $pictureId } } }) {
+      faceTags: faceTags_connection(filters: { picture: { id: { eq: $pictureId } } }) {
         data {
           id
           attributes {

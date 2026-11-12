@@ -46,7 +46,7 @@ export const asUploadPath = (media: FlatUploadFile | undefined, options: UploadO
   // necessary to always get latest version of the picture from CDN/Strapi (after e.g. using the image editor)
   const imgSrcWithParams = `${imgSrc}?updatedAt=${(media?.updatedAt ?? '') as string}`;
 
-  const onCdn = media?.provider === 'strapi-provider-upload-aws-s3-advanced';
+  const onCdn = media?.provider === 'aws-s3';
 
   if (pictureOrigin === PictureOrigin.LOCAL || imgSrc === fallback) return imgSrc;
   if (onCdn) return imgSrcWithParams;
@@ -133,7 +133,11 @@ export const buildHttpLink = (
     operation =>
       !batchedOperationNames.includes(operation.operationName) ||
       extractFiles(operation).files.size > 0,
-    createUploadLink(options),
+    // Apollo Server refuses multipart requests without this header, as protection against CSRF
+    createUploadLink({
+      ...options,
+      headers: { ...options.headers, 'apollo-require-preflight': 'true' },
+    }),
     new BatchHttpLink({
       ...options,
       batchMax: 50,

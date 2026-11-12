@@ -1,4 +1,3 @@
-import { enablePasswordRequirements } from './passwordRequirements';
 import { registerParameterizedPermissionsAuthStrategy } from './registerParameterizedPermissionsAuthStrategy';
 import { enablePasswordTokenExpiration } from './resetPasswordTokenExpiration';
 
@@ -13,8 +12,6 @@ export default (plugin: any) => {
       await plugin.register(...args);
 
       enablePasswordTokenExpiration(plugin.config);
-
-      enablePasswordRequirements();
     },
   };
 };

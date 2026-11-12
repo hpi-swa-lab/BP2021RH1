@@ -7,10 +7,8 @@ export default {
   isAllowed: checkComment('commentId'),
   document: graphql`
     mutation declineComment($commentId: ID!) {
-      deleteComment(id: $commentId) {
-        data {
-          id
-        }
+      deleteComment(documentId: $commentId) {
+        documentId
       }
     }
   `,

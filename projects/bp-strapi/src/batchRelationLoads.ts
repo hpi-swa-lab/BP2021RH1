@@ -1,10 +1,7 @@
-import { convertQueryParams, sanitize, validate } from '@strapi/utils';
-import type { Common } from '@strapi/strapi';
+import type { UID } from '@strapi/strapi';
 import DataLoader from 'dataloader';
 import { withoutDeleted } from './deletedEntries';
 import { StrapiExtended } from './types';
-
-const { transformParamsToQuery } = convertQueryParams;
 
 type Id = number | string;
 type Attribute = { target: string; relation: string; multiple?: boolean };
@@ -12,7 +9,7 @@ type TransformedArgs = { start?: number; limit?: number } & Record<string, unkno
 type Batch = { sanitizedArgs: Promise<TransformedArgs>; loader: DataLoader<Id, unknown> };
 type Context = { state: { auth: unknown } };
 type Resolver = (parent: { id: Id }, args: object, context: Context, info: unknown) => unknown;
-type AssociationOptions = { contentTypeUID: Common.UID.Schema; attributeName: string };
+type AssociationOptions = { contentTypeUID: UID.Schema; attributeName: string };
 type Database = {
   query(uid: string): { findMany(params: object): Promise<Record<string, unknown>[]> };
 };
@@ -54,7 +51,7 @@ export const batchRelationLoads = (strapi: StrapiExtended) => {
     context: Context,
     uid: string,
     attributeName: string,
-    targetUID: Common.UID.Schema,
+    targetUID: UID.Schema,
     args: TransformedArgs
   ) => {
     let batches = batchesByRequest.get(context);
@@ -68,12 +65,12 @@ export const batchRelationLoads = (strapi: StrapiExtended) => {
       const targetContentType = strapi.getModel(targetUID);
       const { auth } = context.state;
       const sanitizedArgs = (async (): Promise<TransformedArgs> => {
-        await validate.contentAPI.query(args, targetContentType, { auth });
-        return sanitize.contentAPI.query(args, targetContentType, { auth });
+        await strapi.contentAPI.validate.query(args, targetContentType, { auth });
+        return strapi.contentAPI.sanitize.query(args, targetContentType, { auth });
       })();
       const loader = new DataLoader<Id, unknown>(
         async ids => {
-          const params = transformParamsToQuery(targetUID, await sanitizedArgs);
+          const params = strapi.get('query-params').transform(targetUID, await sanitizedArgs);
           return loadRelation(uid, attributeName, params, ids);
         },
         { cache: false }
@@ -93,14 +90,14 @@ export const batchRelationLoads = (strapi: StrapiExtended) => {
     created.buildAssociationResolver = (options: AssociationOptions): Resolver => {
       const strapiResolver = buildAssociationResolver(options);
       const { contentTypeUID, attributeName } = options;
-      const attribute = strapi.getModel(contentTypeUID).attributes[attributeName] as Attribute;
+      const attribute = (
+        strapi.getModel(contentTypeUID).attributes as unknown as Record<string, Attribute>
+      )[attributeName];
       if (isMorphRelation(attribute)) {
         return strapiResolver;
       }
       const isMediaAttribute = isMedia(attribute);
-      const targetUID = (
-        isMediaAttribute ? 'plugin::upload.file' : attribute.target
-      ) as Common.UID.Schema;
+      const targetUID = (isMediaAttribute ? 'plugin::upload.file' : attribute.target) as UID.Schema;
       const isToMany = isMediaAttribute ? attribute.multiple : attribute.relation.endsWith('Many');
       const targetContentType = strapi.getModel(targetUID);
 

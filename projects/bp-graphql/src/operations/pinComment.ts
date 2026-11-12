@@ -7,7 +7,7 @@ export default {
   isAllowed: checkComment('commentId'),
   document: graphql`
     mutation pinComment($commentId: ID!) {
-      updateComment(id: $commentId, data: { pinned: true }) {
+      updateComment(documentId: $commentId, data: { pinned: true }) {
         data {
           id
         }

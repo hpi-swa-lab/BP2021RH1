@@ -7,7 +7,9 @@ export default {
   isAllowed: checkOnOtherUsers('userId'),
   document: graphql`
     query getParameterizedPermissions($userId: ID) {
-      parameterizedPermissions(filters: { users_permissions_user: { id: { eq: $userId } } }) {
+      parameterizedPermissions: parameterizedPermissions_connection(
+        filters: { users_permissions_user: { id: { eq: $userId } } }
+      ) {
         data {
           id
           attributes {

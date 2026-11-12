@@ -6,7 +6,7 @@ export default {
   isAllowed: checkFaceTag('id'),
   document: graphql`
     mutation updateFaceTagDirection($id: ID!, $tag_direction: Int) {
-      updateFaceTag(id: $id, data: { tag_direction: $tag_direction }) {
+      updateFaceTag(documentId: $id, data: { tag_direction: $tag_direction }) {
         data {
           id
         }

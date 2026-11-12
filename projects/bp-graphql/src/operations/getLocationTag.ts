@@ -4,7 +4,7 @@ export default {
   isEssential: true,
   document: graphql`
     query getLocationTag($id: ID!) {
-      locationTag(id: $id) {
+      locationTag(documentId: $id) {
         data {
           attributes {
             name

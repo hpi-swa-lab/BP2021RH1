@@ -45,7 +45,6 @@ const AddCollectionMenu = ({
         variables: {
           name: collectionName,
           parentId: parentCollectionId,
-          publishedAt: new Date().toISOString(),
         },
       });
     }

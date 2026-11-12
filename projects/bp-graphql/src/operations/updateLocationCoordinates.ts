@@ -10,7 +10,7 @@ export default {
       $tagId: ID!
       $coordinate: ComponentLocationCoordinatesInput
     ) {
-      updateLocationTag(id: $tagId, data: { coordinates: $coordinate }) {
+      updateLocationTag(documentId: $tagId, data: { coordinates: $coordinate }) {
         data {
           id
         }

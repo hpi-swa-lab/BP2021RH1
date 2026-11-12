@@ -4,11 +4,11 @@ export default {
   isEssential: true,
   document: graphql`
     query getPicturesForCollection($collectionId: ID!) {
-      collection(id: $collectionId) {
+      collection(documentId: $collectionId) {
         data {
           id
           attributes {
-            pictures {
+            pictures: pictures_connection {
               data {
                 id
               }

@@ -1,5 +1,6 @@
 'use strict';
 
+import { mergeWith } from 'lodash';
 import { Variables } from 'bp-graphql/build';
 import { archivePictureCountsType } from './api/archive-tag/content-types/archive-tag/custom-type';
 import { addArchiveTag, removeArchiveTag } from './api/archive-tag/services/custom-update';
@@ -31,6 +32,7 @@ import {
 import { incNotAPlaceCount } from './api/picture/services/custom-update';
 import { batchRelationLoads } from './batchRelationLoads';
 import { deletedEntriesResolversConfig } from './deletedEntries';
+import { numericIds } from './numericIds';
 import { registerE2eReset } from './e2eReset';
 import { updateMe } from './extensions/users-permissions/content-types/user/custom-update';
 import {
@@ -40,6 +42,7 @@ import {
 import { initializeEmailSettings } from './parameterizedPermissions/initializeUsersPermissionsSettings';
 import { parseOperationSource } from './parameterizedPermissions/parseOperation';
 import { GqlExtension, StrapiExtended } from './types';
+import { uploadMutations } from './uploadMutations';
 
 export default {
   /**
@@ -54,8 +57,10 @@ export default {
     const gqlExtensionService = strapi.plugin('graphql').service('extension');
     const gqlExtension = (extensionArgs: GqlExtension) => {
       const { list, mutationField, queryField, objectType } = extensionArgs.nexus;
+      const ids = numericIds(extensionArgs);
       return {
         types: [
+          ...ids.types,
           mutationField('mergeKeywordTags', {
             type: 'ID',
             args: {
@@ -165,7 +170,7 @@ export default {
             },
           }),
           queryField('findPicturesByAllSearch', {
-            type: list('PictureEntity'),
+            type: list('Picture'),
             args: {
               searchTerms: list('String'),
               // Additional search-time tuples (plain search term, parsed start, parsed end)
@@ -336,87 +341,94 @@ export default {
             },
           }),
         ],
-        resolversConfig: {
-          ...deletedEntriesResolversConfig,
-          Query: {
-            findPicturesByAllSearch: {
-              auth: {
-                scope: ['api::picture.picture.find'],
-              },
-            },
-            archivePictureCounts: {
-              auth: {
-                scope: ['api::picture.picture.find'],
-              },
-            },
-          },
-          Mutation: {
-            mergeKeywordTags: {
-              auth: {
-                scope: ['api::keyword-tag.keyword-tag.update'],
-              },
-            },
-            mergeLocationTags: {
-              auth: {
-                scope: ['api::location-tag.location-tag.update'],
-              },
-            },
-            mergePersonTags: {
-              auth: {
-                scope: ['api::person-tag.person-tag.update'],
-              },
-            },
-            mergeCollections: {
-              auth: {
-                scope: ['api::collection.collection.update'],
-              },
-            },
-            updatePictureWithTagCleanup: {
-              auth: {
-                scope: ['api::picture.picture.update'],
-              },
-            },
-            doBulkEdit: {
-              auth: {
-                scope: ['api::picture.picture.update'],
-              },
-            },
-            doLike: {
-              auth: {
-                scope: ['api::picture.picture.find'],
-              },
-            },
-            increaseNotAPlaceCount: {
-              auth: {
-                scope: ['api::picture.picture.find'],
-              },
-            },
-          },
-          Collection: {
-            thumbnail: {
-              middlewares: [
-                async (_: any, parent: any) => {
-                  // The parent here is the actual collection, of which the thumbnail was requested.
-                  // More on the arguments of a resolver can be found for example on:
-                  // https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-arguments
-                  return resolveCollectionThumbnail(extensionArgs.strapi, parent.id, []);
+        // Strapi merges the middleware lists of extensions by index, so one would replace the other
+        resolversConfig: mergeWith(
+          {},
+          ids.resolversConfig,
+          deletedEntriesResolversConfig,
+          {
+            Query: {
+              findPicturesByAllSearch: {
+                auth: {
+                  scope: ['api::picture.picture.find'],
                 },
-              ],
-              auth: {
-                scope: [
-                  'api::collection.collection.find',
-                  'api::collection.collection.findOne',
-                  'api::picture.picture.find',
-                  'api::picture.picture.findOne',
+              },
+              archivePictureCounts: {
+                auth: {
+                  scope: ['api::picture.picture.find'],
+                },
+              },
+            },
+            Mutation: {
+              mergeKeywordTags: {
+                auth: {
+                  scope: ['api::keyword-tag.keyword-tag.update'],
+                },
+              },
+              mergeLocationTags: {
+                auth: {
+                  scope: ['api::location-tag.location-tag.update'],
+                },
+              },
+              mergePersonTags: {
+                auth: {
+                  scope: ['api::person-tag.person-tag.update'],
+                },
+              },
+              mergeCollections: {
+                auth: {
+                  scope: ['api::collection.collection.update'],
+                },
+              },
+              updatePictureWithTagCleanup: {
+                auth: {
+                  scope: ['api::picture.picture.update'],
+                },
+              },
+              doBulkEdit: {
+                auth: {
+                  scope: ['api::picture.picture.update'],
+                },
+              },
+              doLike: {
+                auth: {
+                  scope: ['api::picture.picture.find'],
+                },
+              },
+              increaseNotAPlaceCount: {
+                auth: {
+                  scope: ['api::picture.picture.find'],
+                },
+              },
+            },
+            Collection: {
+              thumbnail: {
+                middlewares: [
+                  async (_: any, parent: any) => {
+                    // The parent here is the actual collection, of which the thumbnail was requested.
+                    // More on the arguments of a resolver can be found for example on:
+                    // https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-arguments
+                    return resolveCollectionThumbnail(extensionArgs.strapi, parent.id, []);
+                  },
                 ],
+                auth: {
+                  scope: [
+                    'api::collection.collection.find',
+                    'api::collection.collection.findOne',
+                    'api::picture.picture.find',
+                    'api::picture.picture.findOne',
+                  ],
+                },
               },
             },
           },
-        },
+          (a: unknown, b: unknown) => (Array.isArray(a) ? a.concat(b) : undefined)
+        ),
       };
     };
 
     gqlExtensionService.use(gqlExtension);
+    gqlExtensionService.use(uploadMutations);
   },
 
   /**

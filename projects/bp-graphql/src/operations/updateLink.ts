@@ -6,7 +6,7 @@ export default {
   isAllowed: checkLink('id'),
   document: graphql`
     mutation updateLink($id: ID!, $data: LinkInput!) {
-      updateLink(id: $id, data: $data) {
+      updateLink(documentId: $id, data: $data) {
         data {
           id
         }

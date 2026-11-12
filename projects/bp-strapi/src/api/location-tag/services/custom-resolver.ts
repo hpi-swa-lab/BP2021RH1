@@ -3,7 +3,7 @@ import { deepStringifyIds } from '../../helper';
 
 export const getAllLocationTags = async (strapi: StrapiExtended) =>
   deepStringifyIds(
-    await strapi.entityService.findMany('api::location-tag.location-tag', {
+    await strapi.documents('api::location-tag.location-tag').findMany({
       fields: ['name', 'visible', 'root', 'accepted'],
       populate: ['coordinates', 'synonyms', 'parent_tags'],
     })
@@ -30,7 +30,8 @@ export const getLocationTagsWithThumbnail = async (
     }
   );
 
-  const locationTags = await strapi.entityService.findMany('api::location-tag.location-tag', {
+  type WithPictures = { pictures?: { id: number }[]; verified_pictures?: { id: number }[] };
+  const locationTags = (await strapi.documents('api::location-tag.location-tag').findMany({
     ...locationArgs,
     fields: ['name'],
     populate: {
@@ -40,7 +41,7 @@ export const getLocationTagsWithThumbnail = async (
       pictures: { filters: { deleted: false } },
       verified_pictures: { filters: { deleted: false } },
     },
-  });
+  })) as WithPictures[];
 
   const { filters: transformedThumbnailFilters } = transformArgs(
     {
@@ -51,14 +52,14 @@ export const getLocationTagsWithThumbnail = async (
     }
   );
 
-  const thumbnails = await strapi.entityService.findMany('api::picture.picture', {
+  const thumbnails = await strapi.documents('api::picture.picture').findMany({
     filters: {
       $and: [
         {
           id: {
             $in: locationTags
               .flatMap(tag => [tag?.pictures?.[0], tag?.verified_pictures?.[0]])
-              .map(picture => (picture as { id: number } | undefined)?.id)
+              .map(picture => picture?.id)
               .filter(id => id),
           },
         },

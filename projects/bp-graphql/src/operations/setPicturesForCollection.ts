@@ -7,7 +7,7 @@ export default {
   isAllowed: always,
   document: graphql`
     mutation setPicturesForCollection($pictureIds: [ID]!, $collectionId: ID!) {
-      updateCollection(id: $collectionId, data: { pictures: $pictureIds }) {
+      updateCollection(documentId: $collectionId, data: { pictures: $pictureIds }) {
         data {
           id
         }

@@ -6,7 +6,7 @@ export default {
   isAllowed: always,
   document: graphql`
     mutation updateLocationParent($tagID: ID!, $parentIDs: [ID!]) {
-      updateLocationTag(id: $tagID, data: { parent_tags: $parentIDs }) {
+      updateLocationTag(documentId: $tagID, data: { parent_tags: $parentIDs }) {
         data {
           id
         }

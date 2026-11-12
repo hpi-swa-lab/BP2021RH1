@@ -86,7 +86,6 @@ const PictureUploadArea = ({
     const initializePictureFromFile = (fileId: string | null | undefined) =>
       ({
         media: fileId,
-        publishedAt: new Date().toISOString(),
         archive_tag: targetArchiveTag.id,
       } as unknown as FlatPicture);
 
@@ -100,7 +99,7 @@ const PictureUploadArea = ({
         })
       ).data?.multipleUpload ?? []
     )
-      .map(upload => upload?.data?.id)
+      .map(upload => upload?.data.id)
       .map(initializePictureFromFile);
     // don't turn into Promise.all, as the order of the pictures
     // (specifically their ids) should be preserved

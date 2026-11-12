@@ -10,13 +10,10 @@ import {
 } from '@mui/x-data-grid';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  ComponentCommonSynonyms,
-  ComponentCommonSynonymsInput,
-} from '../../../graphql/APIConnector';
+import { ComponentCommonSynonymsInput } from '../../../graphql/APIConnector';
 import { useSimplifiedQueryResponseData } from '../../../graphql/queryUtils';
 import useGenericTagEndpoints from '../../../hooks/generic-endpoints.hook';
-import { FlatTag, TagType } from '../../../types/additionalFlatTypes';
+import { ComponentCommonSynonyms, FlatTag, TagType } from '../../../types/additionalFlatTypes';
 import Loading from '../../common/Loading';
 import ProtectedRoute from '../../common/ProtectedRoute';
 import QueryErrorDisplay from '../../common/QueryErrorDisplay';

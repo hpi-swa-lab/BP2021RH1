@@ -730,10 +730,9 @@ const useExhibitionDatabaseSaver = () => {
         variables: {
           exhibitionId: exhibitionId,
           order: order,
-          publishedAt: new Date().toISOString(),
         },
       });
-      const id = result.data?.createExhibitionSection?.data?.id;
+      const id = result.data?.createExhibitionSection?.data.id;
       return id;
     },
 
@@ -774,7 +773,6 @@ const useExhibitionDatabaseSaver = () => {
         variables: {
           exhibitionIdealotId: exhibitionId,
           pictureId: pictureId,
-          publishedAt: new Date().toISOString(),
         },
         refetchQueries: ['getExhibition'],
       });

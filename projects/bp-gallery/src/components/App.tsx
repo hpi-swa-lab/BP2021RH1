@@ -48,7 +48,7 @@ const apolloClient = new ApolloClient({
           canRunOperation: {
             keyArgs: ['operation', 'variableSets', 'withSomeVariables', '$user'],
           },
-          pictures: {
+          pictures_connection: {
             keyArgs: picturesKeyArgsFunction,
             merge: mergeByRefWrappedInData,
           },
@@ -56,15 +56,15 @@ const apolloClient = new ApolloClient({
             keyArgs: ['searchTerms', 'searchTimes', 'textFilter'],
             merge: mergeByRef,
           },
-          keywordTags: {
+          keywordTags_connection: {
             keyArgs: ['filters'],
             merge: mergeByRefWrappedInData,
           },
-          personTags: {
+          personTags_connection: {
             keyArgs: ['filters'],
             merge: mergeByRefWrappedInData,
           },
-          locationTags: {
+          locationTags_connection: {
             keyArgs: ['filters'],
             merge: mergeByRefWrappedInData,
           },

@@ -1,6 +1,6 @@
-import type { Attribute, Schema } from '@strapi/strapi';
+import type { Schema, Struct } from '@strapi/strapi';
 
-export interface CommonSynonyms extends Schema.Component {
+export interface CommonSynonyms extends Struct.ComponentSchema {
   collectionName: 'components_common_synonyms';
   info: {
     description: '';
@@ -8,29 +8,29 @@ export interface CommonSynonyms extends Schema.Component {
     icon: 'layer-group';
   };
   attributes: {
-    name: Attribute.String & Attribute.Required;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
-export interface LocationCoordinates extends Schema.Component {
+export interface LocationCoordinates extends Struct.ComponentSchema {
   collectionName: 'components_location_coordinates';
   info: {
     displayName: 'Coordinates';
     icon: 'map-marked-alt';
   };
   attributes: {
-    latitude: Attribute.Float &
-      Attribute.Required &
-      Attribute.SetMinMax<
+    latitude: Schema.Attribute.Float &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
         {
           max: 90;
           min: -90;
         },
         number
       >;
-    longitude: Attribute.Float &
-      Attribute.Required &
-      Attribute.SetMinMax<
+    longitude: Schema.Attribute.Float &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
         {
           max: 180;
           min: -180;
@@ -40,9 +40,9 @@ export interface LocationCoordinates extends Schema.Component {
   };
 }
 
-declare module '@strapi/types' {
-  export module Shared {
-    export interface Components {
+declare module '@strapi/strapi' {
+  export namespace Public {
+    export interface ComponentSchemas {
       'common.synonyms': CommonSynonyms;
       'location.coordinates': LocationCoordinates;
     }

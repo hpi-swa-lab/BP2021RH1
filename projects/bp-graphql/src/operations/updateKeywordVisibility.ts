@@ -6,7 +6,7 @@ export default {
   isAllowed: always,
   document: graphql`
     mutation updateKeywordVisibility($tagId: ID!, $visible: Boolean!) {
-      updateKeywordTag(id: $tagId, data: { visible: $visible }) {
+      updateKeywordTag(documentId: $tagId, data: { visible: $visible }) {
         data {
           id
           attributes {

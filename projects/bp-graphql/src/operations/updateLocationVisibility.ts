@@ -6,7 +6,7 @@ export default {
   isAllowed: always,
   document: graphql`
     mutation updateLocationVisibility($tagId: ID!, $visible: Boolean!) {
-      updateLocationTag(id: $tagId, data: { visible: $visible }) {
+      updateLocationTag(documentId: $tagId, data: { visible: $visible }) {
         data {
           id
         }

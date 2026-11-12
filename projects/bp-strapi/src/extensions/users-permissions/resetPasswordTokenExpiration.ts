@@ -1,4 +1,3 @@
-import { validateForgotPasswordBody, validateResetPasswordBody } from './authValidation';
 import { StrapiContext } from '../../types';
 import { getAuthController, wrap } from './helper';
 
@@ -8,10 +7,13 @@ export const enablePasswordTokenExpiration = (config: {
   const authController = getAuthController();
 
   wrap<[StrapiContext], 'resetPassword'>(authController, 'resetPassword', async (inner, ctx) => {
-    const { code } = await validateResetPasswordBody(ctx.request.body);
+    // The inner controller validates the body
+    const { code } = ctx.request.body as { code?: unknown };
 
     const userQuery = strapi.query('plugin::users-permissions.user');
-    const user = await userQuery.findOne({ where: { resetPasswordToken: code } });
+    const user =
+      typeof code === 'string' &&
+      (await userQuery.findOne({ where: { resetPasswordToken: code } }));
 
     if (user) {
       const createdAt = new Date(user.resetPasswordTokenCreatedAt);
@@ -31,9 +33,8 @@ export const enablePasswordTokenExpiration = (config: {
   });
 
   wrap<[StrapiContext], 'forgotPassword'>(authController, 'forgotPassword', async (inner, ctx) => {
-    const { email } = await validateForgotPasswordBody(ctx.request.body);
-
     await inner(ctx);
+    const { email } = ctx.request.body as { email: string };
 
     const userQuery = strapi.query('plugin::users-permissions.user');
     const user = await userQuery.findOne({ where: { email: email.toLowerCase() } });

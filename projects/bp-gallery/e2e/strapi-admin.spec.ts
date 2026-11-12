@@ -10,7 +10,7 @@ test.describe('Strapi admin panel', () => {
     expect((await login).status()).toBe(200);
     await expect(page).not.toHaveURL(/\/auth/);
     await page.goto(
-      `${stack.strapi}/admin/content-manager/collectionType/api::keyword-tag.keyword-tag`
+      `${stack.strapi}/admin/content-manager/collection-types/api::keyword-tag.keyword-tag`
     );
     // The list has the name once more in a hidden tooltip
     await expect(
