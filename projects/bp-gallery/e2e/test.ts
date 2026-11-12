@@ -1,4 +1,4 @@
-import { test as base, type Page } from '@playwright/test';
+import { test as base, expect, type Page, type Response } from '@playwright/test';
 
 export { expect } from '@playwright/test';
 
@@ -11,7 +11,36 @@ type Stack = { gallery: string; strapi: string; mailpit: string };
 export const logInAs = (page: Page, token: string) =>
   page.addInitScript(jwt => sessionStorage.setItem('jwt', jwt), token);
 
-type TestFixtures = { curator: boolean; freshData: boolean; _freshData: void };
+// The errors in a GraphQL response, each as "<operation name>: <message>"
+const graphqlErrors = async (response: Response) => {
+  let names: unknown[] = [];
+  try {
+    const request: unknown = response.request().postDataJSON();
+    names = (Array.isArray(request) ? request : [request]).map(
+      operation => (operation as { operationName?: unknown } | null)?.operationName
+    );
+  } catch {
+    // An upload sends a multipart body
+  }
+  let body: unknown;
+  try {
+    body = await response.json();
+  } catch {
+    return response.ok() ? [] : [`HTTP ${response.status()} for ${names.join(', ')}`];
+  }
+  return (Array.isArray(body) ? body : [body]).flatMap((result, index) =>
+    ((result as { errors?: { message: string }[] } | null)?.errors ?? []).map(
+      error => `${String(names[index] ?? 'unknown operation')}: ${error.message}`
+    )
+  );
+};
+
+type TestFixtures = {
+  curator: boolean;
+  freshData: boolean;
+  _freshData: void;
+  expectedErrors: RegExp[];
+};
 type WorkerFixtures = { stack: Stack; curatorToken: string; resetData: () => Promise<void> };
 
 export const test = base.extend<TestFixtures, WorkerFixtures>({
@@ -78,8 +107,29 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
   ],
   // test.use({ curator: true }) logs the pages of the tests in as the test curator
   curator: [false, { option: true }],
-  page: async ({ page, curator, curatorToken }, use) => {
+  // The page fails its test on GraphQL errors and uncaught errors, because the app often shows them
+  // only as missing elements, and its permission checks treat a failed request as allowed.
+  // A test that causes an error on purpose lists it with test.use({ expectedErrors: [/.../] }).
+  expectedErrors: [[], { option: true }],
+  page: async ({ page, curator, curatorToken, expectedErrors }, use) => {
     if (curator) await logInAs(page, curatorToken);
+    const errors: string[] = [];
+    const reads: Promise<void>[] = [];
+    page.on('pageerror', error => errors.push(`Uncaught in the page: ${error.message}`));
+    // Only finished requests, since the body of a request the page dropped never arrives
+    page.on('requestfinished', request => {
+      if (new URL(request.url()).pathname.endsWith('/graphql')) {
+        reads.push(
+          request
+            .response()
+            .then(response => (response ? graphqlErrors(response) : []))
+            .then(found => void errors.push(...found))
+        );
+      }
+    });
     await use(page);
+    await Promise.all(reads);
+    const unexpected = errors.filter(error => !expectedErrors.some(regex => regex.test(error)));
+    expect(unexpected, 'GraphQL errors and uncaught errors in the page').toEqual([]);
   },
 });
